@@ -1,5 +1,5 @@
 ## Hypnofocus Firmware
-Firmware for the Hypnofocus. See [Hypnofocus ASCOM](http://github.com/Hypnoflo/Hypnofocus-ASCOM) for the ASCOM driver to use with this firmware and a Hypnofocus.
+Firmware for the Hypnofocus.
  
 ### Requirements
 * Git, WinAVR/Crosspack
