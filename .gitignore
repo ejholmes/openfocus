@@ -1,0 +1,6 @@
+build/*
+*.o
+*.hex
+*.elf
+*.swp
+tags
