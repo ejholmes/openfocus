@@ -8,7 +8,12 @@
 #include "usbconfig.h"
 #include "requests.h"
 
-#ifdef WINDOWS
+#define SUCCESS               0x00
+#define DEVICE_NOT_FOUND      0x01
+#define ERROR_SET_CONFIG      0x02
+#define ERROR_CLAIM_INTERFACE 0x03
+
+#ifdef __WINDOWS__
 #define APIEXPORT __declspec(dllexport)
 #else
 #define APIEXPORT
@@ -25,12 +30,12 @@ APIEXPORT int focuser_connect(void){
     pid = PID[1] * 256 + PID[0];
 
     if(usbOpenDevice(&handle, vid, vendor, pid, product, NULL, NULL, NULL) != 0){
-        return -1;
+        return DEVICE_NOT_FOUND;
     }
 #if 0
     int retries = 1, usbConfiguration = 1, usbInterface = 0;
     if(usb_set_configuration(handle, usbConfiguration) && showWarnings){
-        return -1;
+        return ERROR_SET_CONFIG;
     }
     /*  now try to claim the interface and detach the kernel HID
      *  driver on
@@ -39,12 +44,12 @@ APIEXPORT int focuser_connect(void){
     while((len = usb_claim_interface(handle, usbInterface)) != 0 && retries-- > 0){
 #ifdef LIBUSB_HAS_DETACH_KERNEL_DRIVER_NP
         if(usb_detach_kernel_driver_np(handle, 0) < 0 && showWarnings){
-            return -1;
+            return ERROR_CLAIM_INTERFACE;
         }
 #endif
     }
 #endif
-    return 0;
+    return SUCCESS;
 }
 
 APIEXPORT int focuser_disconnect(void){

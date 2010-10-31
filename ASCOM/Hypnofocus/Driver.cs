@@ -1,25 +1,3 @@
-//tabs=4
-// --------------------------------------------------------------------------------
-// TODO fill in this information for your driver, then remove this line!
-//
-// ASCOM Focuser driver for Hypnofocus
-//
-// Description:	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam 
-//				nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam 
-//				erat, sed diam voluptua. At vero eos et accusam et justo duo 
-//				dolores et ea rebum. Stet clita kasd gubergren, no sea takimata 
-//				sanctus est Lorem ipsum dolor sit amet.
-//
-// Implements:	ASCOM Focuser interface version: 1.0
-// Author:		(XXX) Your N. Here <your@email.here>
-//
-// Edit Log:
-//
-// Date			Who	Vers	Description
-// -----------	---	-----	-------------------------------------------------------
-// dd-mmm-yyyy	XXX	1.0.0	Initial edit, from ASCOM Focuser Driver template
-// --------------------------------------------------------------------------------
-//
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -32,13 +10,6 @@ using ASCOM.Interface;
 
 namespace ASCOM.Hypnofocus
 {
-    //
-    // Your driver's ID is ASCOM.Hypnofocus.Focuser
-    //
-    // The Guid attribute sets the CLSID for ASCOM.Hypnofocus.Focuser
-    // The ClassInterface/None addribute prevents an empty interface called
-    // _Focuser from being created and used as the [default] interface
-    //
     [Guid("8d3f2e80-ec30-4216-9747-0f7024c5f12a")]
     [ClassInterface(ClassInterfaceType.None)]
     public class Focuser : IFocuser
@@ -106,14 +77,14 @@ namespace ASCOM.Hypnofocus
 
         public void Halt()
         {
-            Hypnofocus.Halt();
+            Device.Halt();
         }
 
         public bool IsMoving
         {
             get
             {
-                return (Hypnofocus.IsMoving() == 0) ? true : false;
+                return (Device.IsMoving() == 0) ? true : false;
             }
         }
 
@@ -125,12 +96,22 @@ namespace ASCOM.Hypnofocus
                 switch (value)
                 {
                     case true:
-                        Hypnofocus.Connect();
-                        this._Link = true;
+                        ExitCode code = Device.Connect();
+                        if (code == ExitCode.SUCCESS)
+                            this._Link = true;
+                        else if (code == ExitCode.DEVICE_NOT_FOUND)
+                            throw new Exception("Could not find Hypnofocus device!");
+                        else
+                            throw new Exception("Received exit code: " + code.ToString() + " from device");
                         break;
                     case false:
-                        Hypnofocus.Disconnect();
-                        this._Link = false;
+                        if (this._Link)
+                        {
+                            if (this.IsMoving)
+                                Device.Halt();
+                            Device.Disconnect();
+                            this._Link = false;
+                        }
                         break;
                 }
             }
@@ -150,7 +131,7 @@ namespace ASCOM.Hypnofocus
         {
             if (val >= 0)
             {
-                Hypnofocus.MoveTo((Int16)val);
+                Device.MoveTo((Int16)val);
             }
         }
 
@@ -158,7 +139,7 @@ namespace ASCOM.Hypnofocus
         {
             get
             {
-                return Hypnofocus.GetPosition();
+                return Device.GetPosition();
             }
         }
 
