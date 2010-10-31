@@ -3,4 +3,5 @@ build/*
 *.hex
 *.elf
 *.swp
+*.exe
 tags

@@ -1,16 +1,12 @@
-EXE_SUFFIX =
-
-NAME = focus
-
-OBJECTS = ../lib/opendevice.o $(NAME).o
+NAME = hypnofocus
 
 INCLUDES = -I../include -I../firmware
 LIBS = -L../lib -lusb
-CC		= gcc
-CFLAGS	= $(CPPFLAGS) $(INCLUDES) -O -g -Wall -I../lib
+CFLAGS = $(USBFLAGS) $(INCLUDES) -shared -mno-cygwin -Wall -O -g
+CC = gcc
+OBJECTS = ../lib/opendevice.o $(NAME).o
 
-PROGRAM = $(NAME)$(EXE_SUFFIX)
-
+PROGRAM = $(NAME).dll
 
 all: $(PROGRAM)
 
@@ -19,9 +15,6 @@ all: $(PROGRAM)
 
 $(PROGRAM): $(OBJECTS)
 	$(CC) $(CFLAGS) -o $(PROGRAM) $(OBJECTS) $(LIBS)
-
-strip: $(PROGRAM)
-	strip $(PROGRAM)
 
 clean:
 	rm -f *.o $(PROGRAM)

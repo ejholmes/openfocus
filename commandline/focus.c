@@ -16,10 +16,10 @@ respectively.
 #include <string.h>
 #include <inttypes.h>
 #include <usb.h>        /* this is libusb */
-#include "../lib/opendevice.h" /* common code moved to separate module */
+#include "opendevice.h" /* common code moved to separate module */
 
-#include "../firmware/requests.h"   /* custom request numbers */
-#include "../firmware/usbconfig.h"  /* device's VID/PID and names */
+#include "requests.h"   /* custom request numbers */
+#include "usbconfig.h"  /* device's VID/PID and names */
 
 static void usage(char *name)
 {
