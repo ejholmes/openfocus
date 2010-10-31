@@ -71,12 +71,12 @@ Source: "driver\ia64\libusb0.dll"; DestDir: {sys}; Flags: uninsneveruninstall re
 Filename: "rundll32"; Parameters: "libusb0.dll,usb_install_driver_np_rundll {app}\driver\Hypnofocus.inf"; StatusMsg: "Installing driver (this may take a few seconds) ..."; Tasks: win32
 
 ; Only for .NET assembly/in-proc drivers
-Filename: "{%FrameworkDir|{win}\Microsoft.NET\Framework}\V2.0.50727\regasm.exe"; Parameters: "/codebase ""{app}\Hypnofocus.dll"""; Flags: runhidden; StatusMsg: "Registering driver with ASCOM..."; Tasks: ascom
+Filename: "{%FrameworkDir|{win}\Microsoft.NET\Framework}\V2.0.50727\regasm.exe"; Parameters: "/codebase ""{app}\ASCOM.Hypnofocus.dll"""; Flags: runhidden; StatusMsg: "Registering driver with ASCOM..."; Tasks: ascom
 
 ; Only if driver is .NET
 [UninstallRun]
 ; Only for .NET assembly/in-proc drivers
-Filename: "{%FrameworkDir|{win}\Microsoft.NET\Framework}\V2.0.50727\regasm.exe"; Parameters: "-u ""{app}\Hypnofocus.dll"""; Flags: runhidden
+Filename: "{%FrameworkDir|{win}\Microsoft.NET\Framework}\V2.0.50727\regasm.exe"; Parameters: "-u ""{app}\ASCOM.Hypnofocus.dll"""; Flags: runhidden
 
 
 
