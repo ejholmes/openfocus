@@ -1,4 +1,4 @@
-## Hypnofocus Firmware
+## Focus
 Command line utility for controlling the Hypnofocus
  
 ### Requirements
