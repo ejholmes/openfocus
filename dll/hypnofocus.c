@@ -66,24 +66,20 @@ APIEXPORT int focuser_is_moving(void){
     int cnt;
     uint8_t buffer[1];
     cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, FOCUSER_GET_STATUS, 0, 0, buffer, sizeof(buffer), 5000);
-    if(cnt > 0){
+    if(cnt > 0)
         return buffer[0];
-    }
-    else {
-        return -1;
-    }
+    else
+        return 1;
 }
 
 APIEXPORT int focuser_get_position(void){
     int cnt;
     uint8_t buffer[2];
     cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, FOCUSER_GET_POSITION, 0, 0, buffer, sizeof(buffer), 5000);
-    if(cnt > 0){
+    if(cnt > 0)
         return (buffer[1] << 8) | buffer[0];
-    }
-    else {
-        return -1;
-    }
+    else
+        return 0;
 }
 
 APIEXPORT void focuser_halt(void){
