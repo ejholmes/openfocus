@@ -49,9 +49,6 @@ namespace ASCOM.Hypnofocus
         private static string s_csDriverID = "ASCOM.Hypnofocus.Focuser";
         private static string s_csDriverDescription = "Hypnofocus";
 
-        private const int VID = 0x16c0;
-        private const int PID = 0x05df;
-
         private bool _Link = false;
 
         //
