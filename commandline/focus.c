@@ -16,7 +16,7 @@ respectively.
 #include <string.h>
 #include <inttypes.h>
 #include <usb.h>        /* this is libusb */
-#include "opendevice.h" /* common code moved to separate module */
+#include "../include/opendevice.h" /* common code moved to separate module */
 
 #include "requests.h"   /* custom request numbers */
 #include "usbconfig.h"  /* device's VID/PID and names */

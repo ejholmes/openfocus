@@ -1,15 +1,15 @@
-EXE_SUFFIX =
-
 NAME = focus
 
 OBJECTS = ../lib/opendevice.o $(NAME).o
 
-INCLUDES = -I../include -I../firmware
-LIBS = -L../lib -lusb
-CC		= gcc
-CFLAGS	= $(CPPFLAGS) $(INCLUDES) -O -g -Wall -I../lib
+#INCLUDES = -I../firmware
+#LIBS     = -L../lib -lusb
+INCLUDES = `libusb-config --cflags` -I../firmware
+LIBS	 = `libusb-config --libs`
+CC       = gcc
+CFLAGS   = $(CPPFLAGS) $(INCLUDES) -O -g -Wall
 
-PROGRAM = $(NAME)$(EXE_SUFFIX)
+PROGRAM = $(NAME)
 
 
 all: $(PROGRAM)
