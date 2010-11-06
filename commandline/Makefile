@@ -1,10 +1,10 @@
 NAME = focus
 
-INCLUDES = `libusb-config --cflags` -I../include -I../firmware
+INCLUDES = `libusb-config --cflags` -I../dll -I../firmware
 LIBS = `libusb-config --libs`
 CFLAGS = $(USBFLAGS) $(INCLUDES) -shared -Wall -O -g
 CC = gcc
-OBJECTS = ../lib/opendevice.o ../dll/hypnofocus.c $(NAME).o
+OBJECTS = ../dll/hypnofocus.c $(NAME).o
 
 PROGRAM = $(NAME)
 

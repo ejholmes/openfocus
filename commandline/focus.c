@@ -16,6 +16,8 @@ respectively.
 #include <string.h>
 #include <inttypes.h>
 
+#include "hypnofocus.h"
+
 
 static void usage(char *name)
 {
