@@ -84,7 +84,7 @@ namespace ASCOM.Hypnofocus
         {
             get
             {
-                return (Device.IsMoving() == 0) ? true : false;
+                return Device.IsMoving;
             }
         }
 
@@ -96,13 +96,7 @@ namespace ASCOM.Hypnofocus
                 switch (value)
                 {
                     case true:
-                        ExitCode code = Device.Connect();
-                        if (code == ExitCode.SUCCESS)
-                            this._Link = true;
-                        else if (code == ExitCode.DEVICE_NOT_FOUND)
-                            throw new Exception("Could not find Hypnofocus device!");
-                        else
-                            throw new Exception("Received exit code: " + code.ToString() + " from device");
+                        this._Link = Device.Connect();
                         break;
                     case false:
                         if (this._Link)
@@ -139,7 +133,7 @@ namespace ASCOM.Hypnofocus
         {
             get
             {
-                return Device.GetPosition();
+                return Device.Position;
             }
         }
 

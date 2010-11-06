@@ -17,6 +17,12 @@
 #include "focuser.h"
 #include "util.h"
 
+#ifdef __HYPNOFOCUS_V1__
+const uint8_t capabilities = CAP_ABSOLUTE;
+#else
+const uint8_t capabilities = 0x00;
+#endif
+
 usbMsgLen_t usbFunctionSetup(uchar data[8])
 {
     usbRequest_t *rq = (void *)data;
@@ -39,10 +45,16 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
         usbMsgPtr = buffer;
         return sizeof(buffer);
     }
-    else if (rq->bRequest == FOCUSER_GET_STATUS){
+    else if (rq->bRequest == FOCUSER_IS_MOVING){
         bool moving = focuser_is_moving();
         static uchar buffer[1];
         buffer[0] = moving ? 0 : 1;
+        usbMsgPtr = buffer;
+        return sizeof(buffer);
+    }
+    else if (rq->bRequest == FOCUSER_GET_CAPABILITIES){
+        static uchar buffer[1];
+        buffer[0] = capabilities;
         usbMsgPtr = buffer;
         return sizeof(buffer);
     }

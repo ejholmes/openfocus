@@ -20,9 +20,10 @@ PORT       = /dev/tty.usbserial-A800eJU7
 PROGRAMMER = -c avrisp
 OBJECTS    = usbdrv/usbdrv.o usbdrv/usbdrvasm.o usbdrv/oddebug.o main.o stepper.o focuser.o util.o
 FUSES      = -U hfuse:w:0xd9:m -U lfuse:w:0xff:m
+DEVICE_VERSION = V1
 
 AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE) -P $(PORT) -b 19200
-COMPILE = avr-gcc -Wall -Os -Iusbdrv -I. -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
+COMPILE = avr-gcc -D__HYPNOFOCUS_$(DEVICE_VERSION)__ -Wall -Os -Iusbdrv -I. -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
 
 # symbolic targets:
 all:	main.hex

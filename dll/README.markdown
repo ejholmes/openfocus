@@ -9,6 +9,7 @@ DLL used to communicate with the firmware. Provides the following functions:
  
 ### Requirements
 * libusb driver installed (libusb0.sys)
+* MinGW to compile source
 
 ### Building from Source
 1. If on Windows, install cygwin with MinGW
