@@ -2,7 +2,7 @@ NAME = hypnofocus
 
 INCLUDES = -I../include -I../firmware
 LIBS = -L../lib -lusb
-CFLAGS = $(USBFLAGS) $(INCLUDES) -shared -mno-cygwin -Wall -O -g
+CFLAGS = $(USBFLAGS) $(INCLUDES) -shared -Wall -O -g
 CC = gcc
 OBJECTS = ../lib/opendevice.o $(NAME).o
 
