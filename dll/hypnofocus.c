@@ -1,19 +1,4 @@
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <inttypes.h>
-#include <usb.h>
-#include "opendevice.h"
-
-#include "errors.h"
-#include "usbconfig.h"
-#include "requests.h"
-
-#ifdef __WINDOWS__
-#define DLLEXPORT __declspec(dllexport)
-#else
-#define DLLEXPORT
-#endif
+#include "hypnofocus.h"
 
 usb_dev_handle *handle = NULL;
 const uint8_t VID[2] = {USB_CFG_VENDOR_ID}, PID[2] = {USB_CFG_DEVICE_ID};
@@ -99,4 +84,9 @@ DLLEXPORT void focuser_halt(void){
     uint8_t buffer[2];
     usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_OUT, FOCUSER_HALT, 0, 0, buffer, 0, 5000);
     error = NO_ERROR;
+}
+
+
+int usbOpenDevice(usb_dev_handle **device, int vendorID, char *vendorNamePattern, int productID, char *productNamePattern, char *serialNamePattern, FILE *printMatchingDevicesFp, FILE *warningsFp){
+    return NO_ERROR;
 }
