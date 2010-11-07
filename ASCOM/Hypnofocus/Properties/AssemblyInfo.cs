@@ -10,9 +10,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Hypnofocus Focuser Driver")]
 [assembly: AssemblyDescription("ASCOM Focuser Driver for Hypnofocus")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ASCOM Initiative")]
-[assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCompany("Hypnoflo")]
+[assembly: AssemblyProduct("Hypnofocus")]
+[assembly: AssemblyCopyright("2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -35,5 +35,5 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 //
 // TODO - Set your driver's version here
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("0.1.0.0")]
+[assembly: AssemblyFileVersion("0.1.0.0")]
