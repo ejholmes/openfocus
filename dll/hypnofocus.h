@@ -25,6 +25,7 @@ DLLEXPORT uint8_t focuser_is_moving(void);
 DLLEXPORT uint16_t focuser_get_position(void);
 DLLEXPORT uint8_t focuser_get_capabilities(void);
 DLLEXPORT void focuser_halt(void);
-int usbOpenDevice(usb_dev_handle **device, int vendorID, char *vendorNamePattern, int productID, char *productNamePattern, char *serialNamePattern, FILE *printMatchingDevicesFp, FILE *warningsFp);
+uint8_t usbOpenDevice(usb_dev_handle **device, int vendorID, char *vendorNamePattern, int productID, char *productNamePattern, char *serialNamePattern);
+int usbGetStringAscii(usb_dev_handle *dev, int index, char *buf, int buflen);
 
 #endif /* __hypnofocus_h_ */

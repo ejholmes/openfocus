@@ -1,12 +1,8 @@
 NAME = hypnofocus
 
-ifeq (`which libusb-config`, '')
-	USBFLAGS = -I../libusb
-	USBLIBS = -L../libusb -lusb
-else
-	USBFLAGS = `libusb-config --cflags`
-	USBLIBS = `libusb-config --libs`
-endif
+USBFLAGS = -I../libusb
+USBLIBS = -L../libusb -lusb
+
 CFLAGS = $(USBFLAGS) -I../firmware -shared -Wall -O -g
 CC = gcc
 OBJECTS = $(NAME).o

@@ -72,7 +72,7 @@ namespace ASCOM.Hypnofocus
 
         public bool Absolute
         {
-            get { return true; }
+            get { return Device.Absolute; }
         }
 
         public void Halt()
@@ -156,7 +156,7 @@ namespace ASCOM.Hypnofocus
 
         public bool TempCompAvailable
         {
-            get { return false; }
+            get { return Device.TempCompAvailable; }
         }
 
         public double Temperature
