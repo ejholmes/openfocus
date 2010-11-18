@@ -1,7 +1,7 @@
 NAME = hypnofocus
 
-USBFLAGS = -I../libusb
-USBLIBS = -L../libusb -lusb
+USBFLAGS = -Ilibusb-win32
+USBLIBS = -Llibusb-win32 -lusb
 
 CFLAGS = $(USBFLAGS) -I../firmware -shared -Wall -O -g
 CC = gcc
