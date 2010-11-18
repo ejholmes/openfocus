@@ -22,9 +22,10 @@ respectively.
 static void usage(char *name)
 {
     fprintf(stderr, "usage:\n");
-    /*fprintf(stderr, "  %s move ....... turn on LED\n", name);*/
-    /*fprintf(stderr, "  %s off ...... turn off LED\n", name);*/
-    /*fprintf(stderr, "  %s status ... ask current status of LED\n", name);*/
+    fprintf(stderr, "  %s move <position>\n", name);
+    fprintf(stderr, "  %s halt\n", name);
+    fprintf(stderr, "  %s status\n", name);
+    fprintf(stderr, "  %s capabilities\n", name);
 }
 
 int main(int argc, char **argv)
