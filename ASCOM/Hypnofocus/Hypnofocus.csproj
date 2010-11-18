@@ -162,4 +162,9 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PreBuildEvent>cd $(SolutionDir)
+cd ../dll
+make</PreBuildEvent>
+  </PropertyGroup>
 </Project>

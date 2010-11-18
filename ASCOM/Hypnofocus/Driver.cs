@@ -82,10 +82,7 @@ namespace ASCOM.Hypnofocus
 
         public bool IsMoving
         {
-            get
-            {
-                return Device.IsMoving;
-            }
+            get { return Device.IsMoving; }
         }
 
         public bool Link
@@ -124,17 +121,12 @@ namespace ASCOM.Hypnofocus
         public void Move(int val)
         {
             if (val >= 0)
-            {
                 Device.MoveTo((Int16)val);
-            }
         }
 
         public int Position
         {
-            get
-            {
-                return Device.Position;
-            }
+            get { return Device.Position; }
         }
 
         public void SetupDialog()

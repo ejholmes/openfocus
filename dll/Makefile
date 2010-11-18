@@ -11,6 +11,9 @@ PROGRAM = $(NAME).dll
 
 all: $(PROGRAM)
 
+release: $(all)
+	strip $(PROGRAM)
+
 .c.o:
 	$(CC) $(CFLAGS) -c $< -o $@
 
