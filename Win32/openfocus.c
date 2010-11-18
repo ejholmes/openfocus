@@ -1,4 +1,4 @@
-#include "hypnofocus.h"
+#include "openfocus.h"
 
 usb_dev_handle *handle = NULL;
 const uint8_t VID[2] = {USB_CFG_VENDOR_ID}, PID[2] = {USB_CFG_DEVICE_ID};

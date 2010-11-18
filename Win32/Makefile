@@ -1,4 +1,4 @@
-NAME = hypnofocus
+NAME = openfocus
 
 USBFLAGS = -Ilibusb-win32
 USBLIBS = -Llibusb-win32 -lusb
