@@ -1,4 +1,4 @@
-namespace ASCOM.Hypnofocus
+namespace ASCOM.OpenFocus
 {
     partial class SetupDialogForm
     {
@@ -68,7 +68,7 @@ namespace ASCOM.Hypnofocus
             // picASCOM
             // 
             this.picASCOM.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.picASCOM.Image = global::ASCOM.Hypnofocus.Properties.Resources.ASCOM;
+            this.picASCOM.Image = global::ASCOM.OpenFocus.Properties.Resources.ASCOM;
             this.picASCOM.Location = new System.Drawing.Point(145, 9);
             this.picASCOM.Name = "picASCOM";
             this.picASCOM.Size = new System.Drawing.Size(48, 56);
@@ -93,7 +93,7 @@ namespace ASCOM.Hypnofocus
             this.Name = "SetupDialogForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Hypnofocus Setup";
+            this.Text = "OpenFocus Setup";
             ((System.ComponentModel.ISupportInitialize)(this.picASCOM)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace ASCOM.Hypnofocus
+namespace ASCOM.OpenFocus
 {
     public enum DeviceError
     {
@@ -23,31 +23,31 @@ namespace ASCOM.Hypnofocus
 
     public class Device
     {
-        private const string _DLL = "hypnofocus.dll";
+        private const string _DLL = "openfocus.dll";
 
         private static byte _Capabilities;
 
         #region private methods
-        [DllImport(_DLL, EntryPoint="focuser_connect")]
+        [DllImport(_DLL, EntryPoint = "focuser_connect")]
         private static extern byte _Connect();
 
-        [DllImport(_DLL, EntryPoint="focuser_disconnect")]
+        [DllImport(_DLL, EntryPoint = "focuser_disconnect")]
         private static extern byte _Disconnect();
 
         [DllImport(_DLL, EntryPoint = "focuser_get_error")]
         private static extern byte _GetLastError();
         private static DeviceError GetLastError() { return (DeviceError)_GetLastError(); }
 
-        [DllImport(_DLL, EntryPoint="focuser_is_moving")]
+        [DllImport(_DLL, EntryPoint = "focuser_is_moving")]
         private static extern byte _IsMoving();
 
-        [DllImport(_DLL, EntryPoint="focuser_move_to")]
+        [DllImport(_DLL, EntryPoint = "focuser_move_to")]
         private static extern void _MoveTo(Int16 position);
 
-        [DllImport(_DLL, EntryPoint="focuser_halt")]
+        [DllImport(_DLL, EntryPoint = "focuser_halt")]
         private static extern void _Halt();
 
-        [DllImport(_DLL, EntryPoint="focuser_get_position")]
+        [DllImport(_DLL, EntryPoint = "focuser_get_position")]
         private static extern Int16 _GetPosition();
 
         [DllImport(_DLL, EntryPoint = "focuser_get_capabilities")]
@@ -150,7 +150,7 @@ namespace ASCOM.Hypnofocus
     #region Exception Handlers
     public class DeviceException : Exception
     {
-        public DeviceException(string message, Exception innerException) 
+        public DeviceException(string message, Exception innerException)
             : base(message, innerException)
         {
         }

@@ -8,17 +8,17 @@ using ASCOM.Helper;
 using ASCOM.Helper2;
 using ASCOM.Interface;
 
-namespace ASCOM.Hypnofocus
+namespace ASCOM.OpenFocus
 {
-    [Guid("8d3f2e80-ec30-4216-9747-0f7024c5f12a")]
+    [Guid("378ee2b3-3ba0-44fe-b382-cd643610814e")]
     [ClassInterface(ClassInterfaceType.None)]
     public class Focuser : IFocuser
     {
         //
         // Driver ID and descriptive string that shows in the Chooser
         //
-        private static string s_csDriverID = "ASCOM.Hypnofocus.Focuser";
-        private static string s_csDriverDescription = "Hypnofocus";
+        private static string s_csDriverID = "ASCOM.OpenFocus.Focuser";
+        private static string s_csDriverDescription = "OpenFocus";
 
         private bool _Link = false;
 
@@ -27,7 +27,6 @@ namespace ASCOM.Hypnofocus
         //
         public Focuser()
         {
-
         }
 
         #region ASCOM Registration
