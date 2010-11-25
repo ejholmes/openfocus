@@ -24,15 +24,7 @@
 #ifndef __hypnofocus_h_
 #define __hypnofocus_h_ 
 
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
 #include <inttypes.h>
-#include <usb.h>
-
-#include "errors.h"
-#include "usbconfig.h"
-#include "requests.h"
 
 #ifdef __WINDOWS__
 #define DLLEXPORT __declspec(dllexport)
@@ -40,15 +32,46 @@
 #define DLLEXPORT
 #endif
 
+/*
+ * Attempts to establish a connection with the focuser.
+ *
+ * Returns NO_ERROR if successful
+ */
 DLLEXPORT uint8_t focuser_connect(void);
+
+/*
+ * Disconnects the focuser 
+ */
 DLLEXPORT uint8_t focuser_disconnect(void);
+
+/*
+ * Returns the last error that was encountered
+ */
 DLLEXPORT uint8_t focuser_get_error(void);
+
+/*
+ * Moves to focuser to position <position>
+ */
 DLLEXPORT void focuser_move_to(uint16_t position);
+
+/*
+ * Returns true if focuser is moving
+ */
 DLLEXPORT uint8_t focuser_is_moving(void);
+
+/*
+ * Returns the current position of the focuser
+ */
 DLLEXPORT uint16_t focuser_get_position(void);
+
+/*
+ * Returns an 8 bit character with the capabilities of the focuser
+ */
 DLLEXPORT uint8_t focuser_get_capabilities(void);
+
+/*
+ * Halts the focuser
+ */
 DLLEXPORT void focuser_halt(void);
-uint8_t usbOpenDevice(usb_dev_handle **device, int vendorID, char *vendorNamePattern, int productID, char *productNamePattern, char *serialNamePattern);
-int usbGetStringAscii(usb_dev_handle *dev, int index, char *buf, int buflen);
 
 #endif /* __hypnofocus_h_ */

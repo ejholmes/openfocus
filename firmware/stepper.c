@@ -158,8 +158,6 @@ void stepper_do_step(int8_t direction)
 /*
  * Overflow interrupt that gets triggered consistently over a period of time
  * This handles the actually stepping of the motor so that it is not blocking
- *
- * Implements two callback events: EVT_STEP_COMPLETE and EVT_MOVE_COMPLETE
  */
 ISR(TIMER0_OVF_vect)
 {
