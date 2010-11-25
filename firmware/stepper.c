@@ -36,11 +36,13 @@ volatile uint16_t steps_to_go = 0;
 static uint8_t step           = 0;
 Callback step_event_cb        = NULL;
 
-void registerEventCallback(Callback cb) {
+void registerEventCallback(Callback cb)
+{
     step_event_cb = cb;
 }
 
-void stepper_init(void) {
+void stepper_init(void)
+{
     MOTOR_DDR  |= _BV(MOTOR_PIN_A) 
         | _BV(MOTOR_PIN_B) 
         | _BV(MOTOR_PIN_C) 
@@ -57,18 +59,21 @@ void stepper_init(void) {
     sei();                                      /* Enable global interrupts */
 }
 
-void stepper_release(void) {
+void stepper_release(void)
+{
     MOTOR_PINS_OFF();
 }
 
 
-void stepper_stop(void) {
+void stepper_stop(void)
+{
     STOP_TIMER();                               /* Stop overflow interrupt */
     steps_to_go = 0;                            /* No more steps to go */
     step_event_cb(EVT_MOVE_COMPLETE, NULL);     /* Let the event handler know that we're done */
 }
 
-void stepper_step(int16_t steps) {
+void stepper_step(int16_t steps)
+{
     if (steps > 0) {
         direction = FORWARD;
     }
