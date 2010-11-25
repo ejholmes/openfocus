@@ -62,16 +62,15 @@
  * Red/Green
  * Yellow/Blue
  *
- * TODO:
- * PWM Holding - PWM enable ports for holding heavier focus loads
- *
  */
 
 
 #ifndef __stepper_h_
 #define __stepper_h_
 
+#ifndef STEPS_PER_REV
 #define STEPS_PER_REV 400
+#endif
 
 /* Motor data direction ports */
 #define MOTOR_DDR   DDRD
@@ -80,10 +79,10 @@
 
 
 /* Motor pins */
-#define MOTOR_PIN_A PD3   // green
-#define MOTOR_PIN_B PD5   // yellow
-#define MOTOR_PIN_C PD4   // red
-#define MOTOR_PIN_D PD6   // blue
+#define MOTOR_PIN_A PD3   /* green */
+#define MOTOR_PIN_B PD5   /* yellow */
+#define MOTOR_PIN_C PD4   /* red */
+#define MOTOR_PIN_D PD6   /* blue */
 
 
 /* PWM/Enable Ports */
@@ -110,16 +109,33 @@
 #define EVT_MOVE_COMPLETE  0x01
 
 #include <inttypes.h>
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <stdlib.h>
 
 typedef void(*Callback)(uint8_t, void*);
 
+/*
+ * Initialize motor pins and enable pins, setup timer and enable global interrupts
+ */
 void stepper_init(void);
+
+/*
+ * Essentially a wrapper for Stepper::oneStep()
+ * Moves the desired steps and delays based on current speed
+ */
 void stepper_step(int16_t steps);
+
+/*
+ * Releases motor pins
+ *
+ * Some motors get pretty hot if the coils are kept activated
+ * call this function to release the coils
+ */
 void stepper_release(void);
+
+/*
+ * Stops the stepper motor
+ */
 void stepper_stop(void);
+
 void registerEventCallback(Callback cb);
 
 #endif

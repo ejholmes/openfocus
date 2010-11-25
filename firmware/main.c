@@ -25,9 +25,9 @@
 #include <avr/wdt.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
+#include <util/delay.h>
 
 #include "usbdrv.h"
-
 #include "focuser.h"
 #include "util.h"
 
@@ -37,32 +37,32 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
 {
     usbRequest_t *rq = (void *)data;
 
-    if(rq->bRequest == FOCUSER_MOVE_TO){
+    if (rq->bRequest == FOCUSER_MOVE_TO) {
         uint8_t l = rq->wValue.bytes[0];
         uint8_t h = rq->wValue.bytes[1];
         focuser_move_to(make_uint(l, h));
         return 0;
     }
-    else if (rq->bRequest == FOCUSER_HALT){
+    else if (rq->bRequest == FOCUSER_HALT) {
         focuser_halt();
         return 0;
     }
-    else if (rq->bRequest == FOCUSER_GET_POSITION){
-        uint16_t position = focuser_position();
+    else if (rq->bRequest == FOCUSER_GET_POSITION) {
+        uint16_t position = focuser_get_position();
         static uchar buffer[2];
         buffer[0] = lsb(position);
         buffer[1] = msb(position);
         usbMsgPtr = buffer;
         return sizeof(buffer);
     }
-    else if (rq->bRequest == FOCUSER_IS_MOVING){
-        bool moving = focuser_is_moving();
+    else if (rq->bRequest == FOCUSER_IS_MOVING) {
+        int is_moving = focuser_is_moving();
         static uchar buffer[1];
-        buffer[0] = moving ? 0 : 1;
+        buffer[0] = is_moving ? 0 : 1;
         usbMsgPtr = buffer;
         return sizeof(buffer);
     }
-    else if (rq->bRequest == FOCUSER_GET_CAPABILITIES){
+    else if (rq->bRequest == FOCUSER_GET_CAPABILITIES) {
         static uchar buffer[1];
         buffer[0] = capabilities;
         usbMsgPtr = buffer;
@@ -72,7 +72,8 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
 }
 
 
-int __attribute__((noreturn)) main(void){
+int __attribute__((noreturn)) main(void)
+{
     uchar   i;
 
     wdt_enable(WDTO_1S);
@@ -86,7 +87,7 @@ int __attribute__((noreturn)) main(void){
     usbInit();
     usbDeviceDisconnect();  /* enforce re-enumeration, do this while interrupts are disabled! */
     i = 0;
-    while(--i){             /* fake USB disconnect for > 250 ms */
+    while (--i) {             /* fake USB disconnect for > 250 ms */
         wdt_reset();
         _delay_ms(1);
     }
@@ -94,7 +95,7 @@ int __attribute__((noreturn)) main(void){
     DDRD |= _BV(PD0);
     focuser_init();
     sei();
-    for(;;){                /* main event loop */
+    for (;;) {                /* main event loop */
         wdt_reset();
         usbPoll();
     }
