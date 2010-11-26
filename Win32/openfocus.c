@@ -32,12 +32,12 @@
 
 #include "openfocus.h"
 
-uint8_t usbOpenDevice(usb_dev_handle **device, int vendorID, 
+uint8_t usb_open_device(usb_dev_handle **device, int vendorID, 
         char *vendorNamePattern,
         int productID,
         char *productNamePattern,
         char *serialNamePattern);
-int usbGetStringAscii(usb_dev_handle *dev, 
+int usb_get_string_ascii(usb_dev_handle *dev, 
         int index,
         char *buf,
         int buflen);
@@ -54,7 +54,7 @@ DLLEXPORT uint8_t focuser_connect(void)
     vid = VID[1] * 256 + VID[0];
     pid = PID[1] * 256 + PID[0];
 
-    return usbOpenDevice(&handle, vid, vendor, pid, product, NULL);
+    return usb_open_device(&handle, vid, vendor, pid, product, NULL);
 }
 
 DLLEXPORT uint8_t focuser_disconnect(void)
@@ -134,7 +134,7 @@ DLLEXPORT void focuser_halt(void)
 }
 
 
-uint8_t usbOpenDevice(usb_dev_handle **device, int vendorID, char *vendorNamePattern, int productID, char *productNamePattern, char *serialNamePattern)
+uint8_t usb_open_device(usb_dev_handle **device, int vendorID, char *vendorNamePattern, int productID, char *productNamePattern, char *serialNamePattern)
 {
     struct usb_bus *bus;
     struct usb_device *dev;
@@ -170,7 +170,7 @@ uint8_t usbOpenDevice(usb_dev_handle **device, int vendorID, char *vendorNamePat
     return error;
 }
 
-int usbGetStringAscii(usb_dev_handle *dev, int index, char *buf, int buflen)
+int usb_get_string_ascii(usb_dev_handle *dev, int index, char *buf, int buflen)
 {
     char    buffer[256];
     int     rval, i;
