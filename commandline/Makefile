@@ -4,7 +4,7 @@ INCLUDES = `libusb-config --cflags` -I../win32 -I../firmware
 LIBS = `libusb-config --libs`
 CFLAGS = $(USBFLAGS) $(INCLUDES) -shared -Wall -O -g
 CC = gcc
-OBJECTS = ../Win32/openfocus.c $(NAME).o
+OBJECTS = ../win32/openfocus.c $(NAME).o
 
 PROGRAM = $(NAME)
 
@@ -17,4 +17,4 @@ $(PROGRAM): $(OBJECTS)
 	$(CC) $(CFLAGS) -o $(PROGRAM) $(OBJECTS) $(LIBS)
 
 clean:
-	rm -f *.o $(PROGRAM)
+	rm -rf *.o $(PROGRAM) $(NAME).dS*
