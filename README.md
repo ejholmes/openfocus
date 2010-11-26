@@ -15,7 +15,7 @@ Requirements:
 - [WinAVR][winavr] (if on Windows) or [CrossPack][crosspack] (if on Mac OS X)
 - [MSYS][msys] (if on Windows)
 
-Building:
+Build:
 
 - Edit firmware/Makefile according to your ISP programmer.
 - Run:
@@ -32,7 +32,7 @@ Requirements:
 - [MSYS][msys] (if on Windows)
 - [libusb][libusb]
 
-Building:
+Build:
 
 - Run:
 
@@ -46,7 +46,7 @@ Requirements:
 - [Visual C# Express 2008][c#]
 - [ASCOM Platform][ascom]
 
-Building:
+Build:
 
 - Open ascom/OpenFocus.sln in Visual C# Express 2008
 - Run **Build**
