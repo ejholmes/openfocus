@@ -8,7 +8,8 @@ the [V-USB stack][vusb] and [libusb][libusb] and also includes an
 Building From Source
 -------------------
 
-**Firmware:**
+Firmware:
+---------
 
 Requirements:
 
@@ -25,7 +26,8 @@ Build:
     `make install`
 
 
-**Driver**
+Driver
+------
 
 Requirements:
 
@@ -39,7 +41,8 @@ Build:
     `make`
 
 
-**ASCOM Driver**
+ASCOM Driver
+-----------
 
 Requirements:
 
