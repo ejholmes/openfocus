@@ -33,7 +33,7 @@ int main(int argc, const char *argv[])
 {
     /* Connect */
     func("focuser_connect()");
-    int i = focuser_connect("c33f7d1c-65f4-4536-9528-a2863e5b500d");
+    int i = focuser_connect(NULL);
     assert(i == OF_NO_ERROR);
     passed();
 
@@ -45,7 +45,7 @@ int main(int argc, const char *argv[])
 
     passed();
 
-    focuser_connect("c33f7d1c-65f4-4536-9528-a2863e5b500d");
+    focuser_connect(NULL);
 
     /* Set position then get position */
     func("focuser_set_position()");
