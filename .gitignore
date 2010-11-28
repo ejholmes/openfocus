@@ -1,4 +1,5 @@
 build/*
+*.dSYM/*
 *.o
 *.hex
 *.elf

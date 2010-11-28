@@ -24,7 +24,5 @@
 #define true 1
 #define false 0
 
-void test_focuser_connect();
-void test_focuser_disconnect();
-void test_focuser_move_to();
-void test_focuser_halt();
+void passed();
+void func(const char *function);

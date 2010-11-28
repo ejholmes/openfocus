@@ -55,6 +55,12 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
         usbMsgPtr = buffer;
         return sizeof(buffer);
     }
+    else if (rq->bRequest == FOCUSER_SET_POSITION) {
+        uint8_t l = rq->wValue.bytes[0];
+        uint8_t h = rq->wValue.bytes[1];
+        focuser_set_position(make_uint(l, h));
+        return 0;
+    }
     else if (rq->bRequest == FOCUSER_IS_MOVING) {
         static uchar buffer[1];
         buffer[0] = focuser_is_moving();

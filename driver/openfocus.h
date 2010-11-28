@@ -37,7 +37,7 @@
  *
  * Returns NO_ERROR if successful
  */
-DLLEXPORT uint8_t focuser_connect(void);
+DLLEXPORT uint8_t focuser_connect(char *serial);
 
 /*
  * Disconnects the focuser 
@@ -63,6 +63,11 @@ DLLEXPORT uint8_t focuser_is_moving(void);
  * Returns the current position of the focuser
  */
 DLLEXPORT uint16_t focuser_get_position(void);
+
+/*
+ * Returns the current position of the focuser
+ */
+DLLEXPORT void focuser_set_position(uint16_t position);
 
 /*
  * Returns an 8 bit character with the capabilities of the focuser

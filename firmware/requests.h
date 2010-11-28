@@ -28,6 +28,7 @@
 /* Focuser commands */
 #define FOCUSER_MOVE_TO          0x00
 #define FOCUSER_HALT             0x01
+#define FOCUSER_SET_POSITION     0x02
 #define FOCUSER_GET_POSITION     0x10
 #define FOCUSER_IS_MOVING        0x11
 #define FOCUSER_GET_CAPABILITIES 0x12

@@ -48,13 +48,13 @@ char vendor[] = {USB_CFG_VENDOR_NAME, 0}, product[] = {USB_CFG_DEVICE_NAME, 0};
 int vid, pid;
 static uint8_t error = OF_NO_ERROR;
 
-DLLEXPORT uint8_t focuser_connect(void)
+DLLEXPORT uint8_t focuser_connect(char *serial)
 {
     usb_init();
     vid = VID[1] * 256 + VID[0];
     pid = PID[1] * 256 + PID[0];
 
-    return usb_open_device(&handle, vid, vendor, pid, product, NULL);
+    return usb_open_device(&handle, vid, vendor, pid, product, serial);
 }
 
 DLLEXPORT uint8_t focuser_disconnect(void)
@@ -109,6 +109,13 @@ DLLEXPORT uint16_t focuser_get_position(void)
     }
 }
 
+DLLEXPORT void focuser_set_position(uint16_t position)
+{
+    uint8_t buffer[2];
+    usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_OUT, FOCUSER_SET_POSITION, position, 2, buffer, 0, 5000);
+    error = OF_NO_ERROR;
+}
+
 DLLEXPORT uint8_t focuser_get_capabilities(void)
 {
     int cnt;
@@ -148,8 +155,9 @@ uint8_t usb_open_device(usb_dev_handle **device, int vendorID, char *vendorNameP
             if ((vendorID == 0 || dev->descriptor.idVendor == vendorID) 
                     && (productID ==0 || dev->descriptor.idProduct == productID)) {
 
-                /*char vendor[256], product[256], serial[256];*/
-                /*int len;*/
+                /* char vendor[256], product[256], serial[256]; */
+                char serial[256];
+                int len;
                 handle = usb_open(dev);
 
                 if (!handle) {
@@ -159,8 +167,19 @@ uint8_t usb_open_device(usb_dev_handle **device, int vendorID, char *vendorNameP
                     return error;
                 }
                 else {
-                    *device = handle;
-                    error = OF_NO_ERROR;
+                    if (serialNamePattern != NULL) {
+                        if (dev->descriptor.iSerialNumber > 0) {
+                            len = usb_get_string_ascii(handle, dev->descriptor.iSerialNumber, serial, sizeof(serial));
+                            if (strcmp(serialNamePattern, serial) == 0) {
+                                *device = handle;
+                                error = OF_NO_ERROR;
+                            }
+                        }
+                    }
+                    else {
+                        *device = handle;
+                        error = OF_NO_ERROR;
+                    }
                 }
             }
         }
