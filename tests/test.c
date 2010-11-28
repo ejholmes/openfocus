@@ -79,6 +79,7 @@ int main(int argc, const char *argv[])
     focuser_move_to(0);
     focuser_halt();
     assert(focuser_is_moving() == false);
+    passed();
 
     focuser_disconnect();
     return 0;

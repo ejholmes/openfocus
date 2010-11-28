@@ -72,7 +72,7 @@ DLLEXPORT uint8_t focuser_get_error(void)
 
 DLLEXPORT void focuser_move_to(uint16_t position)
 {
-    uint8_t buffer[2];
+    char buffer[2];
     usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_OUT, FOCUSER_MOVE_TO, position, 2, buffer, 0, 5000);
     error = OF_NO_ERROR;
 }
@@ -80,12 +80,12 @@ DLLEXPORT void focuser_move_to(uint16_t position)
 DLLEXPORT uint8_t focuser_is_moving(void)
 {
     int cnt;
-    uint8_t buffer[1];
+    char buffer[1];
     cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, FOCUSER_IS_MOVING, 0, 0, buffer, sizeof(buffer), 5000);
     if (cnt > 0)
     {
         error = OF_NO_ERROR;
-        return buffer[0];
+        return (unsigned char)buffer[0];
     }
     else
     {
@@ -96,12 +96,12 @@ DLLEXPORT uint8_t focuser_is_moving(void)
 DLLEXPORT uint16_t focuser_get_position(void)
 {
     int cnt;
-    uint8_t buffer[2];
+    char buffer[2];
     cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, FOCUSER_GET_POSITION, 0, 0, buffer, sizeof(buffer), 5000);
     if (cnt > 0)
     {
         error = OF_NO_ERROR;
-        return (buffer[1] << 8) | buffer[0];
+        return ((unsigned char)buffer[1] << 8) | (unsigned char)buffer[0];
     }
     else
     {
@@ -111,7 +111,7 @@ DLLEXPORT uint16_t focuser_get_position(void)
 
 DLLEXPORT void focuser_set_position(uint16_t position)
 {
-    uint8_t buffer[2];
+    char buffer[2];
     usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_OUT, FOCUSER_SET_POSITION, position, 2, buffer, 0, 5000);
     error = OF_NO_ERROR;
 }
@@ -119,7 +119,7 @@ DLLEXPORT void focuser_set_position(uint16_t position)
 DLLEXPORT uint8_t focuser_get_capabilities(void)
 {
     int cnt;
-    uint8_t buffer[1];
+    char buffer[1];
     cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, FOCUSER_GET_CAPABILITIES, 0, 0, buffer, sizeof(buffer), 5000);
     if (cnt > 0)
     {
@@ -134,7 +134,7 @@ DLLEXPORT uint8_t focuser_get_capabilities(void)
 
 DLLEXPORT void focuser_halt(void)
 {
-    uint8_t buffer[2];
+    char buffer[2];
     usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_OUT, FOCUSER_HALT, 0, 0, buffer, 0, 5000);
     error = OF_NO_ERROR;
 }

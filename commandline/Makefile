@@ -1,10 +1,19 @@
 NAME = focus
 
-INCLUDES = `libusb-config --cflags` -I../win32 -I../firmware
-LIBS = `libusb-config --libs`
-CFLAGS = $(USBFLAGS) $(INCLUDES) -shared -Wall -O -g
+UNAME := $(shell uname)
+
+ifeq ($(UNAME), Darwin)
+	USBFLAGS := $(shell libusb-config --cflags)
+	USBLIBS := $(shell libusb-config --libs)
+else
+	USBFLAGS = -I../driver/libusb-win32
+	USBLIBS = -L../driver/libusb-win32 -lusb
+endif
+
+CFLAGS = $(USBFLAGS) -I../driver -I../firmware -shared -Wall -O -g
+LIBS = $(USBLIBS)
 CC = gcc
-OBJECTS = ../win32/openfocus.c $(NAME).o
+OBJECTS = ../driver/openfocus.o $(NAME).o
 
 PROGRAM = $(NAME)
 

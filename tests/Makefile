@@ -1,7 +1,14 @@
 NAME = test
 
-USBFLAGS = `libusb-config --cflags`
-USBLIBS = `libusb-config --libs`
+UNAME := $(shell uname)
+
+ifeq ($(UNAME), Darwin)
+	USBFLAGS := $(shell libusb-config --cflags)
+	USBLIBS := $(shell libusb-config --libs)
+else
+	USBFLAGS = -I../driver/libusb-win32
+	USBLIBS = -L../driver/libusb-win32 -lusb
+endif
 
 LIBS = $(USBLIBS)
 CFLAGS = $(USBFLAGS) -I../driver -I../firmware -Wall -O -g
