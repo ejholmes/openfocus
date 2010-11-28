@@ -56,9 +56,8 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
         return sizeof(buffer);
     }
     else if (rq->bRequest == FOCUSER_IS_MOVING) {
-        int is_moving = focuser_is_moving();
         static uchar buffer[1];
-        buffer[0] = is_moving ? 0 : 1;
+        buffer[0] = focuser_is_moving();
         usbMsgPtr = buffer;
         return sizeof(buffer);
     }

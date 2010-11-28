@@ -27,10 +27,10 @@
 #include <usb.h>
 
 #include "errors.h"
+#include "openfocus.h"
+
 #include "usbconfig.h"
 #include "requests.h"
-
-#include "openfocus.h"
 
 uint8_t usb_open_device(usb_dev_handle **device, int vendorID, 
         char *vendorNamePattern,
@@ -46,7 +46,7 @@ usb_dev_handle *handle = NULL;
 const uint8_t VID[2] = {USB_CFG_VENDOR_ID}, PID[2] = {USB_CFG_DEVICE_ID};
 char vendor[] = {USB_CFG_VENDOR_NAME, 0}, product[] = {USB_CFG_DEVICE_NAME, 0};
 int vid, pid;
-static uint8_t error = NO_ERROR;
+static uint8_t error = OF_NO_ERROR;
 
 DLLEXPORT uint8_t focuser_connect(void)
 {
@@ -60,19 +60,21 @@ DLLEXPORT uint8_t focuser_connect(void)
 DLLEXPORT uint8_t focuser_disconnect(void)
 {
     usb_close(handle);
-    return NO_ERROR;
+    return OF_NO_ERROR;
 }
 
 DLLEXPORT uint8_t focuser_get_error(void)
 {
-    return error;
+    int rval = error;
+    error = OF_NO_ERROR;
+    return rval;
 }
 
 DLLEXPORT void focuser_move_to(uint16_t position)
 {
     uint8_t buffer[2];
     usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_OUT, FOCUSER_MOVE_TO, position, 2, buffer, 0, 5000);
-    error = NO_ERROR;
+    error = OF_NO_ERROR;
 }
 
 DLLEXPORT uint8_t focuser_is_moving(void)
@@ -82,12 +84,11 @@ DLLEXPORT uint8_t focuser_is_moving(void)
     cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, FOCUSER_IS_MOVING, 0, 0, buffer, sizeof(buffer), 5000);
     if (cnt > 0)
     {
-        error = NO_ERROR;
+        error = OF_NO_ERROR;
         return buffer[0];
     }
     else
     {
-        error = COMMUNICATION_ERROR;
         return 1;
     }
 }
@@ -99,12 +100,11 @@ DLLEXPORT uint16_t focuser_get_position(void)
     cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, FOCUSER_GET_POSITION, 0, 0, buffer, sizeof(buffer), 5000);
     if (cnt > 0)
     {
-        error = NO_ERROR;
+        error = OF_NO_ERROR;
         return (buffer[1] << 8) | buffer[0];
     }
     else
     {
-        error = COMMUNICATION_ERROR;
         return 0;
     }
 }
@@ -116,12 +116,11 @@ DLLEXPORT uint8_t focuser_get_capabilities(void)
     cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, FOCUSER_GET_CAPABILITIES, 0, 0, buffer, sizeof(buffer), 5000);
     if (cnt > 0)
     {
-        error = NO_ERROR;
+        error = OF_NO_ERROR;
         return buffer[0];
     }
     else
     {
-        error = COMMUNICATION_ERROR;
         return 1;
     }
 }
@@ -130,7 +129,7 @@ DLLEXPORT void focuser_halt(void)
 {
     uint8_t buffer[2];
     usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_OUT, FOCUSER_HALT, 0, 0, buffer, 0, 5000);
-    error = NO_ERROR;
+    error = OF_NO_ERROR;
 }
 
 
@@ -139,7 +138,7 @@ uint8_t usb_open_device(usb_dev_handle **device, int vendorID, char *vendorNameP
     struct usb_bus *bus;
     struct usb_device *dev;
     usb_dev_handle *handle;
-    int error = DEVICE_NOT_FOUND_ERROR;
+    int error = OF_DEVICE_NOT_FOUND;
 
     usb_find_busses();
     usb_find_devices();
@@ -154,14 +153,14 @@ uint8_t usb_open_device(usb_dev_handle **device, int vendorID, char *vendorNameP
                 handle = usb_open(dev);
 
                 if (!handle) {
-                    error = USBOPEN_ACCESS_ERROR;
+                    error = OF_CANT_OPEN_DEVICE;
                     usb_close(handle);
                     handle = NULL;
                     return error;
                 }
                 else {
                     *device = handle;
-                    error = NO_ERROR;
+                    error = OF_NO_ERROR;
                 }
             }
         }

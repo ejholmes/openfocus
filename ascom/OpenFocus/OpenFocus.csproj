@@ -116,7 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ASCOM.png" />
-    <Content Include="..\..\Win32\openfocus.dll">
+    <Content Include="..\..\driver\openfocus.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

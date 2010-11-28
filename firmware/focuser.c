@@ -28,7 +28,7 @@
 #include "focuser.h"
 
 static uint16_t current_position = 0;
-static int is_moving             = false;
+static uint8_t is_moving         = false;
 
 /*
  * Handles events sent by the stepper motor
