@@ -41,7 +41,10 @@ static void usage(char *name)
 
 int main(int argc, char **argv)
 {
-    focuser_connect(NULL);
+    if (focuser_connect(NULL) != 0) {
+        printf("Could not OpenFocus device!\n");
+        return 1;
+    }
     if(argc < 2){   /* we need at least one argument */
         usage(argv[0]);
         exit(1);
