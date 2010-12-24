@@ -3,12 +3,9 @@ OpenFocus
 OpenFocus is an open source implementation of a computer controlled focuser for
 telescope systems. It's based off the ATMega328p AVR chip from Atmel. It uses
 the [V-USB stack][vusb] and [libusb][libusb] and also includes an
-[ASCOM][ascom] driver for use of Windows.
+[ASCOM][ascom] driver for use on Windows.
 
-Building From Source
--------------------
-
-Firmware:
+Builing Firmware:
 ---------
 
 Requirements:
@@ -26,7 +23,7 @@ Build:
     `make install`
 
 
-Driver
+Building Driver
 ------
 
 Requirements:
@@ -41,7 +38,7 @@ Build:
     `make`
 
 
-ASCOM Driver
+Building ASCOM Driver
 -----------
 
 Requirements:
