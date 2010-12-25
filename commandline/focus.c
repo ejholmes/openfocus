@@ -59,7 +59,7 @@ int main(int argc, char **argv)
         printf("Position: %d", focuser_get_position());
     }else if (strcasecmp(argv[1], "status") == 0){
         uint8_t moving = focuser_is_moving();
-        if(moving == 0)
+        if(moving)
             printf("Moving\n");
         else
             printf("Stopped\n");
