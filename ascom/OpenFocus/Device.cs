@@ -31,11 +31,8 @@ namespace ASCOM.OpenFocus
     public enum DeviceError
     {
         NO_ERROR = 0x00,
-        UNDEFINED_ERROR = 0x01,
-        DEVICE_NOT_FOUND_ERROR = 0x02,
-        INVALID_RESOURCE_ERROR = 0x03,
-        USBOPEN_ACCESS_ERROR = 0x04,
-        COMMUNICATION_ERROR = 0x05
+        DEVICE_NOT_FOUND = 0x01,
+        CANT_OPEN_DEVICE = 0x02
     }
 
     public struct Capabilities
@@ -52,7 +49,7 @@ namespace ASCOM.OpenFocus
 
         #region private methods
         [DllImport(_DLL, EntryPoint = "focuser_connect")]
-        private static extern byte _Connect();
+        private static extern byte _Connect(string serial);
 
         [DllImport(_DLL, EntryPoint = "focuser_disconnect")]
         private static extern byte _Disconnect();
@@ -73,6 +70,9 @@ namespace ASCOM.OpenFocus
         [DllImport(_DLL, EntryPoint = "focuser_get_position")]
         private static extern Int16 _GetPosition();
 
+        [DllImport(_DLL, EntryPoint = "focuser_set_position")]
+        private static extern Int16 _SetPosition(Int16 position);
+
         [DllImport(_DLL, EntryPoint = "focuser_get_capabilities")]
         private static extern byte _GetCapabilities();
 
@@ -81,12 +81,10 @@ namespace ASCOM.OpenFocus
             string start = "Error Code: 0x" + ((byte)error).ToString("X2");
             switch (error)
             {
-                case DeviceError.DEVICE_NOT_FOUND_ERROR:
+                case DeviceError.DEVICE_NOT_FOUND:
                     throw new DeviceNotFoundException(start + ": Device not found!");
-                case DeviceError.COMMUNICATION_ERROR:
-                    throw new CommunicationException(start + ": Could not communication with device! Has it been disconnected?");
                 default:
-                    throw new DeviceException();
+                    throw new DeviceException("An error occurred");
             }
         }
         #endregion
@@ -94,7 +92,7 @@ namespace ASCOM.OpenFocus
         #region public methods
         public static bool Connect()
         {
-            DeviceError err = (DeviceError)_Connect();
+            DeviceError err = (DeviceError)_Connect(null);
 
             if (err == DeviceError.NO_ERROR)
             {
@@ -132,7 +130,7 @@ namespace ASCOM.OpenFocus
         {
             get
             {
-                bool rval = (_IsMoving() == 0) ? true : false;
+                bool rval = (_IsMoving() == 1) ? true : false;
 
                 DeviceError error = GetLastError();
 
@@ -145,6 +143,10 @@ namespace ASCOM.OpenFocus
 
         public static Int16 Position
         {
+            set
+            {
+                _SetPosition(value);
+            }
             get
             {
                 Int16 rval = _GetPosition();
@@ -192,22 +194,6 @@ namespace ASCOM.OpenFocus
     public class DeviceNotFoundException : DeviceException
     {
         public DeviceNotFoundException(string message)
-            : base(message)
-        {
-        }
-    }
-
-    public class InvalidResourceException : DeviceException
-    {
-        public InvalidResourceException(string message)
-            : base(message)
-        {
-        }
-    }
-
-    public class CommunicationException : DeviceException
-    {
-        public CommunicationException(string message)
             : base(message)
         {
         }
