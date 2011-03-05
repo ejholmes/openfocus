@@ -1,0 +1,5 @@
+Q: I get an "stk500_getsync: not in sync" error
+A: Try changing the baudrate in Makefile. Settings that should work include 19200, 57600
+
+Q: I get "USB Device Not Recognized" error in windows after programming the device and pluggin it in.
+A: Unplug the ISP programmer. The reset pin is probably being pulled low.
