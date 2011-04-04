@@ -16,11 +16,7 @@ Requirements:
 Build:
 
 - Edit firmware/Makefile according to your ISP programmer.
-- Run:
-
-    `make`
-
-    `make install`
+- Run: `make`,  `make install`
 
 
 Building Driver
@@ -33,9 +29,7 @@ Requirements:
 
 Build:
 
-- Run:
-
-    `make`
+- Run: `make`
 
 
 Building ASCOM Driver
