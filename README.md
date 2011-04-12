@@ -8,43 +8,28 @@ the [V-USB stack][vusb] and [libusb][libusb] and also includes an
 Builing Firmware:
 ---------
 
-Requirements:
-
-- [WinAVR][winavr] (if on Windows) or [CrossPack][crosspack] (if on Mac OS X)
-- [MSYS][msys] (if on Windows)
+Requirements:  [WinAVR][winavr] (if on Windows) or [CrossPack][crosspack] (if on Mac OS X), [MSYS][msys] (if on Windows)
 
 Build:
 
 - Edit firmware/Makefile according to your ISP programmer.
-- Run:
-
-    `make`
-
-    `make install`
+- Run: `make`,  `make install`
 
 
 Building Driver
 ------
 
-Requirements:
-
-- [MSYS][msys] (if on Windows)
-- [libusb][libusb]
+Requirements: [MSYS][msys] (if on Windows), [libusb][libusb]
 
 Build:
 
-- Run:
-
-    `make`
+- Run: `make`
 
 
 Building ASCOM Driver
 -----------
 
-Requirements:
-
-- [Visual C# Express 2008][c#]
-- [ASCOM Platform][ascom]
+Requirements: [Visual C# Express 2008][c#], [ASCOM Platform][ascom]
 
 Build:
 
