@@ -1,0 +1,14 @@
+*.b#*
+*.s#*
+*.dri
+*.gpi
+*.GBL
+*.GBO
+*.GBS
+*.GTL
+*.GTO
+*.GTP
+*.GTS
+*.pro
+schematic.TXT
+
