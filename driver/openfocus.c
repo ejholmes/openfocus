@@ -82,13 +82,11 @@ DLLEXPORT uint8_t focuser_is_moving(void)
     int cnt;
     char buffer[1];
     cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, FOCUSER_IS_MOVING, 0, 0, buffer, sizeof(buffer), 5000);
-    if (cnt > 0)
-    {
+    if (cnt > 0) {
         error = OF_NO_ERROR;
         return (unsigned char)buffer[0];
     }
-    else
-    {
+    else {
         return 1;
     }
 }
@@ -98,13 +96,11 @@ DLLEXPORT uint16_t focuser_get_position(void)
     int cnt;
     char buffer[2];
     cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, FOCUSER_GET_POSITION, 0, 0, buffer, sizeof(buffer), 5000);
-    if (cnt > 0)
-    {
+    if (cnt > 0) {
         error = OF_NO_ERROR;
         return ((unsigned char)buffer[1] << 8) | (unsigned char)buffer[0];
     }
-    else
-    {
+    else {
         return 0;
     }
 }
@@ -121,13 +117,11 @@ DLLEXPORT uint8_t focuser_get_capabilities(void)
     int cnt;
     char buffer[1];
     cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, FOCUSER_GET_CAPABILITIES, 0, 0, buffer, sizeof(buffer), 5000);
-    if (cnt > 0)
-    {
+    if (cnt > 0) {
         error = OF_NO_ERROR;
         return buffer[0];
     }
-    else
-    {
+    else {
         return 1;
     }
 }
