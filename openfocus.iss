@@ -46,20 +46,19 @@ Name: source; Description: Install the Source files; Flags: unchecked
 
 [Files]
 Source: "ascom\OpenFocus\bin\Release\ASCOM.OpenFocus.dll"; DestDir: "{app}"; Tasks: ascom
-Source: "ascom\OpenFocus\bin\Release\openfocus.dll"; DestDir: "{sys}"; Tasks: ascom
 ; Require a read-me HTML to appear after installation, maybe driver's Help doc
 Source: "ascom\OpenFocus\README.txt"; DestDir: "{app}"; Flags: isreadme; Tasks: ascom
 ; Optional source files (COM and .NET aware)
 Source: "ascom\OpenFocus\*"; Excludes: *.zip,*.exe,*.dll, \bin\*, \obj\*, \driver\*; DestDir: "{app}\Source\ASCOM"; Tasks: source; Flags: recursesubdirs
 
 ; copy your libusb-win32 setup package to the App folder
-Source: "driver\driver\*"; Excludes: "*.exe"; Flags: recursesubdirs; DestDir: "{app}\driver"
+Source: "driver\*"; Excludes: "*.exe"; Flags: recursesubdirs; DestDir: "{app}\driver"
 
 ; also copy the native (32bit or 64 bit) libusb0.dll to the 
 ; system folder so that rundll32.exe will find it
-Source: "driver\driver\x86\libusb0_x86.dll"; DestName: "libusb0.dll"; DestDir: "{sys}"; Flags: uninsneveruninstall replacesameversion restartreplace promptifolder; Check: IsX86; Tasks: win32
-Source: "driver\driver\amd64\libusb0.dll"; DestDir: "{sys}"; Flags: uninsneveruninstall replacesameversion restartreplace promptifolder; Check: IsX64; Tasks: win32
-Source: "driver\driver\ia64\libusb0.dll"; DestDir: {sys}; Flags: uninsneveruninstall replacesameversion restartreplace promptifolder; Check: IsI64; Tasks: win32
+Source: "driver\x86\libusb0_x86.dll"; DestName: "libusb0.dll"; DestDir: "{sys}"; Flags: uninsneveruninstall replacesameversion restartreplace promptifolder; Check: IsX86; Tasks: win32
+Source: "driver\amd64\libusb0.dll"; DestDir: "{sys}"; Flags: uninsneveruninstall replacesameversion restartreplace promptifolder; Check: IsX64; Tasks: win32
+Source: "driver\ia64\libusb0.dll"; DestDir: {sys}; Flags: uninsneveruninstall replacesameversion restartreplace promptifolder; Check: IsI64; Tasks: win32
 
 ; Only if driver is .NET
 [Run]

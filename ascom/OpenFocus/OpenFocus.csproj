@@ -57,6 +57,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\Program Files\Common Files\ASCOM\.net\ASCOM.Exceptions.dll</HintPath>
     </Reference>
+    <Reference Include="LibUsbDotNet, Version=2.2.7.85, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\LibUsbDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -116,9 +120,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ASCOM.png" />
-    <Content Include="..\..\driver\openfocus.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -26,118 +26,101 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 
+using LibUsbDotNet;
+using LibUsbDotNet.Info;
+using LibUsbDotNet.Main;
+
 namespace ASCOM.OpenFocus
 {
-    public enum DeviceError
-    {
-        NO_ERROR = 0x00,
-        DEVICE_NOT_FOUND = 0x01,
-        CANT_OPEN_DEVICE = 0x02
-    }
-
     public struct Capabilities
     {
         public const byte AbsolutePositioning = 0x01;
         public const byte TemperatureCompensation = 0x02;
     }
 
+    public struct Requests
+    {
+        public const byte MoveTo = 0x00;
+        public const byte Halt = 0x01;
+        public const byte SetPosition = 0x02;
+        public const byte GetPosition = 0x10;
+        public const byte IsMoving = 0x11;
+        public const byte GetCapabilities = 0x12;
+    }
+
     public class Device
     {
-        private const string _DLL = "openfocus.dll";
-
         private static byte _Capabilities;
+        private static Int16 Vendor_ID = 0x16c0;
+        private static Int16 Product_ID = 0x05df;
 
-        #region private methods
-        [DllImport(_DLL, EntryPoint = "focuser_connect")]
-        private static extern byte _Connect(string serial);
-
-        [DllImport(_DLL, EntryPoint = "focuser_disconnect")]
-        private static extern byte _Disconnect();
-
-        [DllImport(_DLL, EntryPoint = "focuser_get_error")]
-        private static extern byte _GetLastError();
-        private static DeviceError GetLastError() { return (DeviceError)_GetLastError(); }
-
-        [DllImport(_DLL, EntryPoint = "focuser_is_moving")]
-        private static extern byte _IsMoving();
-
-        [DllImport(_DLL, EntryPoint = "focuser_move_to")]
-        private static extern void _MoveTo(Int16 position);
-
-        [DllImport(_DLL, EntryPoint = "focuser_halt")]
-        private static extern void _Halt();
-
-        [DllImport(_DLL, EntryPoint = "focuser_get_position")]
-        private static extern Int16 _GetPosition();
-
-        [DllImport(_DLL, EntryPoint = "focuser_set_position")]
-        private static extern Int16 _SetPosition(Int16 position);
-
-        [DllImport(_DLL, EntryPoint = "focuser_get_capabilities")]
-        private static extern byte _GetCapabilities();
-
-        private static void HandleError(DeviceError error)
-        {
-            string start = "Error Code: 0x" + ((byte)error).ToString("X2");
-            switch (error)
-            {
-                case DeviceError.DEVICE_NOT_FOUND:
-                    throw new DeviceNotFoundException(start + ": Device not found!");
-                default:
-                    throw new DeviceException("An error occurred");
-            }
-        }
-        #endregion
+        private static UsbDeviceFinder UsbFinder = new UsbDeviceFinder(Vendor_ID, Product_ID);
+        private static UsbDevice device;
 
         #region public methods
         public static bool Connect()
         {
-            DeviceError err = (DeviceError)_Connect(null);
+            device = UsbDevice.OpenUsbDevice(UsbFinder);
 
-            if (err == DeviceError.NO_ERROR)
+            if (device == null) throw new Exception("Device Not Found");
+
+            IUsbDevice usbDev = device as IUsbDevice;
+            if (!ReferenceEquals(usbDev, null))
             {
-                _Capabilities = _GetCapabilities();
-                return true;
+                usbDev.SetConfiguration(1);
+                usbDev.ClaimInterface(0);
             }
-            else
-            {
-                HandleError(err);
-                return false;
-            }
+
+            GetCapabilities();
+
+            return true;
+        }
+
+        public static void GetCapabilities()
+        {
+            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Requests.GetCapabilities, 0, 0, 0);
+
+            int transfered;
+            byte[] buffer = new byte[1];
+            device.ControlTransfer(ref packet, buffer, 1, out transfered);
+
+            _Capabilities = buffer[0];
         }
 
         public static void Disconnect()
         {
-            _Disconnect();
+            device.Close();
         }
 
         public static void MoveTo(Int16 position)
         {
-            _MoveTo(position);
+            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Requests.MoveTo, (short)position, 2, 1);
 
-            DeviceError error = GetLastError();
-
-            if (error != DeviceError.NO_ERROR)
-                HandleError(error);
+            int transfered;
+            object buffer = null;
+            device.ControlTransfer(ref packet, buffer, 0, out transfered); 
         }
 
         public static void Halt()
         {
-            _Halt();
+            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Requests.Halt, 0, 0, 0);
+
+            int transfered;
+            object buffer = null;
+            device.ControlTransfer(ref packet, buffer, 0, out transfered);
         }
 
         public static bool IsMoving
         {
             get
             {
-                bool rval = (_IsMoving() == 1) ? true : false;
+                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Requests.IsMoving, 0, 0, 0);
 
-                DeviceError error = GetLastError();
+                int transfered;
+                byte[] buffer = new byte[1];
+                device.ControlTransfer(ref packet, buffer, 1, out transfered);
 
-                if (error != DeviceError.NO_ERROR)
-                    HandleError(error);
-
-                return rval;
+                return buffer[0] == 0 ? false : true;
             }
         }
 
@@ -145,18 +128,21 @@ namespace ASCOM.OpenFocus
         {
             set
             {
-                _SetPosition(value);
+                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Requests.SetPosition, (short)value, 2, 1);
+
+                int transfered;
+                object buffer = null;
+                device.ControlTransfer(ref packet, buffer, 0, out transfered); 
             }
             get
             {
-                Int16 rval = _GetPosition();
+                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Requests.GetPosition, 0, 0, 0);
 
-                DeviceError error = GetLastError();
+                int transfered;
+                byte[] buffer = new byte[2];
+                device.ControlTransfer(ref packet, buffer, 2, out transfered);
 
-                if (error != DeviceError.NO_ERROR)
-                    HandleError(error);
-
-                return rval;
+                return (Int16)((buffer[1] << 8) | buffer[0]);
             }
         }
 
@@ -171,32 +157,4 @@ namespace ASCOM.OpenFocus
         }
         #endregion
     }
-
-    #region Exception Handlers
-    public class DeviceException : Exception
-    {
-        public DeviceException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
-
-        public DeviceException(string message)
-            : base(message)
-        {
-        }
-
-        public DeviceException()
-            : base()
-        {
-        }
-    }
-
-    public class DeviceNotFoundException : DeviceException
-    {
-        public DeviceNotFoundException(string message)
-            : base(message)
-        {
-        }
-    }
-    #endregion
 }
