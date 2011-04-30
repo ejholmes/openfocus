@@ -15,17 +15,6 @@ Build:
 - Edit firmware/Makefile according to your ISP programmer.
 - Run: `make`,  `make install`
 
-
-Building Driver
-------
-
-Requirements: [MSYS][msys] (if on Windows), [libusb][libusb]
-
-Build:
-
-- Run: `make`
-
-
 Building ASCOM Driver
 -----------
 
