@@ -33,24 +33,24 @@ using LibUsbDotNet.Main;
 
 namespace ASCOM.OpenFocus
 {
-    public struct Capabilities
-    {
-        public const byte AbsolutePositioning = 0x01;
-        public const byte TemperatureCompensation = 0x02;
-    }
-
-    public struct Requests
-    {
-        public const byte MoveTo = 0x00;
-        public const byte Halt = 0x01;
-        public const byte SetPosition = 0x02;
-        public const byte GetPosition = 0x10;
-        public const byte IsMoving = 0x11;
-        public const byte GetCapabilities = 0x12;
-    }
-
     public class Device
     {
+        private struct Capabilities
+        {
+            public const byte AbsolutePositioning = 0x01;
+            public const byte TemperatureCompensation = 0x02;
+        }
+
+        private struct Requests
+        {
+            public const byte MoveTo = 0x00;
+            public const byte Halt = 0x01;
+            public const byte SetPosition = 0x02;
+            public const byte GetPosition = 0x10;
+            public const byte IsMoving = 0x11;
+            public const byte GetCapabilities = 0x12;
+        }
+
         private static byte _Capabilities;
         private static Int16 Vendor_ID = 0x16c0;
         private static Int16 Product_ID = 0x05df;
