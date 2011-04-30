@@ -47,7 +47,7 @@ Name: source; Description: Install the Source files; Flags: unchecked
 [Files]
 Source: "ascom\OpenFocus\bin\Release\ASCOM.OpenFocus.dll"; DestDir: "{app}"; Tasks: ascom
 ; Require a read-me HTML to appear after installation, maybe driver's Help doc
-Source: "ascom\OpenFocus\README.txt"; DestDir: "{app}"; Flags: isreadme; Tasks: ascom
+Source: "README.md"; DestDir: "{app}"; Flags: isreadme; Tasks: ascom
 ; Optional source files (COM and .NET aware)
 Source: "ascom\OpenFocus\*"; Excludes: *.zip,*.exe,*.dll, \bin\*, \obj\*, \driver\*; DestDir: "{app}\Source\ASCOM"; Tasks: source; Flags: recursesubdirs
 
