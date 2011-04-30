@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
@@ -57,10 +58,28 @@ namespace ASCOM.OpenFocus
         private static UsbDeviceFinder UsbFinder = new UsbDeviceFinder(Vendor_ID, Product_ID);
         private static UsbDevice device;
 
+        public static String Serial = String.Empty;
+
         #region public methods
+        public static List<string> ListDevices()
+        {
+            List<string> serials = new List<string>();
+            UsbRegDeviceList regList = UsbDevice.AllDevices.FindAll(UsbFinder);
+
+            if (regList.Count == 0) return null;
+
+            foreach (UsbRegistry regDevice in regList)
+                serials.Add(regDevice.Device.Info.SerialString);
+
+            return serials;
+        }
+
         public static bool Connect()
         {
-            device = UsbDevice.OpenUsbDevice(UsbFinder);
+            if (String.IsNullOrEmpty(Serial))
+                device = UsbDevice.OpenUsbDevice(UsbFinder);
+            else
+                device = UsbDevice.OpenUsbDevice(new UsbDeviceFinder(Serial));
 
             if (device == null) throw new Exception("Device Not Found");
 
@@ -80,9 +99,12 @@ namespace ASCOM.OpenFocus
         {
             UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Requests.GetCapabilities, 0, 0, 0);
 
+            int expected = 1;
             int transfered;
-            byte[] buffer = new byte[1];
-            device.ControlTransfer(ref packet, buffer, 1, out transfered);
+            byte[] buffer = new byte[expected];
+            device.ControlTransfer(ref packet, buffer, expected, out transfered);
+
+            if (transfered != expected) throw new Exception("Error Communicating With Device");
 
             _Capabilities = buffer[0];
         }
@@ -116,9 +138,12 @@ namespace ASCOM.OpenFocus
             {
                 UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Requests.IsMoving, 0, 0, 0);
 
+                int expected = 1;
                 int transfered;
-                byte[] buffer = new byte[1];
-                device.ControlTransfer(ref packet, buffer, 1, out transfered);
+                byte[] buffer = new byte[expected];
+                device.ControlTransfer(ref packet, buffer, expected, out transfered);
+
+                if (transfered != expected) throw new Exception("Error Communicating With Device");
 
                 return buffer[0] == 0 ? false : true;
             }
@@ -138,9 +163,12 @@ namespace ASCOM.OpenFocus
             {
                 UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Requests.GetPosition, 0, 0, 0);
 
+                int expected = 2;
                 int transfered;
-                byte[] buffer = new byte[2];
-                device.ControlTransfer(ref packet, buffer, 2, out transfered);
+                byte[] buffer = new byte[expected];
+                device.ControlTransfer(ref packet, buffer, expected, out transfered);
+
+                if (transfered != expected) throw new Exception("Error Communicating With Device");
 
                 return (Int16)((buffer[1] << 8) | buffer[0]);
             }

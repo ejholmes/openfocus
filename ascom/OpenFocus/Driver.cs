@@ -30,6 +30,7 @@ using ASCOM;
 using ASCOM.Helper;
 using ASCOM.Helper2;
 using ASCOM.Interface;
+using ASCOM.Utilities;
 
 namespace ASCOM.OpenFocus
 {
@@ -37,8 +38,8 @@ namespace ASCOM.OpenFocus
     [ClassInterface(ClassInterfaceType.None)]
     public class Focuser : IFocuser
     {
-        private static string s_csDriverID = "ASCOM.OpenFocus.Focuser";
-        private static string s_csDriverDescription = "OpenFocus";
+        public static string s_csDriverID = "ASCOM.OpenFocus.Focuser";
+        public static string s_csDriverDescription = "OpenFocus";
 
         private bool _Link = false;
 
