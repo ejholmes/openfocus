@@ -13,7 +13,8 @@ Requirements:  [WinAVR][winavr] (if on Windows) or [CrossPack][crosspack] (if on
 Build:
 
 - Edit firmware/Makefile according to your ISP programmer.
-- Run: `make`,  `make install`
+- Run: `cd firmware`, `make`
+- Flash with: `make install`
 
 Building ASCOM Driver
 -----------
