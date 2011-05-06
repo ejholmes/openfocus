@@ -21,6 +21,10 @@
  *
  */
 
+/* 
+ * temperature (kelvin) = ((5 * [adc val] * 100) / 1024)
+ */
+
 
 #ifndef __temperature_h_
 #define __temperature_h_
@@ -28,5 +32,8 @@
 #include <inttypes.h>
 
 void temperature_init(int pin);
+float temperature_read();
+float celsius(int kelvin);
+float fahrenheit(int kelvin);
 
 #endif
