@@ -162,8 +162,7 @@ namespace ASCOM.OpenFocus
 
         public bool TempComp
         {
-            get { return false; }
-            set { throw new PropertyNotImplementedException("TempComp", true); }
+            get; set;
         }
 
         public bool TempCompAvailable
@@ -173,7 +172,7 @@ namespace ASCOM.OpenFocus
 
         public double Temperature
         {
-            get { throw new PropertyNotImplementedException("Temperature", false); }
+            get { return Device.Temperature; }
         }
 
         #endregion

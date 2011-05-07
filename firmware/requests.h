@@ -32,6 +32,7 @@
 #define FOCUSER_GET_POSITION     0x10
 #define FOCUSER_IS_MOVING        0x11
 #define FOCUSER_GET_CAPABILITIES 0x12
+#define FOCUSER_GET_TEMPERATURE  0x13
 
 /* Capabilities */
 #define CAP_ABSOLUTE  0x01 /* _BV(0) */

@@ -32,7 +32,7 @@
 #include <inttypes.h>
 
 void temperature_init(int pin);
-float temperature_read();
+uint16_t temperature_read();
 float celsius(int kelvin);
 float fahrenheit(int kelvin);
 

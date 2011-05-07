@@ -29,9 +29,10 @@
 
 #include "usbdrv.h"
 #include "focuser.h"
+#include "temperature.h"
 #include "util.h"
 
-const uint8_t capabilities = CAP_ABSOLUTE;
+const uint8_t capabilities = CAP_ABSOLUTE | CAP_TEMP_COMP;
 
 usbMsgLen_t usbFunctionSetup(uchar data[8])
 {
@@ -73,6 +74,14 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
         usbMsgPtr = buffer;
         return sizeof(buffer);
     }
+    else if (rq->bRequest == FOCUSER_GET_TEMPERATURE) {
+        uint16_t temperature = temperature_read();
+        static uchar buffer[2];
+        buffer[0] = lsb(temperature);
+        buffer[1] = msb(temperature);
+        usbMsgPtr = buffer;
+        return sizeof(buffer);
+    }
     return 0;   /* default for not implemented requests: return no data back to host */
 }
 
@@ -99,6 +108,7 @@ int __attribute__((noreturn)) main(void)
     usbDeviceConnect();
     DDRD |= _BV(PD0);
     focuser_init();
+    temperature_init(1);
     sei();
     for (;;) {                /* main event loop */
         wdt_reset();

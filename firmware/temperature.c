@@ -23,9 +23,29 @@
 
 #include <avr/io.h>
 #include <inttypes.h>
-
+#include <util/delay.h>
 
 void temperature_init(int pin)
 {
+    /* ADMUX = _BV(REFS0) | _BV(MUX0); [> Set voltage reference to AVcc with external cap on AREF <] */
+    ADMUX = _BV(REFS0);
 
+    ADCSRA |= _BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0); /* Set prescaller to 128 */
+
+    ADCSRA |= _BV(ADEN); /* Enable ADC */
+}
+
+uint16_t temperature_read()
+{
+    ADCSRA |= _BV(ADSC); /* Start ADC conversion */
+
+    /* ADSC = 1 while a conversion is in progress */
+    while ((ADCSRA & _BV(ADSC)) == _BV(ADSC));
+
+    uint8_t lsb = ADCL; /* Read LSB */
+    uint8_t msb = ADCH; /* Read MSB */
+
+    return (msb << 8) | lsb;
+
+    /* return count; */
 }
