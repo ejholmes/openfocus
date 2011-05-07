@@ -37,23 +37,24 @@ namespace ASCOM.OpenFocus
     {
         private struct Capabilities
         {
-            public const byte AbsolutePositioning = 0x01;
-            public const byte TemperatureCompensation = 0x02;
+            public const byte AbsolutePositioning       = 0x01;
+            public const byte TemperatureCompensation   = 0x02;
         }
 
         private struct Requests
         {
-            public const byte MoveTo = 0x00;
-            public const byte Halt = 0x01;
-            public const byte SetPosition = 0x02;
-            public const byte GetPosition = 0x10;
-            public const byte IsMoving = 0x11;
-            public const byte GetCapabilities = 0x12;
+            public const byte MoveTo                = 0x00;
+            public const byte Halt                  = 0x01;
+            public const byte SetPosition           = 0x02;
+            public const byte GetPosition           = 0x10;
+            public const byte IsMoving              = 0x11;
+            public const byte GetCapabilities       = 0x12;
+            public const byte GetTemperature        = 0x13;
         }
 
         private static byte _Capabilities;
-        private static Int16 Vendor_ID = 0x16c0;
-        private static Int16 Product_ID = 0x05df;
+        private static Int16 Vendor_ID              = 0x16c0;
+        private static Int16 Product_ID             = 0x05df;
 
         private static UsbDeviceFinder UsbFinder = new UsbDeviceFinder(Vendor_ID, Product_ID);
         private static UsbDevice device;
@@ -171,6 +172,26 @@ namespace ASCOM.OpenFocus
                 if (transfered != expected) throw new Exception("Error Communicating With Device");
 
                 return (Int16)((buffer[1] << 8) | buffer[0]);
+            }
+        }
+
+        public static double Temperature
+        {
+            get
+            {
+                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Requests.GetTemperature, 0, 0, 0);
+
+                int expected = 2;
+                int transfered;
+                byte[] buffer = new byte[expected];
+                device.ControlTransfer(ref packet, buffer, expected, out transfered);
+
+                if (transfered != expected) throw new Exception("Error Communicating With Device");
+
+                Int16 adc = (Int16)((buffer[1] << 8) | buffer[0]);
+                double kelvin = (5.00 * (double)adc * 100.00) / 1024.00;
+                double celsius = kelvin - 273.15;
+                return celsius; /* Kelvin */
             }
         }
 

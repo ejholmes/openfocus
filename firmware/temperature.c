@@ -1,5 +1,5 @@
 /*
- * File: requests.h
+ * File: temperature.c
  * Package: OpenFocus
  *
  * Copyright (c) 2010 Eric J. Holmes
@@ -21,21 +21,31 @@
  *
  */
 
+#include <avr/io.h>
+#include <inttypes.h>
+#include <util/delay.h>
 
-#ifndef __requests_h
-#define __requests_h
+void temperature_init(int pin)
+{
+    /* ADMUX = _BV(REFS0) | _BV(MUX0); [> Set voltage reference to AVcc with external cap on AREF <] */
+    ADMUX = _BV(REFS0);
 
-/* Focuser commands */
-#define FOCUSER_MOVE_TO          0x00
-#define FOCUSER_HALT             0x01
-#define FOCUSER_SET_POSITION     0x02
-#define FOCUSER_GET_POSITION     0x10
-#define FOCUSER_IS_MOVING        0x11
-#define FOCUSER_GET_CAPABILITIES 0x12
-#define FOCUSER_GET_TEMPERATURE  0x13
+    ADCSRA |= _BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0); /* Set prescaller to 128 */
 
-/* Capabilities */
-#define CAP_ABSOLUTE  0x01 /* _BV(0) */
-#define CAP_TEMP_COMP 0x02 /* _BV(1) */
+    ADCSRA |= _BV(ADEN); /* Enable ADC */
+}
 
-#endif
+uint16_t temperature_read()
+{
+    ADCSRA |= _BV(ADSC); /* Start ADC conversion */
+
+    /* ADSC = 1 while a conversion is in progress */
+    while ((ADCSRA & _BV(ADSC)) == _BV(ADSC));
+
+    uint8_t lsb = ADCL; /* Read LSB */
+    uint8_t msb = ADCH; /* Read MSB */
+
+    return (msb << 8) | lsb;
+
+    /* return count; */
+}
