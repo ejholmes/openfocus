@@ -33,7 +33,5 @@
 
 void temperature_init(int pin);
 uint16_t temperature_read();
-float celsius(int kelvin);
-float fahrenheit(int kelvin);
 
 #endif
