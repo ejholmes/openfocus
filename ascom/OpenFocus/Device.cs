@@ -189,7 +189,9 @@ namespace ASCOM.OpenFocus
                 if (transfered != expected) throw new Exception("Error Communicating With Device");
 
                 Int16 adc = (Int16)((buffer[1] << 8) | buffer[0]);
-                return (5.00 * (double)adc * 100.00) / 1024.00; /* Kelvin */
+                double kelvin = (5.00 * (double)adc * 100.00) / 1024.00;
+                double celsius = kelvin - 273.15;
+                return celsius; /* Kelvin */
             }
         }
 
