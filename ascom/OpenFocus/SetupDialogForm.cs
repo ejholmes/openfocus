@@ -29,6 +29,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
+using ASCOM.Utilities;
+
 namespace ASCOM.OpenFocus
 {
     [ComVisible(false)]					// Form not registered for COM!
@@ -36,10 +38,22 @@ namespace ASCOM.OpenFocus
     {
         public SetupDialogForm()
         {
+            ASCOM.OpenFocus.Focuser.Profile.DeviceType = ASCOM.OpenFocus.Focuser.s_csDeviceType;
             InitializeComponent();
         }
 
         void SetupDialogForm_Shown(object sender, System.EventArgs e)
+        {
+            LoadValues();
+        }
+
+        private void cmdOK_Click(object sender, EventArgs e)
+        {
+            SaveValues();
+            Dispose();
+        }
+
+        private void LoadValues()
         {
             List<string> serials = Device.ListDevices();
 
@@ -47,12 +61,27 @@ namespace ASCOM.OpenFocus
 
             this.cbDevices.Items.AddRange(serials.ToArray());
             this.cbDevices.SelectedIndex = 0;
+
+            switch (ASCOM.OpenFocus.Focuser.Profile.GetValue(ASCOM.OpenFocus.Focuser.s_csDriverID, "Units"))
+            {
+                case Device.TemperatureUnits.Celsius:
+                    this.rbUnitsCelsius.Checked = true;
+                    break;
+                case Device.TemperatureUnits.Fahrenheit:
+                    this.rbUnitsFahrenheit.Checked = true;
+                    break;
+            }
         }
 
-        private void cmdOK_Click(object sender, EventArgs e)
+        private void SaveValues()
         {
             Device.Serial = this.cbDevices.SelectedItem.ToString();
-            Dispose();
+            ASCOM.OpenFocus.Focuser.Profile.WriteValue(ASCOM.OpenFocus.Focuser.s_csDriverID, "Default", Device.Serial);
+
+            if (this.rbUnitsCelsius.Checked)
+                ASCOM.OpenFocus.Focuser.Profile.WriteValue(ASCOM.OpenFocus.Focuser.s_csDriverID, "Units", Device.TemperatureUnits.Celsius);
+            else if (this.rbUnitsFahrenheit.Checked)
+                ASCOM.OpenFocus.Focuser.Profile.WriteValue(ASCOM.OpenFocus.Focuser.s_csDriverID, "Units", Device.TemperatureUnits.Fahrenheit);
         }
 
         private void cmdCancel_Click(object sender, EventArgs e)

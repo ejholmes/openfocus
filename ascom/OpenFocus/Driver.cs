@@ -27,8 +27,6 @@ using System.Text;
 using System.Runtime.InteropServices;
 
 using ASCOM;
-using ASCOM.Helper;
-using ASCOM.Helper2;
 using ASCOM.Interface;
 using ASCOM.Utilities;
 
@@ -40,14 +38,22 @@ namespace ASCOM.OpenFocus
     {
         public static string s_csDriverID = "ASCOM.OpenFocus.Focuser";
         public static string s_csDriverDescription = "OpenFocus";
+        public static string s_csDeviceType = "Focuser";
 
         private bool _Link = false;
+
+        public static Profile Profile = new Profile();
 
         //
         // Constructor - Must be public for COM registration!
         //
         public Focuser()
         {
+            Profile.DeviceType = s_csDeviceType;
+            string units = Profile.GetValue(s_csDriverID, "Units");
+
+            if (String.IsNullOrEmpty(units))
+                Profile.WriteValue(s_csDriverID, "Units", Device.TemperatureUnits.Celsius);
         }
 
         #region ASCOM Registration
@@ -57,8 +63,8 @@ namespace ASCOM.OpenFocus
         //
         private static void RegUnregASCOM(bool bRegister)
         {
-            Helper.Profile P = new Helper.Profile();
-            P.DeviceTypeV = "Focuser";					//  Requires Helper 5.0.3 or later
+            ASCOM.Utilities.Profile P = new ASCOM.Utilities.Profile();
+            P.DeviceType = "Focuser";					//  Requires Helper 5.0.3 or later
             if (bRegister)
                 P.Register(s_csDriverID, s_csDriverDescription);
             else
@@ -162,7 +168,8 @@ namespace ASCOM.OpenFocus
 
         public bool TempComp
         {
-            get; set;
+            get { return Device.TempComp; }
+            set { Device.TempComp = value; }
         }
 
         public bool TempCompAvailable

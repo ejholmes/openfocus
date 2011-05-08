@@ -71,6 +71,10 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
         focuser_set_position(make_uint(l, h));
         return 0;
     }
+    else if (rq->bRequest == FOCUSER_SET_TEMPERATURE_COMPENSATION) {
+        uint8_t enabled = rq->wValue.bytes[0];
+        return 0;
+    }
     else if (rq->bRequest == FOCUSER_IS_MOVING) {
         static uchar buffer[1];
         buffer[0] = focuser_is_moving();

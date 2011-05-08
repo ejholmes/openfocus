@@ -31,6 +31,8 @@ using LibUsbDotNet;
 using LibUsbDotNet.Info;
 using LibUsbDotNet.Main;
 
+using ASCOM.Utilities;
+
 namespace ASCOM.OpenFocus
 {
     public class Device
@@ -43,18 +45,27 @@ namespace ASCOM.OpenFocus
 
         private struct Requests
         {
-            public const byte MoveTo                = 0x00;
-            public const byte Halt                  = 0x01;
-            public const byte SetPosition           = 0x02;
-            public const byte GetPosition           = 0x10;
-            public const byte IsMoving              = 0x11;
-            public const byte GetCapabilities       = 0x12;
-            public const byte GetTemperature        = 0x13;
+            public const byte MoveTo                        = 0x00;
+            public const byte Halt                          = 0x01;
+            public const byte SetPosition                   = 0x02;
+            public const byte SetTemperatureCompensation    = 0x03;
+            public const byte GetPosition                   = 0x10;
+            public const byte IsMoving                      = 0x11;
+            public const byte GetCapabilities               = 0x12;
+            public const byte GetTemperature                = 0x13;
+        }
+
+        public struct TemperatureUnits
+        {
+            public const string Celsius = "0";
+            public const string Fahrenheit = "1";
         }
 
         private static byte _Capabilities;
         private static Int16 Vendor_ID              = 0x16c0;
         private static Int16 Product_ID             = 0x05df;
+
+        private static bool TempCompEnabled         = false;
 
         private static UsbDeviceFinder UsbFinder = new UsbDeviceFinder(Vendor_ID, Product_ID);
         private static UsbDevice device;
@@ -175,6 +186,24 @@ namespace ASCOM.OpenFocus
             }
         }
 
+        public static bool TempComp
+        {
+            get
+            {
+                return TempCompEnabled;
+            }
+            set
+            {
+                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Requests.SetTemperatureCompensation, (short)((value)?1:0), 1, 1);
+
+                int transfered;
+                object buffer = null;
+                device.ControlTransfer(ref packet, buffer, 0, out transfered); 
+
+                TempCompEnabled = value;
+            }
+        }
+
         public static double Temperature
         {
             get
@@ -188,10 +217,18 @@ namespace ASCOM.OpenFocus
 
                 if (transfered != expected) throw new Exception("Error Communicating With Device");
 
+                string units = ASCOM.OpenFocus.Focuser.Profile.GetValue(ASCOM.OpenFocus.Focuser.s_csDriverID, "Units");
+
                 Int16 adc = (Int16)((buffer[1] << 8) | buffer[0]);
                 double kelvin = (5.00 * (double)adc * 100.00) / 1024.00;
                 double celsius = kelvin - 273.15;
-                return celsius; /* Kelvin */
+
+                if (units == Device.TemperatureUnits.Celsius)
+                    return celsius;
+                else if (units == Device.TemperatureUnits.Fahrenheit)
+                    return ((9.00/5.00) * celsius) + 32;
+                else
+                    return celsius;
             }
         }
 
