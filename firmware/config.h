@@ -1,5 +1,5 @@
 /*
- * File: temperature.h
+ * File: config.h
  * Package: OpenFocus
  *
  * Copyright (c) 2010 Eric J. Holmes
@@ -21,18 +21,22 @@
  *
  */
 
-/* 
- * temperature (kelvin) = ((5 * [adc val] * 100) / 1024)
- */
+#ifdef __CONFIG_H_
+#define __CONFIG_H_ 
 
-
-#ifndef __temperature_h_
-#define __temperature_h_
-
-#include <inttypes.h>
-
-void temperature_init(int pin);
-uint16_t temperature_read(uint8_t times);
-uint16_t temperature_sample();
-
+/* Circuit board revision */
+#ifndef BRD_REV
+    #define BRD_REV 4
 #endif
+
+/* Number of times the sensor is sampled each request */
+#ifndef TEMP_SENSOR_COUNT
+    #define TEMP_SENSOR_COUNT 3
+#endif
+
+/* ADC pin that sensor is on. Can be 0-7. (ex. ADC0 = 0, ADC1 = 1) */
+#ifndef TEMP_SENSOR_PIN
+    #define TEMP_SENSOR_PIN 0
+#endif
+
+#endif /* __CONFIG_H_ */

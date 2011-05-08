@@ -27,10 +27,19 @@
 #include <avr/pgmspace.h>
 #include <util/delay.h>
 
+#include "config.h"
 #include "usbdrv.h"
 #include "focuser.h"
 #include "temperature.h"
 #include "util.h"
+
+#ifndef TEMP_SENSOR_COUNT
+    #define TEMP_SENSOR_COUNT 3
+#endif
+
+#ifndef TEMP_SENSOR_PIN
+    #define TEMP_SENSOR_PIN 0
+#endif
 
 const uint8_t capabilities = CAP_ABSOLUTE | CAP_TEMP_COMP;
 
@@ -75,7 +84,7 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
         return sizeof(buffer);
     }
     else if (rq->bRequest == FOCUSER_GET_TEMPERATURE) {
-        uint16_t temperature = temperature_read();
+        uint16_t temperature = temperature_read(TEMP_SENSOR_COUNT);
         static uchar buffer[2];
         buffer[0] = lsb(temperature);
         buffer[1] = msb(temperature);
@@ -108,7 +117,7 @@ int __attribute__((noreturn)) main(void)
     usbDeviceConnect();
     DDRD |= _BV(PD0);
     focuser_init();
-    temperature_init(1);
+    temperature_init(TEMP_SENSOR_PIN);
     sei();
     for (;;) {                /* main event loop */
         wdt_reset();

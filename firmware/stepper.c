@@ -27,6 +27,7 @@
 #include <avr/interrupt.h>
 #include <stdlib.h>
 
+#include "config.h"
 #include "stepper.h"
 #include "util.h"
 

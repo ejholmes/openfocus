@@ -69,20 +69,34 @@
 #define __stepper_h_
 
 #ifndef STEPS_PER_REV
-#define STEPS_PER_REV 400
+    #define STEPS_PER_REV 400
 #endif
 
-/* Motor data direction ports */
-#define MOTOR_DDR   DDRD
-#define MOTOR_PORT  PORTD
-#define MOTOR_PIN   PIND
+/* Motor registers */
+#ifndef MOTOR_DDR
+    #define MOTOR_DDR   DDRD
+#endif 
+#ifndef MOTOR_PORT
+    #define MOTOR_PORT  PORTD
+#endif
+#ifndef MOTOR_PIN
+    #define MOTOR_PIN   PIND
+#endif
 
 
 /* Motor pins */
-#define MOTOR_PIN_A PD3   /* green */
-#define MOTOR_PIN_B PD5   /* yellow */
-#define MOTOR_PIN_C PD4   /* red */
-#define MOTOR_PIN_D PD6   /* blue */
+#ifndef MOTOR_PIN_A
+    #define MOTOR_PIN_A PD3   /* green */
+#endif
+#ifndef MOTOR_PIN_B
+    #define MOTOR_PIN_B PD5   /* yellow */
+#endif
+#ifndef MOTOR_PIN_C
+    #define MOTOR_PIN_C PD4   /* red */
+#endif
+#ifndef MOTOR_PIN_D
+    #define MOTOR_PIN_D PD6   /* blue */
+#endif
 
 
 /* PWM/Enable Ports */
