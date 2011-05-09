@@ -16,7 +16,7 @@ HKR,,,0,"libusb-win32 devices"
 HKR,,Icon,,-20
 
 [Manufacturer]
-"VOTI"=Devices, NT, NTAMD64, NTIA64
+"Cortex Astronomy"=Devices, NT, NTAMD64, NTIA64
 
 ;--------------------------------------------------------------------------
 ; libusb-win32 files
