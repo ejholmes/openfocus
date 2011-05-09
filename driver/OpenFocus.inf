@@ -126,16 +126,16 @@ ServiceBinary  = %12%\libusb0.sys
 ; inf-wizard utility.
 ;
 [Devices]
-"OpenFocus"=OpenFocus_DEV, USB\VID_16C0&PID_05DF
+"OpenFocus"=OpenFocus_DEV, USB\VID_16C0&PID_05DC
 
 [Devices.NT]
-"OpenFocus"=OpenFocus_DEV, USB\VID_16C0&PID_05DF
+"OpenFocus"=OpenFocus_DEV, USB\VID_16C0&PID_05DC
 
 [Devices.NTAMD64]
-"OpenFocus"=OpenFocus_DEV, USB\VID_16C0&PID_05DF
+"OpenFocus"=OpenFocus_DEV, USB\VID_16C0&PID_05DC
 
 [Devices.NTIA64]
-"OpenFocus"=OpenFocus_DEV, USB\VID_16C0&PID_05DF
+"OpenFocus"=OpenFocus_DEV, USB\VID_16C0&PID_05DC
 
 [Strings]
 OpenFocus_DiskName="OpenFocus Install Disk"

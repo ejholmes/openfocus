@@ -60,8 +60,11 @@ namespace ASCOM.OpenFocus
         }
 
         private static byte _Capabilities;
+
         private static Int16 Vendor_ID              = 0x16c0;
-        private static Int16 Product_ID             = 0x05df;
+        private static Int16 Product_ID             = 0x05dc;
+        private static String ManufacturerString    = "Cortex Astronomy (cortexastronomy.com)";
+        private static String ProductString         = "OpenFocus";
 
         private static bool TempCompEnabled         = false;
 
@@ -98,7 +101,10 @@ namespace ASCOM.OpenFocus
             else
                 device = UsbDevice.OpenUsbDevice(UsbFinder);
 
-            if (device == null) throw new Exception("Device Not Found");
+            /* According to V-USB licensing, we have to check manufacturer string and product string */
+            if (device == null 
+                || device.Info.ManufacturerString != ManufacturerString 
+                || device.Info.ProductString != ProductString) throw new Exception("Device Not Found");
 
             IUsbDevice usbDev = device as IUsbDevice;
             if (!ReferenceEquals(usbDev, null))
