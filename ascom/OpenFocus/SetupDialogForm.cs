@@ -33,7 +33,11 @@ namespace ASCOM.OpenFocus
         {
             List<string> serials = Device.ListDevices();
 
-            if (serials == null) return;
+            if (serials == null)
+            {
+                this.btnConfigureDevice.Enabled = false;
+                return;
+            }
 
             List<KeyValuePair> devices = new List<KeyValuePair>();
             foreach (String serial in serials)
