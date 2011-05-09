@@ -16,14 +16,14 @@
 
 DEVICE     = atmega328p
 CLOCK      = 16000000
-#PORT       = /dev/tty.usbserial-A800eJU7
 PORT       = com5
 PROGRAMMER = -c avrisp
 OBJECTS    = usbdrv/usbdrv.o usbdrv/usbdrvasm.o usbdrv/oddebug.o main.o stepper.o focuser.o util.o temperature.o
 FUSES      = -U hfuse:w:0xd9:m -U lfuse:w:0xff:m
+CFLAGS 	   = 
 
 AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE) -P $(PORT) -b 19200
-COMPILE = avr-gcc -Wall -Os -Iusbdrv -I. -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
+COMPILE = avr-gcc -Wall -Os -Iusbdrv -I. -DF_CPU=$(CLOCK) -mmcu=$(DEVICE) $(CFLAGS)
 
 # symbolic targets:
 all:	main.hex
