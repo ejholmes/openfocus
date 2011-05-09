@@ -43,7 +43,7 @@ namespace ASCOM.OpenFocus
         private void SaveValues()
         {
             Device.Name                             = this.tbName.Text;
-            Device.MaxPosition                      = Int16.Parse(this.tbMaxPosition.Text);
+            Device.MaxPosition                      = UInt16.Parse(this.tbMaxPosition.Text);
             Device.TemperatureCoefficient           = double.Parse(this.tbTemperatureCoefficient.Text);
         }
 
@@ -60,7 +60,7 @@ namespace ASCOM.OpenFocus
                 {
                     ASCOM.OpenFocus.Device.Connect(Serial);
 
-                    ASCOM.OpenFocus.Device.Position = Int16.Parse(setPosition.Position);
+                    ASCOM.OpenFocus.Device.Position = UInt16.Parse(setPosition.Position);
 
                     ASCOM.OpenFocus.Device.Disconnect();
                 }

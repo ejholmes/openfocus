@@ -22,10 +22,7 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
 
 using LibUsbDotNet;
 using LibUsbDotNet.Info;
@@ -35,12 +32,14 @@ namespace ASCOM.OpenFocus
 {
     public class Device
     {
+        /* Device capabilities */
         private struct Capabilities
         {
             public const byte AbsolutePositioning       = 0x01;
             public const byte TemperatureCompensation   = 0x02;
         }
 
+        /* USB Requests */
         private struct Requests
         {
             public const byte MoveTo                        = 0x00;
@@ -53,6 +52,7 @@ namespace ASCOM.OpenFocus
             public const byte GetTemperature                = 0x13;
         }
 
+        /* Temperature Display Units */
         public struct TemperatureUnits
         {
             public const string Celsius = "0";
@@ -64,7 +64,6 @@ namespace ASCOM.OpenFocus
         private static Int16 Product_ID             = 0x05df;
 
         private static bool TempCompEnabled         = false;
-        private static Int16 MaxPosition            = 10000;
 
         private static UsbDeviceFinder UsbFinder = new UsbDeviceFinder(Vendor_ID, Product_ID);
         private static UsbDevice device;
@@ -108,16 +107,22 @@ namespace ASCOM.OpenFocus
                 usbDev.ClaimInterface(0);
             }
 
+            /* Use position stored from last connection if there is one */
+            if (Config.Position != 0)
+                Position = Config.Position;
+
             GetCapabilities();
 
             return true;
         }
 
+        /* Returns the descriptor from the USB device */
         public static UsbDeviceInfo Descriptor
         {
             get { return device.Info; }
         }
 
+        /* Gets the device's capabilites as a single byte */
         public static void GetCapabilities()
         {
             UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Requests.GetCapabilities, 0, 0, 0);
@@ -132,11 +137,15 @@ namespace ASCOM.OpenFocus
             _Capabilities = buffer[0];
         }
 
+        /* Disconnect the device */
         public static void Disconnect()
         {
+            /* Save the last position before disconnecting */
+            Config.Position = Position;
             device.Close();
         }
 
+        /* Move focuser to position */
         public static void MoveTo(Int16 position)
         {
             UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Requests.MoveTo, (short)position, 2, 1);
@@ -146,6 +155,7 @@ namespace ASCOM.OpenFocus
             device.ControlTransfer(ref packet, buffer, 0, out transfered); 
         }
 
+        /* Halt focuser */
         public static void Halt()
         {
             UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Requests.Halt, 0, 0, 0);
@@ -155,6 +165,7 @@ namespace ASCOM.OpenFocus
             device.ControlTransfer(ref packet, buffer, 0, out transfered);
         }
 
+        /* Returns true if moving, false if halted */
         public static bool IsMoving
         {
             get
@@ -172,17 +183,20 @@ namespace ASCOM.OpenFocus
             }
         }
 
-        public static Int16 MaxStep
+        /* Max position */
+        public static UInt16 MaxStep
         {
-            get { return MaxPosition; }
+            get { return new Config.Device(device.Info.SerialString).MaxPosition; }
         }
 
-        public static Int16 MaxIncrement
+        /* Max steps per move */
+        public static UInt16 MaxIncrement
         {
-            get { return MaxPosition; }
+            get { return new Config.Device(device.Info.SerialString).MaxPosition; }
         }
 
-        public static Int16 Position
+        /* Current focuser position */
+        public static UInt16 Position
         {
             set
             {
@@ -203,10 +217,11 @@ namespace ASCOM.OpenFocus
 
                 if (transfered != expected) throw new Exception("Error Communicating With Device");
 
-                return (Int16)((buffer[1] << 8) | buffer[0]);
+                return (UInt16)((buffer[1] << 8) | buffer[0]);
             }
         }
 
+        /* true to turn on temperature compensation, false to turn off */
         public static bool TempComp
         {
             get
@@ -225,6 +240,7 @@ namespace ASCOM.OpenFocus
             }
         }
 
+        /* Current temperature */
         public static double Temperature
         {
             get
@@ -251,11 +267,13 @@ namespace ASCOM.OpenFocus
             }
         }
 
+        /* Returns true if focuser is capable of absolute positioning */
         public static bool Absolute
         {
             get { return ((_Capabilities & Capabilities.AbsolutePositioning) == Capabilities.AbsolutePositioning) ? true : false; }
         }
 
+        /* Returns true if focuser is capable of temperature compensation */
         public static bool TempCompAvailable
         {
             get { return ((_Capabilities & Capabilities.TemperatureCompensation) == Capabilities.TemperatureCompensation) ? true : false; }

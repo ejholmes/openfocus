@@ -21,9 +21,11 @@
  *
  */
 
+/*
+ * This file basically abstracts the ASCOM profile class
+ */
+
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 using ASCOM.Utilities;
 
@@ -37,15 +39,6 @@ namespace ASCOM.OpenFocus
 
         private static String _Units                    = ASCOM.OpenFocus.Device.TemperatureUnits.Celsius;
         private static String _DefaultDevice            = String.Empty;
-
-        #endregion
-
-
-        #region Constructor
-
-        public Config()
-        {
-        }
 
         #endregion
 
@@ -76,6 +69,19 @@ namespace ASCOM.OpenFocus
                     return val;
             }
             set { Write("DefaultDevice", value); }
+        }
+
+        public static UInt16 Position
+        {
+            get
+            {
+                String val = Read("Position");
+                if (String.IsNullOrEmpty(val))
+                    return 0;
+                else
+                    return UInt16.Parse(val);
+            }
+            set { Write("Position", value.ToString()); }
         }
 
         #endregion

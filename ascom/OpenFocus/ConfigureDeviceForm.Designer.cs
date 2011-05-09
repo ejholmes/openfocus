@@ -111,6 +111,7 @@
             this.tbMaxPosition.Name = "tbMaxPosition";
             this.tbMaxPosition.Size = new System.Drawing.Size(100, 20);
             this.tbMaxPosition.TabIndex = 0;
+            this.tbMaxPosition.Validating += new System.ComponentModel.CancelEventHandler(tbMaxPosition_Validating);
             // 
             // gbTemperatureCompensation
             // 
@@ -143,6 +144,7 @@
             this.tbTemperatureCoefficient.Name = "tbTemperatureCoefficient";
             this.tbTemperatureCoefficient.Size = new System.Drawing.Size(100, 20);
             this.tbTemperatureCoefficient.TabIndex = 1;
+            this.tbTemperatureCoefficient.Validating += new System.ComponentModel.CancelEventHandler(tbTemperatureCoefficient_Validating);
             this.toolTip.SetToolTip(this.tbTemperatureCoefficient, "Value should be steps per unit temperature");
             // 
             // btnCancel
@@ -246,6 +248,18 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
+        }
+
+        void tbMaxPosition_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            try { System.UInt16.Parse(((System.Windows.Forms.TextBox)sender).Text); }
+            catch { System.Windows.Forms.MessageBox.Show("Please enter a valid integer between 0 and 32767"); ((System.Windows.Forms.TextBox)sender).Focus(); ((System.Windows.Forms.TextBox)sender).SelectAll(); }
+        }
+
+        void tbTemperatureCoefficient_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            try { double.Parse(((System.Windows.Forms.TextBox)sender).Text); }
+            catch { System.Windows.Forms.MessageBox.Show("Please enter a valid temperature coefficient"); ((System.Windows.Forms.TextBox)sender).Focus(); ((System.Windows.Forms.TextBox)sender).SelectAll(); }
         }
 
         #endregion

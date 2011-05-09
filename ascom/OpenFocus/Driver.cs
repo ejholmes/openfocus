@@ -22,13 +22,9 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Runtime.InteropServices;
 
-using ASCOM;
 using ASCOM.Interface;
-using ASCOM.Utilities;
 
 namespace ASCOM.OpenFocus
 {
