@@ -29,6 +29,11 @@
     #define BRD_REV 4
 #endif
 
+/* Firmware Version */
+// #ifndef USB_CFG_DEVICE_VERSION
+    #define USB_CFG_DEVICE_VERSION  0x01, 0x00 /* Minor, Major */
+// #endif
+
 /* Number of times the sensor is sampled each request */
 #ifndef TEMP_SENSOR_COUNT
     #define TEMP_SENSOR_COUNT 3

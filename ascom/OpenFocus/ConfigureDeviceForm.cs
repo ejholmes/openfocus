@@ -32,12 +32,16 @@ namespace ASCOM.OpenFocus
             UsbDeviceInfo info = ASCOM.OpenFocus.Device.Descriptor;
             ASCOM.OpenFocus.Device.Disconnect();
 
+            Version firmware = new Version(info.Descriptor.BcdDevice >> 8, 0xff & info.Descriptor.BcdDevice);
+
             this.tbName.Text                       = Device.Name;
             this.tbMaxPosition.Text                = Device.MaxPosition.ToString();
             this.tbTemperatureCoefficient.Text     = Device.TemperatureCoefficient.ToString();
 
             this.SerialNumber.Text                  = Serial;
+            this.toolTip.SetToolTip(this.SerialNumber, Serial);
             this.Product.Text                       = info.ProductString;
+            this.FirmwareVersion.Text               = firmware.ToString();
         }
 
         private void SaveValues()

@@ -41,11 +41,13 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.gbDeviceInfo = new System.Windows.Forms.GroupBox();
+            this.FirmwareVersion = new System.Windows.Forms.Label();
+            this.lblFirmwareVersion = new System.Windows.Forms.Label();
+            this.Product = new System.Windows.Forms.Label();
+            this.lblProduct = new System.Windows.Forms.Label();
+            this.SerialNumber = new System.Windows.Forms.Label();
             this.lblSerial = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.SerialNumber = new System.Windows.Forms.Label();
-            this.lblProduct = new System.Windows.Forms.Label();
-            this.Product = new System.Windows.Forms.Label();
             this.gbPositionSettings.SuspendLayout();
             this.gbTemperatureCompensation.SuspendLayout();
             this.gbDeviceInfo.SuspendLayout();
@@ -98,7 +100,7 @@
             // 
             this.lblMaxPosition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblMaxPosition.AutoSize = true;
-            this.lblMaxPosition.Location = new System.Drawing.Point(78, 22);
+            this.lblMaxPosition.Location = new System.Drawing.Point(6, 22);
             this.lblMaxPosition.Name = "lblMaxPosition";
             this.lblMaxPosition.Size = new System.Drawing.Size(67, 13);
             this.lblMaxPosition.TabIndex = 1;
@@ -107,11 +109,11 @@
             // tbMaxPosition
             // 
             this.tbMaxPosition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbMaxPosition.Location = new System.Drawing.Point(151, 19);
+            this.tbMaxPosition.Location = new System.Drawing.Point(79, 19);
             this.tbMaxPosition.Name = "tbMaxPosition";
-            this.tbMaxPosition.Size = new System.Drawing.Size(100, 20);
+            this.tbMaxPosition.Size = new System.Drawing.Size(172, 20);
             this.tbMaxPosition.TabIndex = 0;
-            this.tbMaxPosition.Validating += new System.ComponentModel.CancelEventHandler(tbMaxPosition_Validating);
+            this.tbMaxPosition.Validating += new System.ComponentModel.CancelEventHandler(this.tbMaxPosition_Validating);
             // 
             // gbTemperatureCompensation
             // 
@@ -130,7 +132,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(55, 22);
+            this.label1.Location = new System.Drawing.Point(14, 22);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(90, 13);
             this.label1.TabIndex = 2;
@@ -140,12 +142,12 @@
             // tbTemperatureCoefficient
             // 
             this.tbTemperatureCoefficient.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbTemperatureCoefficient.Location = new System.Drawing.Point(151, 19);
+            this.tbTemperatureCoefficient.Location = new System.Drawing.Point(110, 19);
             this.tbTemperatureCoefficient.Name = "tbTemperatureCoefficient";
-            this.tbTemperatureCoefficient.Size = new System.Drawing.Size(100, 20);
+            this.tbTemperatureCoefficient.Size = new System.Drawing.Size(141, 20);
             this.tbTemperatureCoefficient.TabIndex = 1;
-            this.tbTemperatureCoefficient.Validating += new System.ComponentModel.CancelEventHandler(tbTemperatureCoefficient_Validating);
             this.toolTip.SetToolTip(this.tbTemperatureCoefficient, "Value should be steps per unit temperature");
+            this.tbTemperatureCoefficient.Validating += new System.ComponentModel.CancelEventHandler(this.tbTemperatureCoefficient_Validating);
             // 
             // btnCancel
             // 
@@ -174,6 +176,8 @@
             // 
             this.gbDeviceInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbDeviceInfo.Controls.Add(this.FirmwareVersion);
+            this.gbDeviceInfo.Controls.Add(this.lblFirmwareVersion);
             this.gbDeviceInfo.Controls.Add(this.Product);
             this.gbDeviceInfo.Controls.Add(this.lblProduct);
             this.gbDeviceInfo.Controls.Add(this.SerialNumber);
@@ -185,22 +189,28 @@
             this.gbDeviceInfo.TabStop = false;
             this.gbDeviceInfo.Text = "Device Information";
             // 
-            // lblSerial
+            // FirmwareVersion
             // 
-            this.lblSerial.AutoSize = true;
-            this.lblSerial.Location = new System.Drawing.Point(6, 16);
-            this.lblSerial.Name = "lblSerial";
-            this.lblSerial.Size = new System.Drawing.Size(46, 13);
-            this.lblSerial.TabIndex = 0;
-            this.lblSerial.Text = "Serial #:";
+            this.FirmwareVersion.Location = new System.Drawing.Point(102, 56);
+            this.FirmwareVersion.Name = "FirmwareVersion";
+            this.FirmwareVersion.Size = new System.Drawing.Size(149, 13);
+            this.FirmwareVersion.TabIndex = 5;
             // 
-            // SerialNumber
+            // lblFirmwareVersion
             // 
-            this.SerialNumber.AutoSize = true;
-            this.SerialNumber.Location = new System.Drawing.Point(58, 16);
-            this.SerialNumber.Name = "SerialNumber";
-            this.SerialNumber.Size = new System.Drawing.Size(0, 13);
-            this.SerialNumber.TabIndex = 1;
+            this.lblFirmwareVersion.AutoSize = true;
+            this.lblFirmwareVersion.Location = new System.Drawing.Point(6, 56);
+            this.lblFirmwareVersion.Name = "lblFirmwareVersion";
+            this.lblFirmwareVersion.Size = new System.Drawing.Size(90, 13);
+            this.lblFirmwareVersion.TabIndex = 4;
+            this.lblFirmwareVersion.Text = "Firmware Version:";
+            // 
+            // Product
+            // 
+            this.Product.Location = new System.Drawing.Point(56, 36);
+            this.Product.Name = "Product";
+            this.Product.Size = new System.Drawing.Size(195, 13);
+            this.Product.TabIndex = 3;
             // 
             // lblProduct
             // 
@@ -211,13 +221,21 @@
             this.lblProduct.TabIndex = 2;
             this.lblProduct.Text = "Product:";
             // 
-            // Product
+            // SerialNumber
             // 
-            this.Product.AutoSize = true;
-            this.Product.Location = new System.Drawing.Point(56, 36);
-            this.Product.Name = "Product";
-            this.Product.Size = new System.Drawing.Size(0, 13);
-            this.Product.TabIndex = 3;
+            this.SerialNumber.Location = new System.Drawing.Point(58, 16);
+            this.SerialNumber.Name = "SerialNumber";
+            this.SerialNumber.Size = new System.Drawing.Size(193, 13);
+            this.SerialNumber.TabIndex = 1;
+            // 
+            // lblSerial
+            // 
+            this.lblSerial.AutoSize = true;
+            this.lblSerial.Location = new System.Drawing.Point(6, 16);
+            this.lblSerial.Name = "lblSerial";
+            this.lblSerial.Size = new System.Drawing.Size(46, 13);
+            this.lblSerial.TabIndex = 0;
+            this.lblSerial.Text = "Serial #:";
             // 
             // ConfigureDeviceForm
             // 
@@ -281,5 +299,7 @@
         private System.Windows.Forms.Label SerialNumber;
         private System.Windows.Forms.Label Product;
         private System.Windows.Forms.Label lblProduct;
+        private System.Windows.Forms.Label FirmwareVersion;
+        private System.Windows.Forms.Label lblFirmwareVersion;
     }
 }
