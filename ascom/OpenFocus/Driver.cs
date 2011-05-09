@@ -42,18 +42,12 @@ namespace ASCOM.OpenFocus
 
         private bool _Link = false;
 
-        public static Profile Profile = new Profile();
-
         //
         // Constructor - Must be public for COM registration!
         //
         public Focuser()
         {
-            Profile.DeviceType = s_csDeviceType;
-            string units = Profile.GetValue(s_csDriverID, "Units");
-
-            if (String.IsNullOrEmpty(units))
-                Profile.WriteValue(s_csDriverID, "Units", Device.TemperatureUnits.Celsius);
+            Config.Profile.DeviceType = s_csDeviceType;
         }
 
         #region ASCOM Registration

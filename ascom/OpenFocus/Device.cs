@@ -31,8 +31,6 @@ using LibUsbDotNet;
 using LibUsbDotNet.Info;
 using LibUsbDotNet.Main;
 
-using ASCOM.Utilities;
-
 namespace ASCOM.OpenFocus
 {
     public class Device
@@ -66,6 +64,7 @@ namespace ASCOM.OpenFocus
         private static Int16 Product_ID             = 0x05df;
 
         private static bool TempCompEnabled         = false;
+        private static Int16 MaxPosition            = 10000;
 
         private static UsbDeviceFinder UsbFinder = new UsbDeviceFinder(Vendor_ID, Product_ID);
         private static UsbDevice device;
@@ -88,10 +87,17 @@ namespace ASCOM.OpenFocus
 
         public static bool Connect()
         {
-            if (String.IsNullOrEmpty(Serial))
-                device = UsbDevice.OpenUsbDevice(UsbFinder);
-            else
+            return Connect(String.Empty);
+        }
+
+        public static bool Connect(string serial)
+        {
+            if (!String.IsNullOrEmpty(serial))
+                device = UsbDevice.OpenUsbDevice(new UsbDeviceFinder(serial));
+            else if (!String.IsNullOrEmpty(Serial))
                 device = UsbDevice.OpenUsbDevice(new UsbDeviceFinder(Serial));
+            else
+                device = UsbDevice.OpenUsbDevice(UsbFinder);
 
             if (device == null) throw new Exception("Device Not Found");
 
@@ -105,6 +111,11 @@ namespace ASCOM.OpenFocus
             GetCapabilities();
 
             return true;
+        }
+
+        public static UsbDeviceInfo Descriptor
+        {
+            get { return device.Info; }
         }
 
         public static void GetCapabilities()
@@ -159,6 +170,16 @@ namespace ASCOM.OpenFocus
 
                 return buffer[0] == 0 ? false : true;
             }
+        }
+
+        public static Int16 MaxStep
+        {
+            get { return MaxPosition; }
+        }
+
+        public static Int16 MaxIncrement
+        {
+            get { return MaxPosition; }
         }
 
         public static Int16 Position
@@ -217,15 +238,13 @@ namespace ASCOM.OpenFocus
 
                 if (transfered != expected) throw new Exception("Error Communicating With Device");
 
-                string units = ASCOM.OpenFocus.Focuser.Profile.GetValue(ASCOM.OpenFocus.Focuser.s_csDriverID, "Units");
-
                 Int16 adc = (Int16)((buffer[1] << 8) | buffer[0]);
                 double kelvin = (5.00 * (double)adc * 100.00) / 1024.00;
                 double celsius = kelvin - 273.15;
 
-                if (units == Device.TemperatureUnits.Celsius)
+                if (Config.Units == Device.TemperatureUnits.Celsius)
                     return celsius;
-                else if (units == Device.TemperatureUnits.Fahrenheit)
+                else if (Config.Units == Device.TemperatureUnits.Fahrenheit)
                     return ((9.00/5.00) * celsius) + 32;
                 else
                     return celsius;

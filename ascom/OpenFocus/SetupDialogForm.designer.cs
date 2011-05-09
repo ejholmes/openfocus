@@ -60,19 +60,16 @@ namespace ASCOM.OpenFocus
             this.gbTemperatureUnits = new System.Windows.Forms.GroupBox();
             this.rbUnitsFahrenheit = new System.Windows.Forms.RadioButton();
             this.rbUnitsCelsius = new System.Windows.Forms.RadioButton();
-            this.gbTemperatureCompensation = new System.Windows.Forms.GroupBox();
-            this.tbTemperatureCoefficient = new System.Windows.Forms.TextBox();
-            this.lblTemperatureCoefficient = new System.Windows.Forms.Label();
+            this.btnConfigureDevice = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picASCOM)).BeginInit();
             this.gbTemperatureUnits.SuspendLayout();
-            this.gbTemperatureCompensation.SuspendLayout();
             this.SuspendLayout();
             // 
             // cmdOK
             // 
             this.cmdOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cmdOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.cmdOK.Location = new System.Drawing.Point(248, 150);
+            this.cmdOK.Location = new System.Drawing.Point(248, 127);
             this.cmdOK.Name = "cmdOK";
             this.cmdOK.Size = new System.Drawing.Size(59, 24);
             this.cmdOK.TabIndex = 0;
@@ -84,7 +81,7 @@ namespace ASCOM.OpenFocus
             // 
             this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cmdCancel.Location = new System.Drawing.Point(248, 180);
+            this.cmdCancel.Location = new System.Drawing.Point(248, 157);
             this.cmdCancel.Name = "cmdCancel";
             this.cmdCancel.Size = new System.Drawing.Size(59, 25);
             this.cmdCancel.TabIndex = 1;
@@ -138,7 +135,7 @@ namespace ASCOM.OpenFocus
             this.gbTemperatureUnits.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.gbTemperatureUnits.Controls.Add(this.rbUnitsFahrenheit);
             this.gbTemperatureUnits.Controls.Add(this.rbUnitsCelsius);
-            this.gbTemperatureUnits.Location = new System.Drawing.Point(12, 158);
+            this.gbTemperatureUnits.Location = new System.Drawing.Point(12, 135);
             this.gbTemperatureUnits.Name = "gbTemperatureUnits";
             this.gbTemperatureUnits.Size = new System.Drawing.Size(214, 46);
             this.gbTemperatureUnits.TabIndex = 8;
@@ -167,39 +164,22 @@ namespace ASCOM.OpenFocus
             this.rbUnitsCelsius.Text = "Celsius";
             this.rbUnitsCelsius.UseVisualStyleBackColor = true;
             // 
-            // gbTemperatureCompensation
+            // btnConfigureDevice
             // 
-            this.gbTemperatureCompensation.Controls.Add(this.lblTemperatureCoefficient);
-            this.gbTemperatureCompensation.Controls.Add(this.tbTemperatureCoefficient);
-            this.gbTemperatureCompensation.Location = new System.Drawing.Point(12, 108);
-            this.gbTemperatureCompensation.Name = "gbTemperatureCompensation";
-            this.gbTemperatureCompensation.Size = new System.Drawing.Size(214, 44);
-            this.gbTemperatureCompensation.TabIndex = 9;
-            this.gbTemperatureCompensation.TabStop = false;
-            this.gbTemperatureCompensation.Text = "Temperature Compensation";
-            // 
-            // tbTemperatureCoefficient
-            // 
-            this.tbTemperatureCoefficient.Location = new System.Drawing.Point(99, 18);
-            this.tbTemperatureCoefficient.Name = "tbTemperatureCoefficient";
-            this.tbTemperatureCoefficient.Size = new System.Drawing.Size(100, 20);
-            this.tbTemperatureCoefficient.TabIndex = 0;
-            // 
-            // lblTemperatureCoefficient
-            // 
-            this.lblTemperatureCoefficient.AutoSize = true;
-            this.lblTemperatureCoefficient.Location = new System.Drawing.Point(5, 21);
-            this.lblTemperatureCoefficient.Name = "lblTemperatureCoefficient";
-            this.lblTemperatureCoefficient.Size = new System.Drawing.Size(90, 13);
-            this.lblTemperatureCoefficient.TabIndex = 1;
-            this.lblTemperatureCoefficient.Text = "Temp. Coefficient";
+            this.btnConfigureDevice.Location = new System.Drawing.Point(12, 90);
+            this.btnConfigureDevice.Name = "btnConfigureDevice";
+            this.btnConfigureDevice.Size = new System.Drawing.Size(214, 23);
+            this.btnConfigureDevice.TabIndex = 9;
+            this.btnConfigureDevice.Text = "Configure Selected Device";
+            this.btnConfigureDevice.UseVisualStyleBackColor = true;
+            this.btnConfigureDevice.Click += new System.EventHandler(this.btnConfigureDevice_Click);
             // 
             // SetupDialogForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(317, 213);
-            this.Controls.Add(this.gbTemperatureCompensation);
+            this.ClientSize = new System.Drawing.Size(317, 190);
+            this.Controls.Add(this.btnConfigureDevice);
             this.Controls.Add(this.gbTemperatureUnits);
             this.Controls.Add(this.lblTip);
             this.Controls.Add(this.lblDevices);
@@ -218,8 +198,6 @@ namespace ASCOM.OpenFocus
             ((System.ComponentModel.ISupportInitialize)(this.picASCOM)).EndInit();
             this.gbTemperatureUnits.ResumeLayout(false);
             this.gbTemperatureUnits.PerformLayout();
-            this.gbTemperatureCompensation.ResumeLayout(false);
-            this.gbTemperatureCompensation.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -236,8 +214,6 @@ namespace ASCOM.OpenFocus
         private System.Windows.Forms.GroupBox gbTemperatureUnits;
         private System.Windows.Forms.RadioButton rbUnitsFahrenheit;
         private System.Windows.Forms.RadioButton rbUnitsCelsius;
-        private System.Windows.Forms.GroupBox gbTemperatureCompensation;
-        private System.Windows.Forms.Label lblTemperatureCoefficient;
-        private System.Windows.Forms.TextBox tbTemperatureCoefficient;
+        private System.Windows.Forms.Button btnConfigureDevice;
     }
 }

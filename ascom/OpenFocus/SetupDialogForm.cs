@@ -38,7 +38,6 @@ namespace ASCOM.OpenFocus
     {
         public SetupDialogForm()
         {
-            ASCOM.OpenFocus.Focuser.Profile.DeviceType = ASCOM.OpenFocus.Focuser.s_csDeviceType;
             InitializeComponent();
         }
 
@@ -53,16 +52,34 @@ namespace ASCOM.OpenFocus
             Dispose();
         }
 
-        private void LoadValues()
+        public void PopulateDevices()
         {
             List<string> serials = Device.ListDevices();
 
             if (serials == null) return;
 
-            this.cbDevices.Items.AddRange(serials.ToArray());
-            this.cbDevices.SelectedIndex = 0;
+            List<KeyValuePair> devices = new List<KeyValuePair>();
+            foreach (String serial in serials)
+            {
+                devices.Add(new KeyValuePair(new Config.Device(serial).Name, serial));
+            }
 
-            switch (ASCOM.OpenFocus.Focuser.Profile.GetValue(ASCOM.OpenFocus.Focuser.s_csDriverID, "Units"))
+            this.cbDevices.Items.Clear();
+            this.cbDevices.Items.AddRange(devices.ToArray());
+            this.cbDevices.DisplayMember = "Key";
+            this.cbDevices.ValueMember = "Value";
+
+            this.cbDevices.SelectedIndex = 0;
+        }
+
+        private void LoadValues()
+        {
+            #region Devices
+            PopulateDevices();
+            #endregion
+
+            #region Temperature Units
+            switch (Config.Units)
             {
                 case Device.TemperatureUnits.Celsius:
                     this.rbUnitsCelsius.Checked = true;
@@ -71,17 +88,22 @@ namespace ASCOM.OpenFocus
                     this.rbUnitsFahrenheit.Checked = true;
                     break;
             }
+            #endregion
         }
 
         private void SaveValues()
         {
-            Device.Serial = this.cbDevices.SelectedItem.ToString();
-            ASCOM.OpenFocus.Focuser.Profile.WriteValue(ASCOM.OpenFocus.Focuser.s_csDriverID, "Default", Device.Serial);
+            #region Devices
+            Device.Serial = ((KeyValuePair)this.cbDevices.SelectedItem).Value.ToString();
+            Config.DefaultDevice = Device.Serial;
+            #endregion
 
+            #region Temperature Units
             if (this.rbUnitsCelsius.Checked)
-                ASCOM.OpenFocus.Focuser.Profile.WriteValue(ASCOM.OpenFocus.Focuser.s_csDriverID, "Units", Device.TemperatureUnits.Celsius);
+                Config.Units = Device.TemperatureUnits.Celsius;
             else if (this.rbUnitsFahrenheit.Checked)
-                ASCOM.OpenFocus.Focuser.Profile.WriteValue(ASCOM.OpenFocus.Focuser.s_csDriverID, "Units", Device.TemperatureUnits.Fahrenheit);
+                Config.Units = Device.TemperatureUnits.Fahrenheit;
+            #endregion
         }
 
         private void cmdCancel_Click(object sender, EventArgs e)
@@ -103,6 +125,17 @@ namespace ASCOM.OpenFocus
             catch (System.Exception other)
             {
                 MessageBox.Show(other.Message);
+            }
+        }
+
+        private void btnConfigureDevice_Click(object sender, EventArgs e)
+        {
+            using (ConfigureDeviceForm configureDevice = new ConfigureDeviceForm(((KeyValuePair)this.cbDevices.SelectedItem).Value))
+            {
+                if (configureDevice.ShowDialog(this) == DialogResult.OK)
+                {
+                    PopulateDevices();
+                }
             }
         }
     }
