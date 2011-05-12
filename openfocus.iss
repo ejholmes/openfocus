@@ -46,6 +46,7 @@ Name: source; Description: Install the Source files; Flags: unchecked
 
 [Files]
 Source: "ascom\OpenFocus\bin\Release\ASCOM.OpenFocus.dll"; DestDir: "{app}"; Tasks: ascom
+Source: "ascom\OpenFocus\bin\Release\LibUsbDotNet.dll"; DestDir: "{app}"; Tasks: ascom
 ; Require a read-me HTML to appear after installation, maybe driver's Help doc
 Source: "README.md"; DestDir: "{app}"; Flags: isreadme; Tasks: ascom
 ; Optional source files (COM and .NET aware)
