@@ -46,6 +46,9 @@ all:	main.hex
 
 flash:	all
 	$(AVRDUDE) -U flash:w:main.hex:i
+	
+softflash: all
+	bootloadHID.exe -r main.hex
 
 fuse:
 	$(AVRDUDE) $(FUSES)
