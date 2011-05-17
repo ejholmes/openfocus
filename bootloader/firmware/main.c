@@ -34,7 +34,6 @@
 static void leaveBootloader() __attribute__((__noreturn__));
 
 #include "usbdrv.h"
-#include "oddebug.h"
 
 /* ------------------------------------------------------------------------ */
 
@@ -98,7 +97,6 @@ static void (*nullVector)(void) __attribute__((__noreturn__));
 static void leaveBootloader()
 {
 	PORTB &= ~_BV(PB0);
-    DBG1(0x01, 0, 0);
     cli();
     boot_rww_enable();
     USB_INTR_ENABLE = 0;
@@ -157,7 +155,6 @@ uchar usbFunctionWrite(uchar *data, uchar len)
 
     address.l = currentAddress;
     if(offset == 0){
-        DBG1(0x30, data, 3);
         address.c[0] = data[1];
         address.c[1] = data[2];
 #if (FLASHEND) > 0xffff /* we need long addressing */
@@ -167,7 +164,6 @@ uchar usbFunctionWrite(uchar *data, uchar len)
         data += 4;
         len -= 4;
     }
-    DBG1(0x31, (void *)&currentAddress, 4);
     offset += len;
     isLast = offset & 0x80; /* != 0 if last block received */
     do{
@@ -177,10 +173,8 @@ uchar usbFunctionWrite(uchar *data, uchar len)
 #else
         uchar pageAddr;
 #endif
-        DBG1(0x32, 0, 0);
         pageAddr = address.s[0] & (SPM_PAGESIZE - 1);
         if(pageAddr == 0){              /* if page start: erase */
-            DBG1(0x33, 0, 0);
 #ifndef TEST_MODE
             cli();
             boot_page_erase(address.l); /* erase page */
@@ -197,7 +191,6 @@ uchar usbFunctionWrite(uchar *data, uchar len)
         /* write page when we cross page boundary */
         pageAddr = address.s[0] & (SPM_PAGESIZE - 1);
         if(pageAddr == 0){
-            DBG1(0x34, 0, 0);
 #ifndef TEST_MODE
             cli();
             boot_page_write(prevAddr);
@@ -208,17 +201,13 @@ uchar usbFunctionWrite(uchar *data, uchar len)
         len -= 2;
     }while(len);
     currentAddress = address.l;
-    DBG1(0x35, (void *)&currentAddress, 4);
     return isLast;
 }
 
 static void initForUsbConnectivity(void)
 {
 	uchar   i = 0;
-
-#if F_CPU == 12800000
-    TCCR0 = 3;          /* 1/64 prescaler */
-#endif
+	
     usbInit();
 	usbDeviceDisconnect();  /* enforce re-enumeration, do this while interrupts are disabled! */
 	i = 0;
@@ -234,7 +223,6 @@ static void initForUsbConnectivity(void)
 int __attribute__((noreturn)) main(void)
 {
 	bootLoaderInit();
-	odDebugInit();
 	DDRB |= _BV(PB0);
 	
 	if (bootLoaderCondition()) {
@@ -250,9 +238,6 @@ int __attribute__((noreturn)) main(void)
             usbPoll();
 #if BOOTLOADER_CAN_EXIT
             if (exitMainloop) {
-#if F_CPU == 12800000
-                break;  /* memory is tight at 12.8 MHz, save exit delay below */
-#endif
                 if (--i == 0) {
                     if (--j == 0)
                         break;
