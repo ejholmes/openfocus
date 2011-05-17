@@ -245,7 +245,7 @@ int __attribute__((noreturn)) main(void)
 		GICR = (1 << IVSEL); /* move interrupts to boot flash section */
 		
 		initForUsbConnectivity();
-		do { /* main event loop */
+		for (;;) { /* main event loop */
             wdt_reset();
             usbPoll();
 #if BOOTLOADER_CAN_EXIT
@@ -259,7 +259,7 @@ int __attribute__((noreturn)) main(void)
                 }
             }
 #endif
-        } while(bootLoaderCondition());
+        }
 	}
 	leaveBootloader();
 }
