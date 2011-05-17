@@ -19,7 +19,7 @@ CLOCK      = 16000000
 PORT       = com5
 PROGRAMMER = -c avrisp
 OBJECTS    = usbdrv/usbdrv.o usbdrv/usbdrvasm.o usbdrv/oddebug.o main.o stepper.o focuser.o util.o temperature.o
-FUSES      = -U hfuse:w:0xd9:m -U lfuse:w:0xff:m
+FUSES      = -U hfuse:w:0xda:m -U lfuse:w:0xff:m
 CFLAGS 	   = 
 
 AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE) -P $(PORT) -b 19200
