@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C# Express 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirmwareUpdater", "FirmwareUpdater\FirmwareUpdater.csproj", "{A20DA25F-C819-45EA-937F-0F7B97735548}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BootloadHID", "BootloadHID\BootloadHID.csproj", "{81831403-D041-4B0B-AF45-BA7BCAB47480}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A20DA25F-C819-45EA-937F-0F7B97735548}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A20DA25F-C819-45EA-937F-0F7B97735548}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A20DA25F-C819-45EA-937F-0F7B97735548}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A20DA25F-C819-45EA-937F-0F7B97735548}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81831403-D041-4B0B-AF45-BA7BCAB47480}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81831403-D041-4B0B-AF45-BA7BCAB47480}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81831403-D041-4B0B-AF45-BA7BCAB47480}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81831403-D041-4B0B-AF45-BA7BCAB47480}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
