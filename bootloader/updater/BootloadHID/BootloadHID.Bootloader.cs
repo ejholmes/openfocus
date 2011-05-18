@@ -13,7 +13,6 @@ namespace BootloadHID
 
         public static int UploadFirmware(String firmware)
         {
-            //dataBuffer = IntelHexParser.ParseFile(firmware);
             Usb.DoUpload(firmware, true);
             return 0;
         }
