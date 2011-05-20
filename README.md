@@ -24,7 +24,7 @@ Requirements:  [WinAVR][winavr] (if on Windows) or [CrossPack][crosspack] (if on
 Build:
 
 - Run: `cd firmware`, `make`
-- Flash with Bootloader: `make softflash` **or** Flash with HIDBootFlash: `open bootloader/HIDBootFlashexe`
+- Flash with bootloadHID.exe: `make softflash` **or** Flash with HIDBootFlash: `open bootloader/HIDBootFlashexe`
 
 Building ASCOM Driver
 -----------
