@@ -29,7 +29,7 @@ ARCH_LINK=
 
 OBJ=		main.o usbcalls.o
 #PROGRAM=	bootloadHID$(EXE_SUFFIX)
-PROGRAM = libbootloadhid.dll
+PROGRAM = bootloadhid.dll
 
 all: $(PROGRAM)
 

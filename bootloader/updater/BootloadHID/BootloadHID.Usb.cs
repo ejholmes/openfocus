@@ -8,7 +8,7 @@ namespace BootloadHID
 {
     class Usb
     {
-        [DllImport("libbootloadhid.dll")]
+        [DllImport("bootloadhid.dll")]
         private static extern int doUpload(string file, int leave);
 
         public static int DoUpload(string file, bool leave)
