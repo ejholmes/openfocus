@@ -45,8 +45,7 @@ Name: win32; Description: Install the Windows driver;
 Name: source; Description: Install the Source files; Flags: unchecked
 
 [Files]
-Source: "ascom\OpenFocus\bin\Release\ASCOM.OpenFocus.dll"; DestDir: "{app}"; Tasks: ascom
-Source: "ascom\OpenFocus\bin\Release\LibUsbDotNet.dll"; DestDir: "{app}"; Tasks: ascom
+Source: "ascom\OpenFocus\bin\Release\OpenFocus.dll"; DestDir: "{app}"; Tasks: ascom
 ; Require a read-me HTML to appear after installation, maybe driver's Help doc
 Source: "README.md"; DestDir: "{app}"; Flags: isreadme; Tasks: ascom
 ; Optional source files (COM and .NET aware)
@@ -71,12 +70,12 @@ Source: "driver\ia64\libusb0.dll"; DestDir: {sys}; Flags: uninsneveruninstall re
 Filename: "rundll32"; Parameters: "libusb0.dll,usb_install_driver_np_rundll {app}\driver\OpenFocus.inf"; StatusMsg: "Installing driver (this may take a few seconds) ..."; Tasks: win32
 
 ; Only for .NET assembly/in-proc drivers
-Filename: "{%FrameworkDir|{win}\Microsoft.NET\Framework}\V2.0.50727\regasm.exe"; Parameters: "/codebase ""{app}\ASCOM.OpenFocus.dll"""; Flags: runhidden; StatusMsg: "Registering driver with ASCOM..."; Tasks: ascom
+Filename: "{%FrameworkDir|{win}\Microsoft.NET\Framework}\V2.0.50727\regasm.exe"; Parameters: "/codebase ""{app}\OpenFocus.dll"""; Flags: runhidden; StatusMsg: "Registering driver with ASCOM..."; Tasks: ascom
 
 ; Only if driver is .NET
 [UninstallRun]
 ; Only for .NET assembly/in-proc drivers
-Filename: "{%FrameworkDir|{win}\Microsoft.NET\Framework}\V2.0.50727\regasm.exe"; Parameters: "-u ""{app}\ASCOM.OpenFocus.dll"""; Flags: runhidden
+Filename: "{%FrameworkDir|{win}\Microsoft.NET\Framework}\V2.0.50727\regasm.exe"; Parameters: "-u ""{app}\OpenFocus.dll"""; Flags: runhidden
 
 
 

@@ -30,6 +30,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -168,4 +169,10 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>IF NOT EXIST "C:\Program Files\Microsoft\ILMerge\ILMerge.exe" GOTO NOMERGE
+"C:\Program Files\Microsoft\ILMerge\ILMerge.exe" $(TargetFileName) LibUsbDotNet.dll /out:$(SolutionName)$(TargetExt)
+:NOMERGE
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>
