@@ -5,6 +5,17 @@ telescope systems. It's based off the ATMega328p AVR chip from Atmel. It uses
 the [V-USB stack][vusb] and [libusb][libusb] and also includes an
 [ASCOM][ascom] driver for use on Windows.
 
+Builing Bootloader:
+---------
+
+Requirements:  [WinAVR][winavr] (if on Windows) or [CrossPack][crosspack] (if on Mac OS X), [MSYS][msys] (if on Windows)
+
+Build:
+
+- Edit bootloader/firmware/Makefile according to your ISP programmer.
+- Run: `cd bootloader/firmware`, `make`
+- Flash with: `make install`
+
 Builing Firmware:
 ---------
 
@@ -12,9 +23,8 @@ Requirements:  [WinAVR][winavr] (if on Windows) or [CrossPack][crosspack] (if on
 
 Build:
 
-- Edit firmware/Makefile according to your ISP programmer.
 - Run: `cd firmware`, `make`
-- Flash with: `make install`
+- Flash with Bootloader: `make softflash` **or** Flash with HIDBootFlash: `open bootloader/HIDBootFlashexe`
 
 Building ASCOM Driver
 -----------
