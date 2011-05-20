@@ -2,8 +2,6 @@
  * File: usbconfig.h
  * Package: OpenFocus Bootloader
  *
- * Copyright (c) 2010 Eric J. Holmes
- *
  * Based on BootloadHID by Christian Starkjohann (http://www.obdev.at/products/vusb/bootloadhid.html)
  *
  * This library is free software; you can redistribute it and/or
