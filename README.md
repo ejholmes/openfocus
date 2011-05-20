@@ -5,6 +5,13 @@ telescope systems. It's based off the ATMega328p AVR chip from Atmel. It uses
 the [V-USB stack][vusb] and [libusb][libusb] and also includes an
 [ASCOM][ascom] driver for use on Windows.
 
+Features include:
+
+* Repeatable positions by using a high resolution stepper motor and absolute positioning.
+* Temperature Sensing and Compensation for combating thermal expansion and contraction while imaging.
+* Firmware Upgradable.
+
+
 Builing Bootloader:
 ---------
 
