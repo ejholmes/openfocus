@@ -52,9 +52,12 @@ flash:	all
 
 fuse:
 	$(AVRDUDE) $(FUSES)
+	
+lock:
+	$(AVRDUDE) -U lock:w:0x2f:m
 
 # Xcode uses the Makefile targets "", "clean" and "install"
-install: flash fuse
+install: flash fuse lock
 
 clean:
 	rm -f main.hex main.elf $(OBJECTS)
