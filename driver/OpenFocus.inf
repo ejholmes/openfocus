@@ -2,18 +2,11 @@
 ; Copyright (c) 2010 libusb-win32 (GNU LGPL)
 [Version]
 Signature = "$Windows NT$"
-Class     = "libusb-win32 devices"
-ClassGUID = {EB781AAF-9C70-4523-A5DF-642A87ECA567}
+Class     = "USB"
+ClassGUID = {36fc9e60-c465-11cf-8056-444553540000}
 Provider  = "libusb-win32"
 CatalogFile = OpenFocus.cat
 DriverVer = 11/18/2010, 1.0.0.0
-
-[ClassInstall32]
-AddReg=libusb_class_install_add_reg
-
-[libusb_class_install_add_reg]
-HKR,,,0,"libusb-win32 devices"
-HKR,,Icon,,-20
 
 [Manufacturer]
 "Cortex Astronomy"=Devices, NT, NTAMD64, NTIA64
