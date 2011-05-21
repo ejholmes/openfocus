@@ -268,6 +268,10 @@
 
         }
 
+        #endregion
+
+        #region Data Validation
+
         void tbMaxPosition_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
             try { System.UInt16.Parse(((System.Windows.Forms.TextBox)sender).Text); }

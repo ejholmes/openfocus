@@ -61,6 +61,7 @@ namespace ASCOM.OpenFocus
             this.rbUnitsFahrenheit = new System.Windows.Forms.RadioButton();
             this.rbUnitsCelsius = new System.Windows.Forms.RadioButton();
             this.btnConfigureDevice = new System.Windows.Forms.Button();
+            this.lblDriverVersion = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.picASCOM)).BeginInit();
             this.gbTemperatureUnits.SuspendLayout();
             this.SuspendLayout();
@@ -69,7 +70,7 @@ namespace ASCOM.OpenFocus
             // 
             this.cmdOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cmdOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.cmdOK.Location = new System.Drawing.Point(248, 127);
+            this.cmdOK.Location = new System.Drawing.Point(248, 145);
             this.cmdOK.Name = "cmdOK";
             this.cmdOK.Size = new System.Drawing.Size(59, 24);
             this.cmdOK.TabIndex = 0;
@@ -81,7 +82,7 @@ namespace ASCOM.OpenFocus
             // 
             this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cmdCancel.Location = new System.Drawing.Point(248, 157);
+            this.cmdCancel.Location = new System.Drawing.Point(248, 175);
             this.cmdCancel.Name = "cmdCancel";
             this.cmdCancel.Size = new System.Drawing.Size(59, 25);
             this.cmdCancel.TabIndex = 1;
@@ -132,7 +133,6 @@ namespace ASCOM.OpenFocus
             // 
             // gbTemperatureUnits
             // 
-            this.gbTemperatureUnits.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.gbTemperatureUnits.Controls.Add(this.rbUnitsFahrenheit);
             this.gbTemperatureUnits.Controls.Add(this.rbUnitsCelsius);
             this.gbTemperatureUnits.Location = new System.Drawing.Point(12, 135);
@@ -174,11 +174,21 @@ namespace ASCOM.OpenFocus
             this.btnConfigureDevice.UseVisualStyleBackColor = true;
             this.btnConfigureDevice.Click += new System.EventHandler(this.btnConfigureDevice_Click);
             // 
+            // lblDriverVersion
+            // 
+            this.lblDriverVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblDriverVersion.AutoSize = true;
+            this.lblDriverVersion.Location = new System.Drawing.Point(13, 187);
+            this.lblDriverVersion.Name = "lblDriverVersion";
+            this.lblDriverVersion.Size = new System.Drawing.Size(0, 13);
+            this.lblDriverVersion.TabIndex = 10;
+            // 
             // SetupDialogForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(317, 190);
+            this.ClientSize = new System.Drawing.Size(317, 208);
+            this.Controls.Add(this.lblDriverVersion);
             this.Controls.Add(this.btnConfigureDevice);
             this.Controls.Add(this.gbTemperatureUnits);
             this.Controls.Add(this.lblTip);
@@ -215,5 +225,6 @@ namespace ASCOM.OpenFocus
         private System.Windows.Forms.RadioButton rbUnitsFahrenheit;
         private System.Windows.Forms.RadioButton rbUnitsCelsius;
         private System.Windows.Forms.Button btnConfigureDevice;
+        private System.Windows.Forms.Label lblDriverVersion;
     }
 }

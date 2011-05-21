@@ -70,13 +70,18 @@ namespace ASCOM.OpenFocus
                     break;
             }
             #endregion
+
+            this.lblDriverVersion.Text = "Driver v" + Config.Version.ToString();
         }
 
         private void SaveValues()
         {
             #region Devices
-            Device.Serial = ((KeyValuePair)this.cbDevices.SelectedItem).Value.ToString();
-            Config.DefaultDevice = Device.Serial;
+            if (this.cbDevices.SelectedItem != null)
+            {
+                Device.Serial = ((KeyValuePair)this.cbDevices.SelectedItem).Value.ToString();
+                Config.DefaultDevice = Device.Serial;
+            }
             #endregion
 
             #region Temperature Units

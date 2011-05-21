@@ -84,6 +84,11 @@ namespace ASCOM.OpenFocus
             set { Write("Position", value.ToString()); }
         }
 
+        public static Version Version
+        {
+            get { return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version; }
+        }
+
         #endregion
 
 
