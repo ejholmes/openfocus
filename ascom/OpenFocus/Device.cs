@@ -61,8 +61,8 @@ namespace ASCOM.OpenFocus
 
         private static byte _Capabilities;
 
-        private static Int16 Vendor_ID              = 0x16c0;
-        private static Int16 Product_ID             = 0x05dc;
+        private static Int16 Vendor_ID              = 0x20a0;
+        private static Int16 Product_ID             = 0x416b;
         private static String ManufacturerString    = "Cortex Astronomy (cortexastronomy.com)";
         private static String ProductString         = "OpenFocus";
 
