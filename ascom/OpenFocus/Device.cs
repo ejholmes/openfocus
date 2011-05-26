@@ -46,6 +46,7 @@ namespace ASCOM.OpenFocus
             public const byte Halt                          = 0x01;
             public const byte SetPosition                   = 0x02;
             public const byte SetTemperatureCompensation    = 0x03;
+            public const byte RebootToBootloader            = 0x04;
             public const byte GetPosition                   = 0x10;
             public const byte IsMoving                      = 0x11;
             public const byte GetCapabilities               = 0x12;
@@ -165,6 +166,15 @@ namespace ASCOM.OpenFocus
         public static void Halt()
         {
             UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Requests.Halt, 0, 0, 0);
+
+            int transfered;
+            object buffer = null;
+            device.ControlTransfer(ref packet, buffer, 0, out transfered);
+        }
+
+        public static void RebootToBootloader()
+        {
+            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Requests.RebootToBootloader, 0, 0, 0);
 
             int transfered;
             object buffer = null;

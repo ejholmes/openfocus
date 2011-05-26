@@ -30,6 +30,7 @@
 #define FOCUSER_HALT                         0x01
 #define FOCUSER_SET_POSITION                 0x02
 #define FOCUSER_SET_TEMPERATURE_COMPENSATION 0x03
+#define REBOOT_TO_BOOTLOADER				 0x04
 #define FOCUSER_GET_POSITION                 0x10
 #define FOCUSER_IS_MOVING                    0x11
 #define FOCUSER_GET_CAPABILITIES             0x12

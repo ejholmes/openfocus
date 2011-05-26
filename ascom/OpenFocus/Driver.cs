@@ -94,6 +94,7 @@ namespace ASCOM.OpenFocus
         public void Halt()
         {
             Device.Halt();
+            Device.RebootToBootloader();
         }
 
         public bool IsMoving

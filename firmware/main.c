@@ -26,6 +26,7 @@
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
 #include <util/delay.h>
+#include <avr/eeprom.h>
 
 #include "config.h"
 #include "usbdrv.h"
@@ -71,6 +72,11 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
         focuser_set_position(make_uint(l, h));
         return 0;
     }
+	else if (rq->bRequest == REBOOT_TO_BOOTLOADER) {
+		wdt_enable(WDTO_15MS);
+		_delay_ms(14);
+		return 0;
+	}
     else if (rq->bRequest == FOCUSER_SET_TEMPERATURE_COMPENSATION) {
         uint8_t enabled = rq->wValue.bytes[0];
         return 0;
