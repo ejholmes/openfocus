@@ -65,6 +65,12 @@ namespace FirmwareUpdater
             {
                 dataBuffer = IntelHexParser.ParseFile(dialog.FileName, PageSize);
 
+                if (dataBuffer.Length > (FlashSize - 2048))
+                {
+                    Log("File is too large!");
+                    return;
+                }
+
                 FileInfo file = new FileInfo(dialog.FileName);
                 Log("Opened file " + file.Name);
                 Log("Ready to upload " + dataBuffer.Length.ToString() + " bytes of data");
