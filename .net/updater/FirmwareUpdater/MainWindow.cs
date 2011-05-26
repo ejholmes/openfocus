@@ -23,6 +23,8 @@ namespace FirmwareUpdater
 
         Byte[] dataBuffer;
 
+        bool done = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -35,8 +37,18 @@ namespace FirmwareUpdater
                 lbLog.SelectedIndex = lbLog.Items.Count - 1;
         }
 
+        private void MainWindow_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
+        {
+            if (device != null && !done)
+            {
+                Log("No data uploaded...rebooting");
+                device.Reboot();
+            }
+        }
+
         private void btnFindDevice_Click(object sender, EventArgs e)
         {
+            bool rebooting = false;
             try
             {
                 device = new Bootloader(0x16c0, 0x05df);
@@ -52,8 +64,20 @@ namespace FirmwareUpdater
             }
             catch
             {
-                Log("Device not found!");
-                Log("");
+                try
+                {
+                    Device.Connect();
+                    Log("Rebooting device into firmware update mode...");
+                    Device.RebootToBootloader();
+                    Device.Disconnect();
+                    System.Threading.Thread.Sleep(2000);
+                    Application.DoEvents();
+                    btnFindDevice_Click(null, null);
+                }
+                catch
+                {
+                    Log("Device not found!");
+                }
             }
         }
 
@@ -94,11 +118,13 @@ namespace FirmwareUpdater
             }
 
             Log("Firmware update complete!");
-
-#if !DEBUG
             Log("Device is rebooting");
             device.Reboot();
-#endif
+            done = true;
+
+            this.btnFindDevice.Enabled = false;
+            this.btnLocateFirmware.Enabled = false;
+            this.btnUpload.Enabled = false;
         }
     }
 }

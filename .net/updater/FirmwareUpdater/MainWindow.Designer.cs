@@ -67,7 +67,7 @@
             this.btnFindDevice.Name = "btnFindDevice";
             this.btnFindDevice.Size = new System.Drawing.Size(101, 23);
             this.btnFindDevice.TabIndex = 0;
-            this.btnFindDevice.Text = "Find Device";
+            this.btnFindDevice.Text = "Connect Device";
             this.btnFindDevice.UseVisualStyleBackColor = true;
             this.btnFindDevice.Click += new System.EventHandler(this.btnFindDevice_Click);
             // 
@@ -125,6 +125,7 @@
             this.Icon = global::FirmwareUpdater.Properties.Resources.icon;
             this.Name = "MainWindow";
             this.Text = "Firmware Updater";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
