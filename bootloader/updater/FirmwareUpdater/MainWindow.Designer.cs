@@ -122,8 +122,8 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.lbLog);
+            this.Icon = global::FirmwareUpdater.Properties.Resources.icon;
             this.Name = "MainWindow";
-            this.ShowIcon = false;
             this.Text = "Firmware Updater";
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
