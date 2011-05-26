@@ -27,6 +27,7 @@
 
 #ifndef __ASSEMBLER__   /* assembler cannot parse function definitions */
 #include <util/delay.h>
+#include <avr/eeprom.h>
 
 static inline void  bootLoaderInit(void)
 {
@@ -34,7 +35,7 @@ static inline void  bootLoaderInit(void)
     _delay_us(10);  /* wait for levels to stabilize */
 }
 
-#define bootLoaderCondition()   ((PIND & _BV(PD7)) == 0)   /* True if jumper is set */
+#define bootLoaderCondition()   (((PIND & _BV(PD7)) == 0) || (eeprom_read_byte((const uint8_t*)0) == 1))  /* True if jumper is set or byte at addr 0 in eeprom is set to 1 */
 
 #endif
 

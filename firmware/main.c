@@ -73,6 +73,7 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
         return 0;
     }
 	else if (rq->bRequest == REBOOT_TO_BOOTLOADER) {
+		__EEPUT(0, 1); /* Set to 1 to stay in bootloader */
 		wdt_enable(WDTO_15MS);
 		_delay_ms(14);
 		return 0;
