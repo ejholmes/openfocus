@@ -16,19 +16,23 @@ namespace FirmwareUpdater
         {
             InitializeComponent();
 
-            /*IntPtr ptr = HID.Enumerate(0x0, 0x0);
-            HID.hid_device_info info = (HID.hid_device_info)Marshal.PtrToStructure(ptr, typeof(HID.hid_device_info));
-            info = (HID.hid_device_info)Marshal.PtrToStructure(info.next, typeof(HID.hid_device_info));
-            info = (HID.hid_device_info)Marshal.PtrToStructure(info.next, typeof(HID.hid_device_info));
+            HID hid = new HID();
+            hid.Open(0x16c0, 0x05df, null);
+            Console.WriteLine(hid.GetManufacturerString());
+            Console.WriteLine(hid.GetProductString());
 
-            string p = Marshal.PtrToStringAnsi(info.product_string);*/
+            Byte[] data = new Byte[7];
 
-            //IntPtr handle = HID.Open(0x16c0, 0x05df, null);
+            data = hid.GetReport(HID.RequestTypes.GetReport, 7);
 
-            /*string buffer = String.Empty;
-            int ret = HID.GetManufacturerString(ref handle, ref buffer, 256);*/
+            /*Byte[] reboot = new Byte[2];
+            reboot[0] = HID.RequestTypes.SetReport
+            hid.SetReport(*/
 
-            //HID.Close(ref handle);
+            Console.WriteLine("Page Size: " + ((data[2] << 8) | data[1]).ToString());
+            Console.WriteLine("Flash Size: " + ((data[6] << 24) | (data[5] << 16) | (data[4] << 8) | data[3]).ToString());
+
+            hid.Close();
 
             return;
         }

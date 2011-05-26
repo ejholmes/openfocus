@@ -6,69 +6,186 @@ using System.Runtime.InteropServices;
 
 namespace FirmwareUpdater
 {
+    using size_t = UInt16;
+
     public class HID
     {
+        IntPtr handle = IntPtr.Zero;
+
+        #region Definitions
+
         [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Auto)]
-        public struct hid_device_info
+        private struct hid_device_info
         {
             public IntPtr path;
-
             public ushort vendor_id;
-
             public ushort product_id;
-
             public IntPtr serial_number;
-
             public ushort release_number;
-
             public IntPtr manufacturer_string;
-
             public IntPtr product_string;
-
             public ushort usage_page;
-
             public ushort usage;
-
             public int interface_number;
-
             public IntPtr next;
         }
-
-        #region Function Definitions
 
         [DllImport("hidapi.dll")]
         private static extern IntPtr hid_enumerate(ushort vendor_id, ushort product_id);
 
         [DllImport("hidapi.dll")]
+        private static extern void hid_free_enumeration(IntPtr devs);
+
+        [DllImport("hidapi.dll")]
         private static extern IntPtr hid_open(ushort vendor_id, ushort product_id, string serial_number);
 
         [DllImport("hidapi.dll")]
-        private static extern int hid_get_manufacturer_string(ref IntPtr handle, ref string buffer, ushort maxlen);
+        private static extern IntPtr hid_open_path(IntPtr path);
 
         [DllImport("hidapi.dll")]
-        private static extern void hid_close(ref IntPtr handle);
+        private static extern int hid_write(IntPtr handle, IntPtr data, size_t length);
+
+        [DllImport("hidapi.dll")]
+        private static extern int hid_read(IntPtr handle, IntPtr data, size_t length);
+
+        [DllImport("hidapi.dll")]
+        private static extern int hid_set_nonblocking(IntPtr handle, int nonblock);
+
+        [DllImport("hidapi.dll")]
+        private static extern int hid_send_feature_report(IntPtr handle, Byte[] data, size_t length);
+
+        [DllImport("hidapi.dll")]
+        private static extern int hid_get_feature_report(IntPtr handle, Byte[] data, size_t length);
+
+        [DllImport("hidapi.dll")]
+        private static extern void hid_close(IntPtr handle);
+
+        [DllImport("hidapi.dll")]
+        private static extern int hid_get_manufacturer_string(IntPtr handle, IntPtr buffer, size_t maxlen);
+
+        [DllImport("hidapi.dll")]
+        private static extern int hid_get_product_string(IntPtr handle, IntPtr buffer, size_t maxlen);
+
+        [DllImport("hidapi.dll")]
+        private static extern IntPtr hid_error(IntPtr handle);
 
         #endregion
 
-
-        public static IntPtr Enumerate(ushort vendor_id, ushort product_id)
+        public struct DeviceInfo
         {
-            return hid_enumerate(vendor_id, product_id);
+            public string Path;
+
+            public ushort VendorID;
+
+            public ushort ProductID;
+
+            public string SerialNumber;
+
+            public ushort ReleaseNumber;
+
+            public string ManufacturerString;
+
+            public string ProductString;
+
+            public ushort UsagePage;
+
+            public ushort Usage;
+
+            public int InterfaceNumber;
         }
 
-        public static IntPtr Open(ushort vendor_id, ushort product_id, string serial_number)
+        public struct RequestTypes
         {
-            return hid_open(vendor_id, product_id, serial_number);
+            public const byte GetReport = 0x01;
+            public const byte SetReport = 0x09;
         }
 
-        public static int GetManufacturerString(ref IntPtr handle, ref string buffer, ushort maxlen)
+        public DeviceInfo[] Enumerate(ushort vendor_id, ushort product_id)
         {
-            return hid_get_manufacturer_string(ref handle, ref buffer, maxlen);
+            IntPtr ptr = hid_enumerate(vendor_id, product_id);
+            hid_device_info dev_info = (hid_device_info)Marshal.PtrToStructure(ptr, typeof(hid_device_info));
+            List<DeviceInfo> devices = new List<DeviceInfo>();
+
+            for (int i = 0;; i++)
+            {
+                DeviceInfo dev = new DeviceInfo();
+
+                dev.Path = Marshal.PtrToStringAuto(dev_info.path);
+                dev.VendorID = dev_info.vendor_id;
+                dev.ProductID = dev_info.product_id;
+                dev.SerialNumber = Marshal.PtrToStringAuto(dev_info.serial_number);
+                dev.ReleaseNumber = dev_info.release_number;
+                dev.ManufacturerString = Marshal.PtrToStringAuto(dev_info.manufacturer_string);
+                dev.ProductString = Marshal.PtrToStringAuto(dev_info.product_string);
+                dev.UsagePage = dev_info.usage_page;
+                dev.Usage = dev_info.usage;
+                dev.InterfaceNumber = dev_info.interface_number;
+
+                devices.Add(dev);
+
+                if (dev_info.next == IntPtr.Zero)
+                    break;
+                dev_info = (hid_device_info)Marshal.PtrToStructure(dev_info.next, typeof(hid_device_info));
+            }
+
+            hid_free_enumeration(ptr);
+
+            return devices.ToArray();
         }
 
-        public static void Close(ref IntPtr handle)
+        public void Open(int vendor_id, int product_id, string serial_number)
         {
-            hid_close(ref handle);
+            this.handle = hid_open((ushort)vendor_id, (ushort)product_id, serial_number);
+
+            if (this.handle == IntPtr.Zero)
+                throw new Exception("Device not found!");
+        }
+
+        public void SetReport(Byte[] data)
+        {
+            if (hid_send_feature_report(this.handle, data, (size_t)data.Length) < 0)
+                throw new Exception("Unable to send feature report");
+        }
+
+        public Byte[] GetReport(Byte report_type, int expected)
+        {
+            Byte[] data = new Byte[expected];
+            data[0] = report_type;
+
+            if (hid_get_feature_report(this.handle, data, (size_t)data.Length) < 0)
+                throw new Exception("Unable to get feature report");
+
+            return data;
+        }
+
+        public void Close()
+        {
+            if (this.handle != IntPtr.Zero)
+                hid_close(this.handle);
+        }
+
+        public string GetManufacturerString()
+        {
+            IntPtr buffer = Marshal.AllocHGlobal(256);
+            if (hid_get_manufacturer_string(this.handle, buffer, 256) != 0)
+                throw new Exception("Error getting manufacturer string");
+
+            string manufacturer_string = Marshal.PtrToStringAuto(buffer);
+            Marshal.FreeHGlobal(buffer);
+
+            return manufacturer_string;
+        }
+
+        public string GetProductString()
+        {
+            IntPtr buffer = Marshal.AllocHGlobal(256);
+            if (hid_get_product_string(this.handle, buffer, 256) != 0)
+                throw new Exception("Error getting product string");
+
+            string product_string = Marshal.PtrToStringAuto(buffer);
+            Marshal.FreeHGlobal(buffer);
+
+            return product_string;
         }
     }
 }
