@@ -10,6 +10,9 @@ using LibUsbDotNet;
 using LibUsbDotNet.Info;
 using LibUsbDotNet.Main;
 
+using Cortex;
+using Cortex.OpenFocus;
+
 namespace ASCOM.OpenFocus
 {
     public partial class ConfigureDeviceForm : Form
@@ -28,9 +31,9 @@ namespace ASCOM.OpenFocus
 
         private void LoadValues()
         {
-            ASCOM.OpenFocus.Device.Connect(Serial);
-            UsbDeviceInfo info = ASCOM.OpenFocus.Device.Descriptor;
-            ASCOM.OpenFocus.Device.Disconnect();
+            Cortex.OpenFocus.Device.Connect(Serial);
+            UsbDeviceInfo info = Cortex.OpenFocus.Device.Descriptor;
+            Cortex.OpenFocus.Device.Disconnect();
 
             Version firmware = new Version(info.Descriptor.BcdDevice >> 8, 0xff & info.Descriptor.BcdDevice);
 
@@ -62,11 +65,11 @@ namespace ASCOM.OpenFocus
             {
                 if (setPosition.ShowDialog(this) == DialogResult.OK)
                 {
-                    ASCOM.OpenFocus.Device.Connect(Serial);
+                    Cortex.OpenFocus.Device.Connect(Serial);
 
-                    ASCOM.OpenFocus.Device.Position = UInt16.Parse(setPosition.Position);
+                    Cortex.OpenFocus.Device.Position = UInt16.Parse(setPosition.Position);
 
-                    ASCOM.OpenFocus.Device.Disconnect();
+                    Cortex.OpenFocus.Device.Disconnect();
                 }
             }
         }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FirmwareUpdater
+namespace Cortex.OpenFocus
 {
     public class Bootloader : IDisposable
     {

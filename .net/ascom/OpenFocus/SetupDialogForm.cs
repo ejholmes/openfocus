@@ -8,6 +8,9 @@ using System.Windows.Forms;
 
 using ASCOM.Utilities;
 
+using Cortex;
+using Cortex.OpenFocus;
+
 namespace ASCOM.OpenFocus
 {
     [ComVisible(false)]					// Form not registered for COM!

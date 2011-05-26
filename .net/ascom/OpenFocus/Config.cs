@@ -29,6 +29,9 @@ using System;
 
 using ASCOM.Utilities;
 
+using Cortex;
+using Cortex.OpenFocus;
+
 namespace ASCOM.OpenFocus
 {
     public partial class Config
@@ -37,7 +40,7 @@ namespace ASCOM.OpenFocus
 
         #region Default Values
 
-        private static String _Units                    = ASCOM.OpenFocus.Device.TemperatureUnits.Celsius;
+        private static String _Units                    = Cortex.OpenFocus.Device.TemperatureUnits.Celsius;
         private static String _DefaultDevice            = String.Empty;
 
         #endregion

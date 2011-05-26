@@ -6,7 +6,7 @@ using System.IO;
  * Start Code (1) | Byte Count (2) | Address (4) | Record Type (2) | Data (16) | CheckSum (2) | End Line (2)
  */
 
-namespace FirmwareUpdater
+namespace Cortex
 {
     public class IntelHexParser
     {

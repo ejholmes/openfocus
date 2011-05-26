@@ -28,29 +28,29 @@ using LibUsbDotNet;
 using LibUsbDotNet.Info;
 using LibUsbDotNet.Main;
 
-namespace ASCOM.OpenFocus
+namespace Cortex.OpenFocus
 {
     public class Device
     {
         /* Device capabilities */
         private struct Capabilities
         {
-            public const byte AbsolutePositioning       = 0x01;
-            public const byte TemperatureCompensation   = 0x02;
+            public const byte AbsolutePositioning = 0x01;
+            public const byte TemperatureCompensation = 0x02;
         }
 
         /* USB Requests */
         private struct Requests
         {
-            public const byte MoveTo                        = 0x00;
-            public const byte Halt                          = 0x01;
-            public const byte SetPosition                   = 0x02;
-            public const byte SetTemperatureCompensation    = 0x03;
-            public const byte RebootToBootloader            = 0x04;
-            public const byte GetPosition                   = 0x10;
-            public const byte IsMoving                      = 0x11;
-            public const byte GetCapabilities               = 0x12;
-            public const byte GetTemperature                = 0x13;
+            public const byte MoveTo = 0x00;
+            public const byte Halt = 0x01;
+            public const byte SetPosition = 0x02;
+            public const byte SetTemperatureCompensation = 0x03;
+            public const byte RebootToBootloader = 0x04;
+            public const byte GetPosition = 0x10;
+            public const byte IsMoving = 0x11;
+            public const byte GetCapabilities = 0x12;
+            public const byte GetTemperature = 0x13;
         }
 
         /* Temperature Display Units */
@@ -62,12 +62,12 @@ namespace ASCOM.OpenFocus
 
         private static byte _Capabilities;
 
-        private static Int16 Vendor_ID              = 0x20a0;
-        private static Int16 Product_ID             = 0x416b;
-        private static String ManufacturerString    = "Cortex Astronomy (cortexastronomy.com)";
-        private static String ProductString         = "OpenFocus";
+        private static Int16 Vendor_ID = 0x20a0;
+        private static Int16 Product_ID = 0x416b;
+        private static String ManufacturerString = "Cortex Astronomy (cortexastronomy.com)";
+        private static String ProductString = "OpenFocus";
 
-        private static bool TempCompEnabled         = false;
+        private static bool TempCompEnabled = false;
 
         private static UsbDeviceFinder UsbFinder = new UsbDeviceFinder(Vendor_ID, Product_ID);
         private static UsbDevice device;
@@ -103,8 +103,8 @@ namespace ASCOM.OpenFocus
                 device = UsbDevice.OpenUsbDevice(UsbFinder);
 
             /* According to V-USB licensing, we have to check manufacturer string and product string */
-            if (device == null 
-                || device.Info.ManufacturerString != ManufacturerString 
+            if (device == null
+                || device.Info.ManufacturerString != ManufacturerString
                 || device.Info.ProductString != ProductString) throw new Exception("Device Not Found");
 
             IUsbDevice usbDev = device as IUsbDevice;
@@ -113,10 +113,6 @@ namespace ASCOM.OpenFocus
                 usbDev.SetConfiguration(1);
                 usbDev.ClaimInterface(0);
             }
-
-            /* Use position stored from last connection if there is one */
-            if (Config.Position != 0)
-                Position = Config.Position;
 
             GetCapabilities();
 
@@ -147,8 +143,6 @@ namespace ASCOM.OpenFocus
         /* Disconnect the device */
         public static void Disconnect()
         {
-            /* Save the last position before disconnecting */
-            Config.Position = Position;
             device.Close();
         }
 
@@ -159,7 +153,7 @@ namespace ASCOM.OpenFocus
 
             int transfered;
             object buffer = null;
-            device.ControlTransfer(ref packet, buffer, 0, out transfered); 
+            device.ControlTransfer(ref packet, buffer, 0, out transfered);
         }
 
         /* Halt focuser */
@@ -199,17 +193,17 @@ namespace ASCOM.OpenFocus
             }
         }
 
-        /* Max position */
-        public static UInt16 MaxStep
-        {
-            get { return new Config.Device(device.Info.SerialString).MaxPosition; }
-        }
+        ///* Max position */
+        //public static UInt16 MaxStep
+        //{
+        //    get { return new Config.Device(device.Info.SerialString).MaxPosition; }
+        //}
 
-        /* Max steps per move */
-        public static UInt16 MaxIncrement
-        {
-            get { return new Config.Device(device.Info.SerialString).MaxPosition; }
-        }
+        ///* Max steps per move */
+        //public static UInt16 MaxIncrement
+        //{
+        //    get { return new Config.Device(device.Info.SerialString).MaxPosition; }
+        //}
 
         /* Current focuser position */
         public static UInt16 Position
@@ -220,7 +214,7 @@ namespace ASCOM.OpenFocus
 
                 int transfered;
                 object buffer = null;
-                device.ControlTransfer(ref packet, buffer, 0, out transfered); 
+                device.ControlTransfer(ref packet, buffer, 0, out transfered);
             }
             get
             {
@@ -246,11 +240,11 @@ namespace ASCOM.OpenFocus
             }
             set
             {
-                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Requests.SetTemperatureCompensation, (short)((value)?1:0), 1, 1);
+                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Requests.SetTemperatureCompensation, (short)((value) ? 1 : 0), 1, 1);
 
                 int transfered;
                 object buffer = null;
-                device.ControlTransfer(ref packet, buffer, 0, out transfered); 
+                device.ControlTransfer(ref packet, buffer, 0, out transfered);
 
                 TempCompEnabled = value;
             }
@@ -272,14 +266,8 @@ namespace ASCOM.OpenFocus
 
                 Int16 adc = (Int16)((buffer[1] << 8) | buffer[0]);
                 double kelvin = (5.00 * (double)adc * 100.00) / 1024.00;
-                double celsius = kelvin - 273.15;
 
-                if (Config.Units == Device.TemperatureUnits.Celsius)
-                    return celsius;
-                else if (Config.Units == Device.TemperatureUnits.Fahrenheit)
-                    return ((9.00/5.00) * celsius) + 32;
-                else
-                    return celsius;
+                return kelvin;
             }
         }
 

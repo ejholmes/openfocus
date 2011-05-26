@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace FirmwareUpdater
+namespace Cortex
 {
     using size_t = UInt16;
 
@@ -12,7 +12,7 @@ namespace FirmwareUpdater
 
         #region Definitions
 
-        [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Auto)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
         private struct hid_device_info
         {
             public IntPtr path;
@@ -92,7 +92,7 @@ namespace FirmwareUpdater
             hid_device_info dev_info = (hid_device_info)Marshal.PtrToStructure(ptr, typeof(hid_device_info));
             List<DeviceInfo> devices = new List<DeviceInfo>();
 
-            for (int i = 0;; i++)
+            for (int i = 0; ; i++)
             {
                 DeviceInfo dev = new DeviceInfo();
 

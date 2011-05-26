@@ -9,6 +9,9 @@ using System.IO;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
+using Cortex;
+using Cortex.OpenFocus;
+
 namespace FirmwareUpdater
 {
     public partial class MainWindow : Form

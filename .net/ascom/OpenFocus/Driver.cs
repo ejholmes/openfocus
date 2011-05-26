@@ -26,6 +26,9 @@ using System.Runtime.InteropServices;
 
 using ASCOM.Interface;
 
+using Cortex;
+using Cortex.OpenFocus;
+
 namespace ASCOM.OpenFocus
 {
     [Guid("378ee2b3-3ba0-44fe-b382-cd643610814e")]
@@ -94,7 +97,6 @@ namespace ASCOM.OpenFocus
         public void Halt()
         {
             Device.Halt();
-            Device.RebootToBootloader();
         }
 
         public bool IsMoving
@@ -111,12 +113,16 @@ namespace ASCOM.OpenFocus
                 {
                     case true:
                         this._Link = Device.Connect();
+                        if (Config.Position != 0)
+                            Device.Position = Config.Position;
                         break;
                     case false:
                         if (this._Link)
                         {
                             if (this.IsMoving)
                                 Device.Halt();
+                            /* Save the last position before disconnecting */
+                            Config.Position = Device.Position;
                             Device.Disconnect();
                             this._Link = false;
                         }
@@ -170,7 +176,18 @@ namespace ASCOM.OpenFocus
 
         public double Temperature
         {
-            get { return Device.Temperature; }
+            get
+            {
+                double kelvin = Device.Temperature;
+                double celsius = kelvin - 273.15;
+
+                if (Config.Units == Device.TemperatureUnits.Celsius)
+                    return celsius;
+                else if (Config.Units == Device.TemperatureUnits.Fahrenheit)
+                    return ((9.00 / 5.00) * celsius) + 32;
+                else
+                    return celsius;
+            }
         }
 
         #endregion
