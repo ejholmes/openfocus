@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
 
 namespace FirmwareUpdater
@@ -41,12 +39,6 @@ namespace FirmwareUpdater
 
         [DllImport("hidapi.dll")]
         private static extern IntPtr hid_open_path(IntPtr path);
-
-        [DllImport("hidapi.dll")]
-        private static extern int hid_write(IntPtr handle, Byte[] data, size_t length);
-
-        [DllImport("hidapi.dll")]
-        private static extern int hid_read(IntPtr handle, Byte[] data, size_t length);
 
         [DllImport("hidapi.dll")]
         private static extern int hid_set_nonblocking(IntPtr handle, int nonblock);
@@ -94,12 +86,6 @@ namespace FirmwareUpdater
             public int InterfaceNumber;
         }
 
-        /*public struct ReportID
-        {
-            public const byte GetReport = 0x01;
-            public const byte SetReport = 0x09;
-        }*/
-
         public DeviceInfo[] Enumerate(ushort vendor_id, ushort product_id)
         {
             IntPtr ptr = hid_enumerate(vendor_id, product_id);
@@ -139,20 +125,6 @@ namespace FirmwareUpdater
 
             if (this.handle == IntPtr.Zero)
                 throw new Exception("Device not found!");
-        }
-
-        public void Write(Byte[] data)
-        {
-            if (hid_write(this.handle, data, (size_t)data.Length) < 0)
-                throw new Exception(LastError());
-        }
-
-        public Byte[] Read(Byte[] data)
-        {
-            if (hid_read(this.handle, data, (size_t)data.Length) < 0)
-                throw new Exception(LastError());
-
-            return data;
         }
 
         public void SendFeatureReport(Byte[] data)

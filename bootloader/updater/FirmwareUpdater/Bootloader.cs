@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
 
 namespace FirmwareUpdater
 {
@@ -17,9 +13,9 @@ namespace FirmwareUpdater
 
         HID hid = new HID();
 
-        public Bootloader()
+        public Bootloader(int vid, int pid)
         {
-            hid.Open(0x16c0, 0x05df, null);
+            hid.Open(vid, pid, null);
         }
 
         public UInt16 PageSize

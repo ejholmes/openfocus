@@ -36,13 +36,13 @@ namespace FirmwareUpdater
         {
             try
             {
-                device = new Bootloader();
+                device = new Bootloader(0x16c0, 0x05df);
                 PageSize = device.PageSize;
                 FlashSize = device.FlashSize;
 
                 Log("Device Found!");
-                Log("Page Size: " + PageSize.ToString());
-                Log("Flash Size: " + FlashSize.ToString());
+                Log("Page Size: " + PageSize.ToString() + " bytes");
+                Log("Flash Size: " + FlashSize.ToString() + " bytes");
                 Log("");
 
                 this.btnLocateFirmware.Enabled = true;
@@ -86,7 +86,9 @@ namespace FirmwareUpdater
                 device.WriteBlock(address, data);
             }
 
-            //device.Reboot();
+#if !DEBUG
+            device.Reboot();
+#endif
 
             Log("");
             Log("Firmware update complete!");
