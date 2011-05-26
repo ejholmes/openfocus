@@ -48,7 +48,6 @@ namespace FirmwareUpdater
 
         private void btnFindDevice_Click(object sender, EventArgs e)
         {
-            bool rebooting = false;
             try
             {
                 device = new Bootloader(0x16c0, 0x05df);
