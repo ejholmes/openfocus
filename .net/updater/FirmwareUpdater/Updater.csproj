@@ -14,6 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <StartupObject>
     </StartupObject>
+    <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -98,4 +99,9 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>IF NOT EXIST "C:\Program Files\Microsoft\ILMerge\ILMerge.exe" GOTO NOMERGE
+"C:\Program Files\Microsoft\ILMerge\ILMerge.exe" "$(TargetFileName)" LibUsbDotNet.dll Cortex.dll /out:$(ProjectName)$(TargetExt)
+:NOMERGE</PostBuildEvent>
+  </PropertyGroup>
 </Project>
