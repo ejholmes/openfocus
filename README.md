@@ -31,7 +31,7 @@ Requirements:  [WinAVR][winavr] (if on Windows) or [CrossPack][crosspack] (if on
 Build:
 
 - Run: `cd firmware`, `make`
-- Flash with bootloadHID.exe: `make softflash` **or** Flash with HIDBootFlash: `open bootloader/HIDBootFlashexe`
+- Flash with Firmware Updater
 
 Building ASCOM Driver
 -----------
@@ -40,8 +40,8 @@ Requirements: [Visual C# Express 2008][c#], [ASCOM Platform][ascom]
 
 Build:
 
-- Open ascom/OpenFocus.sln in Visual C# Express 2008
-- Run **Build**
+- Open .net/ascom/OpenFocus.sln in Visual C# Express 2008
+- Run **Build Solution**
 
 [vusb]:http://www.obdev.at/products/vusb/index.html
 [libusb]:http://www.libusb.org/
