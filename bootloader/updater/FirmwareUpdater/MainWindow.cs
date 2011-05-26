@@ -43,7 +43,6 @@ namespace FirmwareUpdater
                 Log("Device Found!");
                 Log("Page Size: " + PageSize.ToString() + " bytes");
                 Log("Flash Size: " + FlashSize.ToString() + " bytes");
-                Log("");
 
                 this.btnLocateFirmware.Enabled = true;
                 this.btnFindDevice.Enabled = false;
@@ -74,7 +73,6 @@ namespace FirmwareUpdater
                 FileInfo file = new FileInfo(dialog.FileName);
                 Log("Opened file " + file.Name);
                 Log("Ready to upload " + dataBuffer.Length.ToString() + " bytes of data");
-                Log("");
 
                 this.btnUpload.Enabled = true;
             }
@@ -92,13 +90,12 @@ namespace FirmwareUpdater
                 device.WriteBlock(address, data);
             }
 
+            Log("Firmware update complete!");
+
 #if !DEBUG
+            Log("Device is rebooting");
             device.Reboot();
 #endif
-
-            Log("");
-            Log("Firmware update complete!");
-            Log("");
         }
     }
 }
