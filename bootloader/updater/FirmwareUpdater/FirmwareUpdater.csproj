@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bootloader.cs" />
     <Compile Include="HID.cs" />
     <Compile Include="IntelHexParser.cs" />
     <Compile Include="MainWindow.cs">

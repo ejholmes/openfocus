@@ -32,14 +32,15 @@ namespace FirmwareUpdater
 
         private static Byte[] dataBuffer = new Byte[65536 + 256];
 
-        public static Byte[] ParseFile(String file)
+        public static Byte[] ParseFile(String file, uint pagesize)
         {
             FileStream fp = File.OpenRead(file);
             IntelHexLine line;
+            int address = 0;
 
             while ((line = ParseLine(fp)) != null)
             {
-                int address = ParseHex(line.address);
+                address = ParseHex(line.address);
                 for (int i = 0; i < line.data.Length; i += 2)
                 {
                     Byte[] b = new Byte[2];
@@ -52,7 +53,13 @@ namespace FirmwareUpdater
 
             fp.Close();
 
-            return dataBuffer;
+            uint mask = pagesize - 1;
+            int endaddress = (int)((address + mask) & ~mask);
+
+            Byte[] returnBuffer = new Byte[endaddress];
+            Buffer.BlockCopy(dataBuffer, 0, returnBuffer, 0, endaddress);
+
+            return returnBuffer;
         }
 
         private static IntelHexLine ParseLine(FileStream fp)

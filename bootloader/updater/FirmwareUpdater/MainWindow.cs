@@ -16,23 +16,25 @@ namespace FirmwareUpdater
         {
             InitializeComponent();
 
-            HID hid = new HID();
-            hid.Open(0x16c0, 0x05df, null);
-            Console.WriteLine(hid.GetManufacturerString());
-            Console.WriteLine(hid.GetProductString());
+            /*Bootloader b = new Bootloader();
+            uint pagesize = b.PageSize;
+            uint flashsize = b.FlashSize;
 
-            Byte[] data = new Byte[7];
+            Byte[] bytes = IntelHexParser.ParseFile(@"C:\Users\ejholmes\Dropbox\Cortex Astronomy\Product Development\OpenFocus\firmware\main.hex", pagesize);
 
-            data = hid.GetReport(HID.RequestTypes.GetReport, 7);
+            Console.WriteLine("Uploading " + bytes.Length + " bytes");
 
-            /*Byte[] reboot = new Byte[2];
-            reboot[0] = HID.RequestTypes.SetReport
-            hid.SetReport(*/
+            for (uint address = 0; address < bytes.Length; address += pagesize)
+            {
+                Console.WriteLine("0x" + address.ToString("x") + " ... " + "0x" + (address + pagesize).ToString("x"));
 
-            Console.WriteLine("Page Size: " + ((data[2] << 8) | data[1]).ToString());
-            Console.WriteLine("Flash Size: " + ((data[6] << 24) | (data[5] << 16) | (data[4] << 8) | data[3]).ToString());
+                Byte[] data = new Byte[pagesize];
+                Buffer.BlockCopy(bytes, (int)address, data, 0, (int)pagesize);
 
-            hid.Close();
+                b.WriteBlock(address, data);
+            }
+
+            b.Reboot();*/
 
             return;
         }

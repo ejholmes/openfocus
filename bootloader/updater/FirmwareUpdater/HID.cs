@@ -43,10 +43,10 @@ namespace FirmwareUpdater
         private static extern IntPtr hid_open_path(IntPtr path);
 
         [DllImport("hidapi.dll")]
-        private static extern int hid_write(IntPtr handle, IntPtr data, size_t length);
+        private static extern int hid_write(IntPtr handle, Byte[] data, size_t length);
 
         [DllImport("hidapi.dll")]
-        private static extern int hid_read(IntPtr handle, IntPtr data, size_t length);
+        private static extern int hid_read(IntPtr handle, Byte[] data, size_t length);
 
         [DllImport("hidapi.dll")]
         private static extern int hid_set_nonblocking(IntPtr handle, int nonblock);
@@ -94,11 +94,11 @@ namespace FirmwareUpdater
             public int InterfaceNumber;
         }
 
-        public struct RequestTypes
+        /*public struct ReportID
         {
             public const byte GetReport = 0x01;
             public const byte SetReport = 0x09;
-        }
+        }*/
 
         public DeviceInfo[] Enumerate(ushort vendor_id, ushort product_id)
         {
@@ -141,19 +141,30 @@ namespace FirmwareUpdater
                 throw new Exception("Device not found!");
         }
 
-        public void SetReport(Byte[] data)
+        public void Write(Byte[] data)
         {
-            if (hid_send_feature_report(this.handle, data, (size_t)data.Length) < 0)
-                throw new Exception("Unable to send feature report");
+            if (hid_write(this.handle, data, (size_t)data.Length) < 0)
+                throw new Exception(LastError());
         }
 
-        public Byte[] GetReport(Byte report_type, int expected)
+        public Byte[] Read(Byte[] data)
         {
-            Byte[] data = new Byte[expected];
-            data[0] = report_type;
+            if (hid_read(this.handle, data, (size_t)data.Length) < 0)
+                throw new Exception(LastError());
 
+            return data;
+        }
+
+        public void SendFeatureReport(Byte[] data)
+        {
+            if (hid_send_feature_report(this.handle, data, (size_t)data.Length) < 0)
+                throw new Exception(LastError());
+        }
+
+        public Byte[] GetFeatureReport(Byte[] data)
+        {
             if (hid_get_feature_report(this.handle, data, (size_t)data.Length) < 0)
-                throw new Exception("Unable to get feature report");
+                throw new Exception(LastError());
 
             return data;
         }
@@ -186,6 +197,11 @@ namespace FirmwareUpdater
             Marshal.FreeHGlobal(buffer);
 
             return product_string;
+        }
+
+        public string LastError()
+        {
+            return Marshal.PtrToStringAuto(hid_error(this.handle));
         }
     }
 }
