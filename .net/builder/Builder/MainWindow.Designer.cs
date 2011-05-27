@@ -39,6 +39,7 @@
             this.cbGenerateSerial = new System.Windows.Forms.CheckBox();
             this.gbProgrammer = new System.Windows.Forms.GroupBox();
             this.cboxISPSerialPort = new System.Windows.Forms.ComboBox();
+            this.lblISPSerialPort = new System.Windows.Forms.Label();
             this.gbBaseDirectory.SuspendLayout();
             this.gbOptions.SuspendLayout();
             this.gbProgrammer.SuspendLayout();
@@ -149,6 +150,7 @@
             // 
             this.gbProgrammer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbProgrammer.Controls.Add(this.lblISPSerialPort);
             this.gbProgrammer.Controls.Add(this.cboxISPSerialPort);
             this.gbProgrammer.Location = new System.Drawing.Point(290, 64);
             this.gbProgrammer.Name = "gbProgrammer";
@@ -165,6 +167,15 @@
             this.cboxISPSerialPort.Size = new System.Drawing.Size(121, 21);
             this.cboxISPSerialPort.TabIndex = 0;
             // 
+            // lblISPSerialPort
+            // 
+            this.lblISPSerialPort.AutoSize = true;
+            this.lblISPSerialPort.Location = new System.Drawing.Point(22, 23);
+            this.lblISPSerialPort.Name = "lblISPSerialPort";
+            this.lblISPSerialPort.Size = new System.Drawing.Size(55, 13);
+            this.lblISPSerialPort.TabIndex = 1;
+            this.lblISPSerialPort.Text = "Serial Port";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -175,6 +186,7 @@
             this.Controls.Add(this.gbBaseDirectory);
             this.Controls.Add(this.btnBuild);
             this.Controls.Add(this.lbLog);
+            this.MinimumSize = new System.Drawing.Size(530, 362);
             this.Name = "MainWindow";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -184,6 +196,7 @@
             this.gbOptions.ResumeLayout(false);
             this.gbOptions.PerformLayout();
             this.gbProgrammer.ResumeLayout(false);
+            this.gbProgrammer.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -201,6 +214,7 @@
         private System.Windows.Forms.CheckBox cbBurnBootloader;
         private System.Windows.Forms.GroupBox gbProgrammer;
         private System.Windows.Forms.ComboBox cboxISPSerialPort;
+        private System.Windows.Forms.Label lblISPSerialPort;
     }
 }
 

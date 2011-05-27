@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Windows.Forms;
 using System.Diagnostics;
 
@@ -24,6 +25,8 @@ namespace Builder
 
             BaseDirectory = Properties.Settings.Default.Path;
             this.tbBaseDirectory.Text = BaseDirectory;
+
+            this.Text = this.Text + " - v" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
         public void Log(string text)
@@ -58,10 +61,12 @@ namespace Builder
 
         private void btnBuild_Click(object sender, EventArgs e)
         {
+            this.btnBuild.Enabled = false;
             BuildBurnBootloader();
             BuildBurnFirmware();
 
             Log("");
+            this.btnBuild.Enabled = true;
         }
 
         private Guid GenerateGUID()
@@ -106,19 +111,88 @@ namespace Builder
             Log("Cleaning firmware directory...");
             Make("clean");
             Log("Building firmware...");
-            Make("\"CFLAGS=-D\\\"USB_CFG_SERIAL_NUMBER=" + tokenized + "\\\" -DUSB_CFG_SERIAL_NUMBER_LEN=" + guid.ToString().ToCharArray().Length + "\"");
+
+            if (this.cbGenerateSerial.Checked)
+                Make("\"CFLAGS=-D\\\"USB_CFG_SERIAL_NUMBER=" + tokenized + "\\\" -DUSB_CFG_SERIAL_NUMBER_LEN=" + guid.ToString().ToCharArray().Length + "\"");
+            else
+                Make();
+
+            UploadFirmware();
+            
+            Log("");
+        }
+
+        private void UploadFirmware()
+        {
+            Byte[] dataBuffer;
+            uint PageSize = 0, FlashSize = 0;
 
             Log("Attempting to connect to bootloader");
 
             try
             {
-                // Connect bootloader
+                Bootloader.Connect();
+                PageSize = Bootloader.PageSize;
+                FlashSize = Bootloader.FlashSize;
+
+                Log("Device Found!");
+                Log("Page Size: " + PageSize.ToString() + " bytes");
+                Log("Flash Size: " + FlashSize.ToString() + " bytes");
             }
-            catch (DeviceNotFoundException ex)
+            catch (DeviceNotFoundException)
             {
-                Log(ex.Message);
+                try
+                {
+                    Device.Connect();
+                    Log("Rebooting device into firmware update mode...");
+                    Device.RebootToBootloader();
+                    Device.Disconnect();
+                    System.Threading.Thread.Sleep(2000);
+                    Application.DoEvents();
+                    UploadFirmware();
+                    return;
+                }
+                catch (DeviceNotFoundException)
+                {
+                    Log("Device not found!");
+                    return;
+                }
             }
-            Log("");
+
+            try
+            {
+                string FileName = BaseDirectory + CurrentDirectory + @"\main.hex";
+                dataBuffer = IntelHexParser.ParseFile(FileName, PageSize);
+
+                if (dataBuffer.Length > (FlashSize - 2048))
+                {
+                    Log("File is too large!");
+                    return;
+                }
+
+                FileInfo file = new FileInfo(FileName);
+                Log("Opened file " + file.Name);
+                Log("Ready to upload " + dataBuffer.Length.ToString() + " bytes of data");
+            }
+            catch (ChecksumMismatchException)
+            {
+                Log("Checksum mismatch! File is not valid.");
+                return;
+            }
+
+            for (uint address = 0; address < dataBuffer.Length; address += PageSize)
+            {
+                Byte[] data = new Byte[PageSize];
+                Buffer.BlockCopy(dataBuffer, (int)address, data, 0, (int)PageSize);
+
+                Log("Writing block 0x" + String.Format("{0:x3}", address) + " ... 0x" + String.Format("{0:x3}", (address + PageSize)));
+
+                Bootloader.WriteBlock(address, data);
+            }
+
+            Log("Firmware update complete!");
+            Log("Device is rebooting");
+            Bootloader.Reboot();
         }
 
         private void Make()
@@ -133,10 +207,11 @@ namespace Builder
             Process make = new Process();
 
             make.StartInfo.FileName = command;
-            //make.StartInfo.CreateNoWindow = true;
+            make.StartInfo.CreateNoWindow = true;
             make.StartInfo.WorkingDirectory = BaseDirectory + CurrentDirectory;
             make.StartInfo.Arguments = " " + Args;
             make.StartInfo.UseShellExecute = false;
+            make.StartInfo.ErrorDialog = false;
             make.StartInfo.RedirectStandardOutput = true;
             make.Start();
 

@@ -109,7 +109,7 @@ namespace Cortex
             int twos_comp = (~sum + 1) & 0xff;
             int checksum = ParseHex(line.checksum);
 
-            /*if (twos_comp != checksum)*/
+            if (twos_comp != checksum)
                 throw new ChecksumMismatchException("Checksum mismatch!", line, twos_comp);
         }
 
