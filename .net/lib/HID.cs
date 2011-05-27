@@ -124,7 +124,7 @@ namespace Cortex
             this.handle = hid_open((ushort)vendor_id, (ushort)product_id, serial_number);
 
             if (this.handle == IntPtr.Zero)
-                throw new Exception("Device not found!");
+                throw new DeviceNotFoundException("Device not found!");
         }
 
         public void SendFeatureReport(Byte[] data)

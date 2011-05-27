@@ -16,14 +16,12 @@ namespace FirmwareUpdater
 {
     public partial class MainWindow : Form
     {
-        Bootloader device;
-
         uint PageSize = 0;
         uint FlashSize = 0;
 
         Byte[] dataBuffer;
 
-        bool done = false;
+        bool done = true;
 
         public MainWindow()
         {
@@ -39,10 +37,10 @@ namespace FirmwareUpdater
 
         private void MainWindow_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
         {
-            if (device != null && !done)
+            if (!done)
             {
                 Log("No data uploaded...rebooting");
-                device.Reboot();
+                Bootloader.Reboot();
             }
         }
 
@@ -50,9 +48,10 @@ namespace FirmwareUpdater
         {
             try
             {
-                device = new Bootloader(0x16c0, 0x05df);
-                PageSize = device.PageSize;
-                FlashSize = device.FlashSize;
+                done = false;
+                Bootloader.Connect();
+                PageSize = Bootloader.PageSize;
+                FlashSize = Bootloader.FlashSize;
 
                 Log("Device Found!");
                 Log("Page Size: " + PageSize.ToString() + " bytes");
@@ -61,7 +60,7 @@ namespace FirmwareUpdater
                 this.btnLocateFirmware.Enabled = true;
                 this.btnFindDevice.Enabled = false;
             }
-            catch
+            catch (DeviceNotFoundException)
             {
                 try
                 {
@@ -73,7 +72,7 @@ namespace FirmwareUpdater
                     Application.DoEvents();
                     btnFindDevice_Click(null, null);
                 }
-                catch
+                catch (DeviceNotFoundException)
                 {
                     Log("Device not found!");
                 }
@@ -88,19 +87,26 @@ namespace FirmwareUpdater
 
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
-                dataBuffer = IntelHexParser.ParseFile(dialog.FileName, PageSize);
-
-                if (dataBuffer.Length > (FlashSize - 2048))
+                try
                 {
-                    Log("File is too large!");
-                    return;
+                    dataBuffer = IntelHexParser.ParseFile(dialog.FileName, PageSize);
+
+                    if (dataBuffer.Length > (FlashSize - 2048))
+                    {
+                        Log("File is too large!");
+                        return;
+                    }
+
+                    FileInfo file = new FileInfo(dialog.FileName);
+                    Log("Opened file " + file.Name);
+                    Log("Ready to upload " + dataBuffer.Length.ToString() + " bytes of data");
+
+                    this.btnUpload.Enabled = true;
                 }
-
-                FileInfo file = new FileInfo(dialog.FileName);
-                Log("Opened file " + file.Name);
-                Log("Ready to upload " + dataBuffer.Length.ToString() + " bytes of data");
-
-                this.btnUpload.Enabled = true;
+                catch (ChecksumMismatchException)
+                {
+                    Log("Checksum mismatch! File is not valid.");
+                }
             }
         }
 
@@ -113,12 +119,12 @@ namespace FirmwareUpdater
 
                 Log("Writing block 0x" + String.Format("{0:x3}", address) + " ... 0x" + String.Format("{0:x3}", (address + PageSize)));
 
-                device.WriteBlock(address, data);
+                Bootloader.WriteBlock(address, data);
             }
 
             Log("Firmware update complete!");
             Log("Device is rebooting");
-            device.Reboot();
+            Bootloader.Reboot();
             done = true;
 
             this.btnFindDevice.Enabled = false;

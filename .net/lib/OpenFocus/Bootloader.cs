@@ -2,8 +2,11 @@
 
 namespace Cortex.OpenFocus
 {
-    public class Bootloader : IDisposable
+    public class Bootloader
     {
+        private const Int16 Vendor_ID = 0x16c0;
+        private const Int16 Product_ID = 0x05df;
+
         struct ReportID
         {
             public static byte GetInfo = 0x01;
@@ -11,14 +14,19 @@ namespace Cortex.OpenFocus
             public static byte Reboot = 0x01;
         }
 
-        HID hid = new HID();
+        static HID hid = new HID();
 
-        public Bootloader(int vid, int pid)
+        public static void Connect()
         {
-            hid.Open(vid, pid, null);
+            hid.Open(Vendor_ID, Product_ID, null);
         }
 
-        public UInt16 PageSize
+        public static void Disconnect()
+        {
+            hid.Close();
+        }
+
+        public static UInt16 PageSize
         {
             get
             {
@@ -30,7 +38,7 @@ namespace Cortex.OpenFocus
             }
         }
 
-        public UInt32 FlashSize
+        public static UInt32 FlashSize
         {
             get
             {
@@ -42,7 +50,7 @@ namespace Cortex.OpenFocus
             }
         }
 
-        public void WriteBlock(UInt32 address, Byte[] data)
+        public static void WriteBlock(UInt32 address, Byte[] data)
         {
             Byte[] b = new Byte[4 + data.Length];
 
@@ -53,16 +61,16 @@ namespace Cortex.OpenFocus
             hid.SendFeatureReport(b);
         }
 
-        public void Reboot()
+        public static void Reboot()
         {
             Byte[] data = new Byte[7];
             data[0] = ReportID.Reboot;
             hid.SendFeatureReport(data);
 
-            hid.Close();
+            Disconnect();
         }
 
-        private Byte[] ToUsbInt(UInt32 value, int length)
+        private static Byte[] ToUsbInt(UInt32 value, int length)
         {
             Byte[] bytes = new Byte[length];
             for (int i = 0; i < length; i++)
@@ -74,7 +82,7 @@ namespace Cortex.OpenFocus
             return bytes;
         }
 
-        private UInt32 GetUsbInt(Byte[] bytes)
+        private static UInt32 GetUsbInt(Byte[] bytes)
         {
             UInt32 value = 0;
             int shift = 0;
@@ -86,19 +94,6 @@ namespace Cortex.OpenFocus
             }
 
             return value;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        public void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                hid.Close();
-            }
         }
     }
 }

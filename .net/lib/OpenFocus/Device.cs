@@ -62,10 +62,10 @@ namespace Cortex.OpenFocus
 
         private static byte _Capabilities;
 
-        private static Int16 Vendor_ID = 0x20a0;
-        private static Int16 Product_ID = 0x416b;
-        private static String ManufacturerString = "Cortex Astronomy (cortexastronomy.com)";
-        private static String ProductString = "OpenFocus";
+        public static Int16 Vendor_ID = 0x20a0;
+        public static Int16 Product_ID = 0x416b;
+        public static String ManufacturerString = "Cortex Astronomy (cortexastronomy.com)";
+        public static String ProductString = "OpenFocus";
 
         private static bool TempCompEnabled = false;
 
@@ -105,7 +105,7 @@ namespace Cortex.OpenFocus
             /* According to V-USB licensing, we have to check manufacturer string and product string */
             if (device == null
                 || device.Info.ManufacturerString != ManufacturerString
-                || device.Info.ProductString != ProductString) throw new Exception("Device Not Found");
+                || device.Info.ProductString != ProductString) throw new DeviceNotFoundException("Device not found");
 
             IUsbDevice usbDev = device as IUsbDevice;
             if (!ReferenceEquals(usbDev, null))
