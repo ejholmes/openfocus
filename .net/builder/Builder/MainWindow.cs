@@ -21,6 +21,9 @@ namespace Builder
         public MainWindow()
         {
             InitializeComponent();
+
+            BaseDirectory = Properties.Settings.Default.Path;
+            this.tbBaseDirectory.Text = BaseDirectory;
         }
 
         public void Log(string text)
@@ -66,6 +69,7 @@ namespace Builder
             Log("Generating new GUID for seral number...");
             Guid guid = Guid.NewGuid();
             Log("GUID: " + guid.ToString());
+            Log("");
 
             return guid;
         }
@@ -80,9 +84,15 @@ namespace Builder
             }
             Log("Building bootloader...");
             Make();
-            Log("Bootloader built. Flashing to device...");
-            //Make("install");
-            Log("Bootloader flashed to device");
+            
+            if (this.cbBurnBootloader.Checked)
+            {
+                Log("Flashing to device...");
+                Make("install");
+                Log("Bootloader flashed to device");
+            }
+
+            Log("");
         }
 
         private void BuildBurnFirmware()
@@ -104,10 +114,11 @@ namespace Builder
             {
                 // Connect bootloader
             }
-            catch
+            catch (DeviceNotFoundException ex)
             {
-                // Device not found
+                Log(ex.Message);
             }
+            Log("");
         }
 
         private void Make()
@@ -122,10 +133,21 @@ namespace Builder
             Process make = new Process();
 
             make.StartInfo.FileName = command;
+            //make.StartInfo.CreateNoWindow = true;
             make.StartInfo.WorkingDirectory = BaseDirectory + CurrentDirectory;
-            make.StartInfo.CreateNoWindow = true;
             make.StartInfo.Arguments = " " + Args;
+            make.StartInfo.UseShellExecute = false;
+            make.StartInfo.RedirectStandardOutput = true;
             make.Start();
+
+            string line = String.Empty;
+
+            Log("");
+
+            while (!String.IsNullOrEmpty((line = make.StandardOutput.ReadLine())))
+                Log(line);
+
+            Log("");
 
             make.WaitForExit();
         }

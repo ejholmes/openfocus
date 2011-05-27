@@ -34,10 +34,14 @@
             this.gbBaseDirectory = new System.Windows.Forms.GroupBox();
             this.btnBaseDirectorySelect = new System.Windows.Forms.Button();
             this.gbOptions = new System.Windows.Forms.GroupBox();
+            this.cbBurnBootloader = new System.Windows.Forms.CheckBox();
             this.cbCleanFirst = new System.Windows.Forms.CheckBox();
             this.cbGenerateSerial = new System.Windows.Forms.CheckBox();
+            this.gbProgrammer = new System.Windows.Forms.GroupBox();
+            this.cboxISPSerialPort = new System.Windows.Forms.ComboBox();
             this.gbBaseDirectory.SuspendLayout();
             this.gbOptions.SuspendLayout();
+            this.gbProgrammer.SuspendLayout();
             this.SuspendLayout();
             // 
             // lbLog
@@ -97,20 +101,31 @@
             // 
             // gbOptions
             // 
-            this.gbOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbOptions.Controls.Add(this.cbBurnBootloader);
             this.gbOptions.Controls.Add(this.cbCleanFirst);
             this.gbOptions.Controls.Add(this.cbGenerateSerial);
             this.gbOptions.Location = new System.Drawing.Point(12, 64);
             this.gbOptions.Name = "gbOptions";
-            this.gbOptions.Size = new System.Drawing.Size(490, 66);
+            this.gbOptions.Size = new System.Drawing.Size(272, 66);
             this.gbOptions.TabIndex = 4;
             this.gbOptions.TabStop = false;
             this.gbOptions.Text = "Options";
             // 
+            // cbBurnBootloader
+            // 
+            this.cbBurnBootloader.AutoSize = true;
+            this.cbBurnBootloader.Location = new System.Drawing.Point(163, 19);
+            this.cbBurnBootloader.Name = "cbBurnBootloader";
+            this.cbBurnBootloader.Size = new System.Drawing.Size(101, 17);
+            this.cbBurnBootloader.TabIndex = 2;
+            this.cbBurnBootloader.Text = "Burn bootloader";
+            this.cbBurnBootloader.UseVisualStyleBackColor = true;
+            // 
             // cbCleanFirst
             // 
             this.cbCleanFirst.AutoSize = true;
+            this.cbCleanFirst.Checked = true;
+            this.cbCleanFirst.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbCleanFirst.Location = new System.Drawing.Point(6, 42);
             this.cbCleanFirst.Name = "cbCleanFirst";
             this.cbCleanFirst.Size = new System.Drawing.Size(104, 17);
@@ -125,21 +140,41 @@
             this.cbGenerateSerial.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbGenerateSerial.Location = new System.Drawing.Point(6, 19);
             this.cbGenerateSerial.Name = "cbGenerateSerial";
-            this.cbGenerateSerial.Size = new System.Drawing.Size(119, 17);
+            this.cbGenerateSerial.Size = new System.Drawing.Size(115, 17);
             this.cbGenerateSerial.TabIndex = 0;
-            this.cbGenerateSerial.Text = "Generate Serial No.";
+            this.cbGenerateSerial.Text = "Generate serial no.";
             this.cbGenerateSerial.UseVisualStyleBackColor = true;
+            // 
+            // gbProgrammer
+            // 
+            this.gbProgrammer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbProgrammer.Controls.Add(this.cboxISPSerialPort);
+            this.gbProgrammer.Location = new System.Drawing.Point(290, 64);
+            this.gbProgrammer.Name = "gbProgrammer";
+            this.gbProgrammer.Size = new System.Drawing.Size(212, 66);
+            this.gbProgrammer.TabIndex = 5;
+            this.gbProgrammer.TabStop = false;
+            this.gbProgrammer.Text = "ISP Programmer Options";
+            // 
+            // cboxISPSerialPort
+            // 
+            this.cboxISPSerialPort.FormattingEnabled = true;
+            this.cboxISPSerialPort.Location = new System.Drawing.Point(83, 19);
+            this.cboxISPSerialPort.Name = "cboxISPSerialPort";
+            this.cboxISPSerialPort.Size = new System.Drawing.Size(121, 21);
+            this.cboxISPSerialPort.TabIndex = 0;
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(514, 324);
+            this.Controls.Add(this.gbProgrammer);
             this.Controls.Add(this.gbOptions);
             this.Controls.Add(this.gbBaseDirectory);
             this.Controls.Add(this.btnBuild);
             this.Controls.Add(this.lbLog);
-            this.MaximizeBox = false;
             this.Name = "MainWindow";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -148,6 +183,7 @@
             this.gbBaseDirectory.PerformLayout();
             this.gbOptions.ResumeLayout(false);
             this.gbOptions.PerformLayout();
+            this.gbProgrammer.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -162,6 +198,9 @@
         private System.Windows.Forms.GroupBox gbOptions;
         private System.Windows.Forms.CheckBox cbGenerateSerial;
         private System.Windows.Forms.CheckBox cbCleanFirst;
+        private System.Windows.Forms.CheckBox cbBurnBootloader;
+        private System.Windows.Forms.GroupBox gbProgrammer;
+        private System.Windows.Forms.ComboBox cboxISPSerialPort;
     }
 }
 
