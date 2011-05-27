@@ -23,6 +23,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Timers;
 
 using ASCOM.Interface;
 
@@ -41,12 +42,17 @@ namespace ASCOM.OpenFocus
 
         private bool _Link = false;
 
+        private Timer TempCompTimer = new Timer(10000);
+        private double LastTemperature = 0;
+
         //
         // Constructor - Must be public for COM registration!
         //
         public Focuser()
         {
             Config.Profile.DeviceType = s_csDeviceType;
+
+            TempCompTimer.Elapsed += new ElapsedEventHandler(TempCompTimer_Elapsed);
         }
 
         #region ASCOM Registration
@@ -163,17 +169,20 @@ namespace ASCOM.OpenFocus
             get { return 2; }
         }
 
+        /* Set to true to enable temperature compensation */
         public bool TempComp
         {
             get { return Device.TempComp; }
-            set { Device.TempComp = value; }
+            set { TempCompTimer.Enabled = value; Device.TempComp = value; }
         }
 
+        /* Asks the device if it can do temperature compensation */
         public bool TempCompAvailable
         {
             get { return Device.TempCompAvailable; }
         }
 
+        /* Gets a temperature reading from the device */
         public double Temperature
         {
             get
@@ -188,6 +197,25 @@ namespace ASCOM.OpenFocus
                 else
                     return celsius;
             }
+        }
+
+        /*
+         * This event fires when the timer interval is up
+         * 
+         * We check to see if the temperature has changed then calculate how far 
+         * we should move the focuser according to the temperature coefficient
+         */
+        private void TempCompTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            double CurrentTemperature = Device.Temperature;
+
+            if (LastTemperature != 0 && !IsMoving)
+            {
+                double delta = CurrentTemperature - LastTemperature;
+                Move((int)(Position + (new Config.Device(Device.Serial).TemperatureCoefficient * delta)));
+            }
+
+            LastTemperature = CurrentTemperature;
         }
 
         #endregion
