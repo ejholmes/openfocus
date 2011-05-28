@@ -93,7 +93,7 @@ namespace Builder
             if (this.cbBurnBootloader.Checked)
             {
                 Log("Flashing to device...");
-                Make("install");
+                Make("install", true);
                 Log("Bootloader flashed to device");
             }
 
@@ -112,12 +112,46 @@ namespace Builder
             Make("clean");
             Log("Building firmware...");
 
-            if (this.cbGenerateSerial.Checked)
-                Make("\"CFLAGS=-D\\\"USB_CFG_SERIAL_NUMBER=" + tokenized + "\\\" -DUSB_CFG_SERIAL_NUMBER_LEN=" + guid.ToString().ToCharArray().Length + "\"");
-            else
-                Make();
+            List<string> Defines = new List<string>();
 
-            UploadFirmware();
+            if (this.cbGenerateSerial.Checked)
+            {
+                Defines.Add("USB_CFG_SERIAL_NUMBER=" + tokenized);
+                Defines.Add("USB_CFG_SERIAL_NUMBER_LEN=" + guid.ToString().ToCharArray().Length);
+            }
+
+            if (this.cbAbsolutePositioning.Checked)
+                Defines.Add("CAN_ABSOLUTE_POSITION=1");
+
+            if (this.cbTemperatureCompensation.Checked)
+                Defines.Add("CAN_TEMPERATURE_COMPENSATE=1");
+
+            StringBuilder CFLAGS = new StringBuilder();
+
+            if (Defines.Count > 0)
+            {
+                CFLAGS.Append("\"CFLAGS=");
+
+                foreach (string define in Defines)
+                {
+                    CFLAGS.Append("-D\\\"" + define + "\\\" ");
+                }
+
+                CFLAGS.Append("\"");
+            }
+
+            Make(CFLAGS.ToString());
+
+            if (!this.cbBurnBootloader.Checked || (this.cbBurnBootloader.Checked && MessageBox.Show("Push the firmware button on the device", 
+                "Device reboot required", 
+                MessageBoxButtons.OKCancel, 
+                MessageBoxIcon.Information, 
+                MessageBoxDefaultButton.Button1) == DialogResult.OK))
+            {
+                UploadFirmware();
+            }
+
+            
             
             Log("");
         }
@@ -202,16 +236,21 @@ namespace Builder
 
         private void Make(string Args)
         {
+            Make(Args, true);
+        }
+
+        private void Make(string Args, bool redirect)
+        {
             String command = "make.exe";
 
             Process make = new Process();
 
             make.StartInfo.FileName = command;
-            make.StartInfo.CreateNoWindow = true;
+            make.StartInfo.CreateNoWindow = redirect;
             make.StartInfo.WorkingDirectory = BaseDirectory + CurrentDirectory;
             make.StartInfo.Arguments = " " + Args;
-            make.StartInfo.UseShellExecute = false;
             make.StartInfo.ErrorDialog = false;
+            make.StartInfo.UseShellExecute = false;
             make.StartInfo.RedirectStandardOutput = true;
             make.Start();
 
