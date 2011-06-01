@@ -13,9 +13,19 @@ Features include:
 
 Installation
 ------------
-Download the latest setup executable from the [[downloads|https://github.com/CortexAstronomy/OpenFocus/downloads]] page.
+Download the latest setup executable from the [downloads][downloads] page.
 
 
 Building from source
 -------------------
-See the [[wiki article|https://github.com/CortexAstronomy/OpenFocus/wiki/Building]] for instructions on building from source.
+See the [wiki article][wiki] for instructions on building from source.
+
+[vusb]:http://www.obdev.at/products/vusb/index.html
+[libusb]:http://www.libusb.org/
+[winavr]:http://winavr.sourceforge.net/
+[crosspack]:http://www.obdev.at/products/crosspack/index.html
+[msys]:http://www.mingw.org/wiki/MSYS
+[ascom]:http://ascom-standards.org/
+[c#]:http://www.microsoft.com/express/Downloads/#2008-Visual-CS
+[downloads]:https://github.com/CortexAstronomy/OpenFocus/downloads
+[wiki]:https://github.com/CortexAstronomy/OpenFocus/wiki/Building
