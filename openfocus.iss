@@ -22,7 +22,7 @@ Compression=lzma/Normal
 SolidCompression=false
 ; Put there by Platform if Driver Installer Support selected
 WizardImageFile="C:\Program Files\ASCOM\InstallGen\Resources\WizardImage.bmp"
-LicenseFile="C:\Program Files\ASCOM\InstallGen\Resources\CreativeCommons.txt"
+LicenseFile="LICENSE.txt"
 ; {cf}\ASCOM\Uninstall\Focuser folder created by Platform, always
 UninstallFilesDir="{cf}\ASCOM\Uninstall\Focuser\OpenFocus"
 PrivilegesRequired=admin
@@ -45,11 +45,11 @@ Name: win32; Description: Install the Windows driver;
 Name: source; Description: Install the Source files; Flags: unchecked
 
 [Files]
-Source: ".net\ascom\OpenFocus\bin\Release\OpenFocus.dll"; DestDir: "{app}"; Tasks: ascom
+Source: "windows\ascom\OpenFocus\bin\Release\OpenFocus.dll"; DestDir: "{app}"; Tasks: ascom
 ; Require a read-me HTML to appear after installation, maybe driver's Help doc
-Source: "README.md"; DestDir: "{app}"; Flags: isreadme; Tasks: ascom
+; Source: "README.md"; DestDir: "{app}"; Flags: isreadme; Tasks: ascom
 ; Optional source files (COM and .NET aware)
-Source: ".net\ascom\OpenFocus\*"; Excludes: *.zip,*.exe,*.dll, \bin\*, \obj\*, \driver\*; DestDir: "{app}\Source\ASCOM"; Tasks: source; Flags: recursesubdirs
+Source: "windows\ascom\OpenFocus\*"; Excludes: *.zip,*.exe,*.dll, \bin\*, \obj\*, \driver\*; DestDir: "{app}\Source\ASCOM"; Tasks: source; Flags: recursesubdirs
 
 ; copy your libusb-win32 setup package to the App folder
 Source: "driver\*"; Excludes: "*.exe"; Flags: recursesubdirs; DestDir: "{app}\driver"
