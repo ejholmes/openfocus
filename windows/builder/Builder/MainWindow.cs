@@ -16,6 +16,8 @@ namespace Builder
 {
     public partial class MainWindow : Form
     {
+        Timer tempTimer = new Timer();
+
         String CurrentDirectory = String.Empty;
         String BaseDirectory = String.Empty;
 
@@ -69,12 +71,14 @@ namespace Builder
                 btnBaseDirectorySelect_Click(null, null);
                 return;
             }
+            this.btnConnect.Enabled = false;
             this.btnBuild.Enabled = false;
             BuildBurnBootloader();
             BuildBurnFirmware();
 
             Logger.Write();
             this.btnBuild.Enabled = true;
+            this.btnConnect.Enabled = true;
         }
 
         private Guid GenerateGUID()
@@ -204,6 +208,49 @@ namespace Builder
             Logger.Write("");
 
             make.WaitForExit();
+        }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            if (this.btnConnect.Text == "Connect" && Device.Connect())
+            {
+                this.btnTemperatureTestStart.Enabled = true;
+
+                this.btnConnect.Text = "Disconnect";
+            }
+            else if (this.btnConnect.Text == "Disconnect")
+            {
+                Device.Disconnect();
+                this.btnConnect.Text = "Connect";
+            }
+        }
+
+        private void btnTemperatureTestStart_Click(object sender, EventArgs e)
+        {
+            this.btnTemperatureTestStart.Enabled = false;
+            this.btnTemperatureTestStop.Enabled = true;
+
+            tempTimer.Interval = 200;
+            tempTimer.Tick += new EventHandler(tempTimer_Tick);
+
+            tempTimer.Start();
+        }
+
+        void tempTimer_Tick(object sender, EventArgs e)
+        {
+            double temperature = Device.Temperature;
+
+            this.lbTemperatureLog.Items.Add("Temp: " + temperature.ToString());
+
+            this.lbTemperatureLog.SelectedIndex = this.lbTemperatureLog.Items.Count - 1;
+        }
+
+        private void btnTemperatureTestStop_Click(object sender, EventArgs e)
+        {
+            this.btnTemperatureTestStop.Enabled = false;
+            this.btnTemperatureTestStart.Enabled = true;
+
+            tempTimer.Stop();
         }
     }
 }

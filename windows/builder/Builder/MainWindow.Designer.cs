@@ -46,12 +46,19 @@
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tpProgram = new System.Windows.Forms.TabPage();
             this.tpTesting = new System.Windows.Forms.TabPage();
+            this.btnConnect = new System.Windows.Forms.Button();
+            this.gbTemperatureTest = new System.Windows.Forms.GroupBox();
+            this.lbTemperatureLog = new System.Windows.Forms.ListBox();
+            this.btnTemperatureTestStart = new System.Windows.Forms.Button();
+            this.btnTemperatureTestStop = new System.Windows.Forms.Button();
             this.gbBaseDirectory.SuspendLayout();
             this.gbOptions.SuspendLayout();
             this.gbProgrammer.SuspendLayout();
             this.gbCapabilities.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tpProgram.SuspendLayout();
+            this.tpTesting.SuspendLayout();
+            this.gbTemperatureTest.SuspendLayout();
             this.SuspendLayout();
             // 
             // lbLog
@@ -250,6 +257,8 @@
             // 
             // tpTesting
             // 
+            this.tpTesting.Controls.Add(this.gbTemperatureTest);
+            this.tpTesting.Controls.Add(this.btnConnect);
             this.tpTesting.Location = new System.Drawing.Point(4, 22);
             this.tpTesting.Name = "tpTesting";
             this.tpTesting.Padding = new System.Windows.Forms.Padding(3);
@@ -257,6 +266,58 @@
             this.tpTesting.TabIndex = 1;
             this.tpTesting.Text = "Testing";
             this.tpTesting.UseVisualStyleBackColor = true;
+            // 
+            // btnConnect
+            // 
+            this.btnConnect.Location = new System.Drawing.Point(6, 6);
+            this.btnConnect.Name = "btnConnect";
+            this.btnConnect.Size = new System.Drawing.Size(755, 23);
+            this.btnConnect.TabIndex = 0;
+            this.btnConnect.Text = "Connect";
+            this.btnConnect.UseVisualStyleBackColor = true;
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
+            // 
+            // gbTemperatureTest
+            // 
+            this.gbTemperatureTest.Controls.Add(this.btnTemperatureTestStop);
+            this.gbTemperatureTest.Controls.Add(this.btnTemperatureTestStart);
+            this.gbTemperatureTest.Controls.Add(this.lbTemperatureLog);
+            this.gbTemperatureTest.Location = new System.Drawing.Point(6, 35);
+            this.gbTemperatureTest.Name = "gbTemperatureTest";
+            this.gbTemperatureTest.Size = new System.Drawing.Size(251, 376);
+            this.gbTemperatureTest.TabIndex = 1;
+            this.gbTemperatureTest.TabStop = false;
+            this.gbTemperatureTest.Text = "Temperature Test";
+            // 
+            // lbTemperatureLog
+            // 
+            this.lbTemperatureLog.FormattingEnabled = true;
+            this.lbTemperatureLog.Location = new System.Drawing.Point(6, 19);
+            this.lbTemperatureLog.Name = "lbTemperatureLog";
+            this.lbTemperatureLog.Size = new System.Drawing.Size(239, 316);
+            this.lbTemperatureLog.TabIndex = 2;
+            // 
+            // btnTemperatureTestStart
+            // 
+            this.btnTemperatureTestStart.Enabled = false;
+            this.btnTemperatureTestStart.Location = new System.Drawing.Point(89, 347);
+            this.btnTemperatureTestStart.Name = "btnTemperatureTestStart";
+            this.btnTemperatureTestStart.Size = new System.Drawing.Size(75, 23);
+            this.btnTemperatureTestStart.TabIndex = 2;
+            this.btnTemperatureTestStart.Text = "Start";
+            this.btnTemperatureTestStart.UseVisualStyleBackColor = true;
+            this.btnTemperatureTestStart.Click += new System.EventHandler(this.btnTemperatureTestStart_Click);
+            // 
+            // btnTemperatureTestStop
+            // 
+            this.btnTemperatureTestStop.Enabled = false;
+            this.btnTemperatureTestStop.Location = new System.Drawing.Point(170, 347);
+            this.btnTemperatureTestStop.Name = "btnTemperatureTestStop";
+            this.btnTemperatureTestStop.Size = new System.Drawing.Size(75, 23);
+            this.btnTemperatureTestStop.TabIndex = 2;
+            this.btnTemperatureTestStop.Text = "Stop";
+            this.btnTemperatureTestStop.UseVisualStyleBackColor = true;
+            this.btnTemperatureTestStop.Click += new System.EventHandler(this.btnTemperatureTestStop_Click);
             // 
             // MainWindow
             // 
@@ -279,6 +340,8 @@
             this.gbCapabilities.PerformLayout();
             this.tabControl.ResumeLayout(false);
             this.tpProgram.ResumeLayout(false);
+            this.tpTesting.ResumeLayout(false);
+            this.gbTemperatureTest.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -303,6 +366,11 @@
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage tpProgram;
         private System.Windows.Forms.TabPage tpTesting;
+        private System.Windows.Forms.Button btnConnect;
+        private System.Windows.Forms.GroupBox gbTemperatureTest;
+        private System.Windows.Forms.Button btnTemperatureTestStop;
+        private System.Windows.Forms.Button btnTemperatureTestStart;
+        private System.Windows.Forms.ListBox lbTemperatureLog;
     }
 }
 

@@ -166,18 +166,6 @@ namespace Cortex.OpenFocus
             }
         }
 
-        ///* Max position */
-        //public static UInt16 MaxStep
-        //{
-        //    get { return new Config.Device(device.Info.SerialString).MaxPosition; }
-        //}
-
-        ///* Max steps per move */
-        //public static UInt16 MaxIncrement
-        //{
-        //    get { return new Config.Device(device.Info.SerialString).MaxPosition; }
-        //}
-
         /* Current focuser position */
         public static UInt16 Position
         {
