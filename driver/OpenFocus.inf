@@ -6,7 +6,7 @@ Class     = "USB"
 ClassGUID = {36fc9e60-c465-11cf-8056-444553540000}
 Provider  = "libusb-win32"
 CatalogFile = OpenFocus.cat
-DriverVer = 5/9/2011, 1.2.3.0
+DriverVer = 4/8/2011, 1.2.4.0
 
 [Manufacturer]
 "Cortex Astronomy"=Devices, NT, NTAMD64, NTIA64
@@ -104,7 +104,7 @@ HKR,,SurpriseRemovalOK, 0x00010001, 1
 ;--------------------------------------------------------------------------
 
 [libusb_add_service]
-DisplayName    = "LibUsb-Win32 - Kernel Driver 1.2.3.0, 5/9/2011"
+DisplayName    = "LibUsb-Win32 - Kernel Driver 1.2.4.0, 4/8/2011"
 ServiceType    = 1
 StartType      = 3
 ErrorControl   = 0
