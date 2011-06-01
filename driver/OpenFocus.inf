@@ -6,7 +6,7 @@ Class     = "USB"
 ClassGUID = {36fc9e60-c465-11cf-8056-444553540000}
 Provider  = "libusb-win32"
 CatalogFile = OpenFocus.cat
-DriverVer = 4/8/2011, 1.2.4.0
+DriverVer = 04/08/2011, 1.2.4.0
 
 [Manufacturer]
 "Cortex Astronomy"=Devices, NT, NTAMD64, NTIA64
