@@ -44,10 +44,12 @@
             // 
             this.lbLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbLog.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbLog.FormattingEnabled = true;
+            this.lbLog.ItemHeight = 15;
             this.lbLog.Location = new System.Drawing.Point(12, 84);
             this.lbLog.Name = "lbLog";
-            this.lbLog.Size = new System.Drawing.Size(422, 160);
+            this.lbLog.Size = new System.Drawing.Size(422, 154);
             this.lbLog.TabIndex = 0;
             // 
             // groupBox1
@@ -108,7 +110,7 @@
             this.btnUpload.Name = "btnUpload";
             this.btnUpload.Size = new System.Drawing.Size(75, 23);
             this.btnUpload.TabIndex = 0;
-            this.btnUpload.Text = "Update!";
+            this.btnUpload.Text = "Upload";
             this.btnUpload.UseVisualStyleBackColor = true;
             this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
             // 
@@ -121,7 +123,10 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.lbLog);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = global::FirmwareUpdater.Properties.Resources.icon;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "MainWindow";
             this.Text = "Firmware Updater";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
