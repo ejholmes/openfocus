@@ -61,6 +61,75 @@ namespace Cortex.OpenFocus
             hid.SendFeatureReport(b);
         }
 
+        public static void UploadFile(string file)
+        {
+            Byte[] data = null;
+            uint PageSize = 0, FlashSize = 0;
+
+            Logger.Write("Attempting to connect to bootloader");
+
+            try /* Try to connect to the bootloader */
+            {
+                Connect();
+                PageSize = Bootloader.PageSize;
+                FlashSize = Bootloader.FlashSize;
+
+                Logger.Write("Device Found!");
+                Logger.Write("Page Size: " + PageSize.ToString() + " bytes");
+                Logger.Write("Flash Size: " + FlashSize.ToString() + " bytes");
+            }
+            catch (DeviceNotFoundException) /* If the device isn't found... */
+            {
+                try /* Try connecting to the device and rebooting it into the bootloader */
+                {
+                    Device.Connect();
+                    Logger.Write("Rebooting device into firmware update mode...");
+                    Device.RebootToBootloader();
+                    Device.Disconnect();
+                    System.Threading.Thread.Sleep(2000);
+                    UploadFile(file); /* If successful, wait 2 seconds and then retry */
+                    return;
+                }
+                catch (DeviceNotFoundException) /* If this is reach, the device probably not connected */
+                {
+                    Logger.Write("Device not found!");
+                    return;
+                }
+            }
+            
+            try
+            {
+                data = IntelHexParser.ParseFile(file, PageSize);
+
+                if (data.Length > (FlashSize - 2048))
+                {
+                    Logger.Write("File is too large!");
+                    return;
+                }
+                Logger.Write("Ready to upload " + data.Length.ToString() + " bytes of data");
+            }
+            catch (ChecksumMismatchException)
+            {
+                Logger.Write("Checksum mismatch! File is not valid.");
+                return;
+            }
+
+            /* Now that the device is connected, write the data, page by page. */
+            for (uint address = 0; address < data.Length; address += PageSize)
+            {
+                Byte[] page = new Byte[PageSize];
+                Buffer.BlockCopy(data, (int)address, page, 0, (int)PageSize);
+
+                Logger.Write("Writing block 0x" + String.Format("{0:x3}", address) + " ... 0x" + String.Format("{0:x3}", (address + PageSize)));
+
+                Bootloader.WriteBlock(address, page);
+            }
+
+            Logger.Write("Firmware update complete!");
+            Logger.Write("Device is rebooting");
+            Bootloader.Reboot();
+        }
+
         public static void Reboot()
         {
             Byte[] data = new Byte[7];

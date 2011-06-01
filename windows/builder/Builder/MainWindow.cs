@@ -27,12 +27,14 @@ namespace Builder
             this.tbBaseDirectory.Text = BaseDirectory;
 
             this.Text = this.Text + " - v" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+            Logger.LoggerWrite += new Logger.LoggerWriteEventHandler(Logger_LoggerWrite);
         }
 
-        public void Log(string text)
+        void Logger_LoggerWrite(object sender, LoggerEventArgs e)
         {
-            this.lbLog.Items.Add(text);
-            if (text == String.Empty)
+            this.lbLog.Items.Add(e.Text);
+            if (e.Text == String.Empty)
             {
                 int current = this.lbLog.SelectedIndex;
                 this.lbLog.SelectedIndex = this.lbLog.Items.Count - 1;
@@ -61,43 +63,49 @@ namespace Builder
 
         private void btnBuild_Click(object sender, EventArgs e)
         {
+            if (String.IsNullOrEmpty(BaseDirectory))
+            {
+                MessageBox.Show("Please select the directory for the project");
+                btnBaseDirectorySelect_Click(null, null);
+                return;
+            }
             this.btnBuild.Enabled = false;
             BuildBurnBootloader();
             BuildBurnFirmware();
 
-            Log("");
+            Logger.Write();
             this.btnBuild.Enabled = true;
         }
 
         private Guid GenerateGUID()
         {
-            Log("Generating new GUID for seral number...");
+            Logger.Write("Generating new GUID for seral number...");
             Guid guid = Guid.NewGuid();
-            Log("GUID: " + guid.ToString());
-            Log("");
+            Logger.Write("GUID: " + guid.ToString());
+            Logger.Write("");
 
             return guid;
         }
 
         private void BuildBurnBootloader()
         {
-            CurrentDirectory = @"\bootloader\firmware";
+            CurrentDirectory = @"\firmware\bootloader";
             if (this.cbCleanFirst.Checked)
             {
-                Log("Cleaning bootloader directory...");
+                Logger.Write("Cleaning bootloader directory...");
                 Make("clean");
             }
-            Log("Building bootloader...");
+            Logger.Write("Building bootloader...");
             Make();
             
             if (this.cbBurnBootloader.Checked)
             {
-                Log("Flashing to device...");
+                Logger.Write("Flashing to device...");
                 Make("install", true);
-                Log("Bootloader flashed to device");
+                Logger.Write("Bootloader flashed to device");
             }
 
-            Log("");
+            Logger.Write("");
         }
 
         private void BuildBurnFirmware()
@@ -108,9 +116,9 @@ namespace Builder
             /* Generate a GUID based serial, split to individual characters and join with commas */
             string tokenized = String.Join(",", guid.ToString().ToCharArray().Select(x => "'" + x.ToString() + "'").ToArray());
 
-            Log("Cleaning firmware directory...");
+            Logger.Write("Cleaning firmware directory...");
             Make("clean");
-            Log("Building firmware...");
+            Logger.Write("Building firmware...");
 
             List<string> Defines = new List<string>();
 
@@ -153,80 +161,12 @@ namespace Builder
 
             
             
-            Log("");
+            Logger.Write("");
         }
 
         private void UploadFirmware()
         {
-            Byte[] dataBuffer;
-            uint PageSize = 0, FlashSize = 0;
-
-            Log("Attempting to connect to bootloader");
-
-            try
-            {
-                Bootloader.Connect();
-                PageSize = Bootloader.PageSize;
-                FlashSize = Bootloader.FlashSize;
-
-                Log("Device Found!");
-                Log("Page Size: " + PageSize.ToString() + " bytes");
-                Log("Flash Size: " + FlashSize.ToString() + " bytes");
-            }
-            catch (DeviceNotFoundException)
-            {
-                try
-                {
-                    Device.Connect();
-                    Log("Rebooting device into firmware update mode...");
-                    Device.RebootToBootloader();
-                    Device.Disconnect();
-                    System.Threading.Thread.Sleep(2000);
-                    Application.DoEvents();
-                    UploadFirmware();
-                    return;
-                }
-                catch (DeviceNotFoundException)
-                {
-                    Log("Device not found!");
-                    return;
-                }
-            }
-
-            try
-            {
-                string FileName = BaseDirectory + CurrentDirectory + @"\main.hex";
-                dataBuffer = IntelHexParser.ParseFile(FileName, PageSize);
-
-                if (dataBuffer.Length > (FlashSize - 2048))
-                {
-                    Log("File is too large!");
-                    return;
-                }
-
-                FileInfo file = new FileInfo(FileName);
-                Log("Opened file " + file.Name);
-                Log("Ready to upload " + dataBuffer.Length.ToString() + " bytes of data");
-            }
-            catch (ChecksumMismatchException)
-            {
-                Log("Checksum mismatch! File is not valid.");
-                return;
-            }
-
-            for (uint address = 0; address < dataBuffer.Length; address += PageSize)
-            {
-                Byte[] data = new Byte[PageSize];
-                Buffer.BlockCopy(dataBuffer, (int)address, data, 0, (int)PageSize);
-
-                Log("Writing block 0x" + String.Format("{0:x3}", address) + " ... 0x" + String.Format("{0:x3}", (address + PageSize)));
-
-                Bootloader.WriteBlock(address, data);
-            }
-
-            Log("Firmware update complete!");
-            Log("Device is rebooting");
-            Bootloader.Reboot();
+            Bootloader.UploadFile(BaseDirectory + CurrentDirectory + @"\main.hex");
         }
 
         private void Make()
@@ -256,12 +196,12 @@ namespace Builder
 
             string line = String.Empty;
 
-            Log("");
+            Logger.Write("");
 
             while (!String.IsNullOrEmpty((line = make.StandardOutput.ReadLine())))
-                Log(line);
+                Logger.Write(line);
 
-            Log("");
+            Logger.Write("");
 
             make.WaitForExit();
         }

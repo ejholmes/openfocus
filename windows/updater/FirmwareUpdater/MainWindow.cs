@@ -26,20 +26,30 @@ namespace FirmwareUpdater
         public MainWindow()
         {
             InitializeComponent();
+
+            Logger.LoggerWrite += new Logger.LoggerWriteEventHandler(Logger_LoggerWrite);
         }
 
-        public void Log(string text)
+        void Logger_LoggerWrite(object sender, LoggerEventArgs e)
         {
-            lbLog.Items.Add(text);
-            if (text != String.Empty)
-                lbLog.SelectedIndex = lbLog.Items.Count - 1;
+            this.lbLog.Items.Add(e.Text);
+            if (e.Text == String.Empty)
+            {
+                int current = this.lbLog.SelectedIndex;
+                this.lbLog.SelectedIndex = this.lbLog.Items.Count - 1;
+                this.lbLog.SelectedIndex = current;
+            }
+            else
+            {
+                this.lbLog.SelectedIndex = this.lbLog.Items.Count - 1;
+            }
         }
 
         private void MainWindow_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
         {
             if (!done)
             {
-                Log("No data uploaded...rebooting");
+                Logger.Write("No data uploaded...rebooting");
                 Bootloader.Reboot();
             }
         }
@@ -53,9 +63,9 @@ namespace FirmwareUpdater
                 PageSize = Bootloader.PageSize;
                 FlashSize = Bootloader.FlashSize;
 
-                Log("Device Found!");
-                Log("Page Size: " + PageSize.ToString() + " bytes");
-                Log("Flash Size: " + FlashSize.ToString() + " bytes");
+                Logger.Write("Device Found!");
+                Logger.Write("Page Size: " + PageSize.ToString() + " bytes");
+                Logger.Write("Flash Size: " + FlashSize.ToString() + " bytes");
 
                 this.btnLocateFirmware.Enabled = true;
                 this.btnFindDevice.Enabled = false;
@@ -65,7 +75,7 @@ namespace FirmwareUpdater
                 try
                 {
                     Device.Connect();
-                    Log("Rebooting device into firmware update mode...");
+                    Logger.Write("Rebooting device into firmware update mode...");
                     Device.RebootToBootloader();
                     Device.Disconnect();
                     System.Threading.Thread.Sleep(2000);
@@ -74,7 +84,7 @@ namespace FirmwareUpdater
                 }
                 catch (DeviceNotFoundException)
                 {
-                    Log("Device not found!");
+                    Logger.Write("Device not found!");
                 }
             }
         }
@@ -93,19 +103,19 @@ namespace FirmwareUpdater
 
                     if (dataBuffer.Length > (FlashSize - 2048))
                     {
-                        Log("File is too large!");
+                        Logger.Write("File is too large!");
                         return;
                     }
 
                     FileInfo file = new FileInfo(dialog.FileName);
-                    Log("Opened file " + file.Name);
-                    Log("Ready to upload " + dataBuffer.Length.ToString() + " bytes of data");
+                    Logger.Write("Opened file " + file.Name);
+                    Logger.Write("Ready to upload " + dataBuffer.Length.ToString() + " bytes of data");
 
                     this.btnUpload.Enabled = true;
                 }
                 catch (ChecksumMismatchException)
                 {
-                    Log("Checksum mismatch! File is not valid.");
+                    Logger.Write("Checksum mismatch! File is not valid.");
                 }
             }
         }
@@ -117,13 +127,13 @@ namespace FirmwareUpdater
                 Byte[] data = new Byte[PageSize];
                 Buffer.BlockCopy(dataBuffer, (int)address, data, 0, (int)PageSize);
 
-                Log("Writing block 0x" + String.Format("{0:x3}", address) + " ... 0x" + String.Format("{0:x3}", (address + PageSize)));
+                Logger.Write("Writing block 0x" + String.Format("{0:x3}", address) + " ... 0x" + String.Format("{0:x3}", (address + PageSize)));
 
                 Bootloader.WriteBlock(address, data);
             }
 
-            Log("Firmware update complete!");
-            Log("Device is rebooting");
+            Logger.Write("Firmware update complete!");
+            Logger.Write("Device is rebooting");
             Bootloader.Reboot();
             done = true;
 

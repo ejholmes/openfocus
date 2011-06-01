@@ -45,7 +45,7 @@
             this.cbAbsolutePositioning = new System.Windows.Forms.CheckBox();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tpProgram = new System.Windows.Forms.TabPage();
-            this.tpTest = new System.Windows.Forms.TabPage();
+            this.tpTesting = new System.Windows.Forms.TabPage();
             this.gbBaseDirectory.SuspendLayout();
             this.gbOptions.SuspendLayout();
             this.gbProgrammer.SuspendLayout();
@@ -225,7 +225,7 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.tpProgram);
-            this.tabControl.Controls.Add(this.tpTest);
+            this.tabControl.Controls.Add(this.tpTesting);
             this.tabControl.Location = new System.Drawing.Point(12, 12);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
@@ -248,15 +248,15 @@
             this.tpProgram.Text = "Program";
             this.tpProgram.UseVisualStyleBackColor = true;
             // 
-            // tpTest
+            // tpTesting
             // 
-            this.tpTest.Location = new System.Drawing.Point(4, 22);
-            this.tpTest.Name = "tpTest";
-            this.tpTest.Padding = new System.Windows.Forms.Padding(3);
-            this.tpTest.Size = new System.Drawing.Size(767, 417);
-            this.tpTest.TabIndex = 1;
-            this.tpTest.Text = "Test";
-            this.tpTest.UseVisualStyleBackColor = true;
+            this.tpTesting.Location = new System.Drawing.Point(4, 22);
+            this.tpTesting.Name = "tpTesting";
+            this.tpTesting.Padding = new System.Windows.Forms.Padding(3);
+            this.tpTesting.Size = new System.Drawing.Size(767, 417);
+            this.tpTesting.TabIndex = 1;
+            this.tpTesting.Text = "Testing";
+            this.tpTesting.UseVisualStyleBackColor = true;
             // 
             // MainWindow
             // 
@@ -302,7 +302,7 @@
         private System.Windows.Forms.CheckBox cbAbsolutePositioning;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage tpProgram;
-        private System.Windows.Forms.TabPage tpTest;
+        private System.Windows.Forms.TabPage tpTesting;
     }
 }
 
