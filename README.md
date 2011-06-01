@@ -11,42 +11,11 @@ Features include:
 * Temperature Sensing and Compensation for combating thermal expansion and contraction while imaging.
 * Firmware Upgradable.
 
+Installation
+------------
+Download the latest setup executable from the [[downloads|https://github.com/CortexAstronomy/OpenFocus/downloads]] page.
 
-Builing Bootloader:
----------
 
-Requirements:  [WinAVR][winavr] (if on Windows) or [CrossPack][crosspack] (if on Mac OS X), [MSYS][msys] (if on Windows)
-
-Build:
-
-- Edit bootloader/firmware/Makefile according to your ISP programmer.
-- Run: `cd bootloader/firmware`, `make`
-- Flash with: `make install`
-
-Builing Firmware:
----------
-
-Requirements:  [WinAVR][winavr] (if on Windows) or [CrossPack][crosspack] (if on Mac OS X), [MSYS][msys] (if on Windows)
-
-Build:
-
-- Run: `cd firmware`, `make`
-- Flash with Firmware Updater
-
-Building ASCOM Driver
------------
-
-Requirements: [Visual C# Express 2008][c#], [ASCOM Platform][ascom]
-
-Build:
-
-- Open .net/ascom/OpenFocus.sln in Visual C# Express 2008
-- Run **Build Solution**
-
-[vusb]:http://www.obdev.at/products/vusb/index.html
-[libusb]:http://www.libusb.org/
-[winavr]:http://winavr.sourceforge.net/
-[crosspack]:http://www.obdev.at/products/crosspack/index.html
-[msys]:http://www.mingw.org/wiki/MSYS
-[ascom]:http://ascom-standards.org/
-[c#]:http://www.microsoft.com/express/Downloads/#2008-Visual-CS
+Building from source
+-------------------
+See the [[wiki article|https://github.com/CortexAstronomy/OpenFocus/wiki/Building]] for instructions on building from source.
