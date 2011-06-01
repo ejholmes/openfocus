@@ -94,8 +94,6 @@ namespace Cortex.OpenFocus
             get { return device.Info; }
         }
 
-        
-
         /* Disconnect the device */
         public static void Disconnect()
         {
@@ -143,7 +141,7 @@ namespace Cortex.OpenFocus
                 byte[] buffer = new byte[expected];
                 device.ControlTransfer(ref packet, buffer, expected, out transfered);
 
-                if (transfered != expected) throw new Exception("Error Communicating With Device");
+                if (transfered != expected) throw new CommunicationException("Error Communicating With Device");
 
                 return buffer[0] == 0 ? false : true;
             }
@@ -169,7 +167,7 @@ namespace Cortex.OpenFocus
                 byte[] buffer = new byte[expected];
                 device.ControlTransfer(ref packet, buffer, expected, out transfered);
 
-                if (transfered != expected) throw new Exception("Error Communicating With Device");
+                if (transfered != expected) throw new CommunicationException("Error Communicating With Device");
 
                 return (UInt16)((buffer[1] << 8) | buffer[0]);
             }
@@ -206,7 +204,7 @@ namespace Cortex.OpenFocus
                 byte[] buffer = new byte[expected];
                 device.ControlTransfer(ref packet, buffer, expected, out transfered);
 
-                if (transfered != expected) throw new Exception("Error Communicating With Device");
+                if (transfered != expected) throw new CommunicationException("Error Communicating With Device");
 
                 Int16 adc = (Int16)((buffer[1] << 8) | buffer[0]);
                 double kelvin = (5.00 * (double)adc * 100.00) / 1024.00;
@@ -227,7 +225,7 @@ namespace Cortex.OpenFocus
                 byte[] buffer = new byte[expected];
                 device.ControlTransfer(ref packet, buffer, expected, out transfered);
 
-                if (transfered != expected) throw new Exception("Error Communicating With Device");
+                if (transfered != expected) throw new CommunicationException("Error Communicating With Device");
 
                 return buffer[0];
             }

@@ -10,6 +10,11 @@ namespace Cortex
         public DeviceNotFoundException(string errorMessage) : base(errorMessage) { }
     }
 
+    public class CommunicationException : Exception
+    {
+        public CommunicationException(string errorMessage) : base(errorMessage) { }
+    }
+
     public class ChecksumMismatchException : Exception
     {
         private IntelHexParser.IntelHexLine _Line = new IntelHexParser.IntelHexLine();
