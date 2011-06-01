@@ -41,12 +41,17 @@
             this.lblISPSerialPort = new System.Windows.Forms.Label();
             this.cboxISPSerialPort = new System.Windows.Forms.ComboBox();
             this.gbCapabilities = new System.Windows.Forms.GroupBox();
-            this.cbAbsolutePositioning = new System.Windows.Forms.CheckBox();
             this.cbTemperatureCompensation = new System.Windows.Forms.CheckBox();
+            this.cbAbsolutePositioning = new System.Windows.Forms.CheckBox();
+            this.tabControl = new System.Windows.Forms.TabControl();
+            this.tpProgram = new System.Windows.Forms.TabPage();
+            this.tpTest = new System.Windows.Forms.TabPage();
             this.gbBaseDirectory.SuspendLayout();
             this.gbOptions.SuspendLayout();
             this.gbProgrammer.SuspendLayout();
             this.gbCapabilities.SuspendLayout();
+            this.tabControl.SuspendLayout();
+            this.tpProgram.SuspendLayout();
             this.SuspendLayout();
             // 
             // lbLog
@@ -55,15 +60,15 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.lbLog.FormattingEnabled = true;
-            this.lbLog.Location = new System.Drawing.Point(12, 165);
+            this.lbLog.Location = new System.Drawing.Point(6, 159);
             this.lbLog.Name = "lbLog";
-            this.lbLog.Size = new System.Drawing.Size(723, 264);
+            this.lbLog.Size = new System.Drawing.Size(755, 251);
             this.lbLog.TabIndex = 0;
             // 
             // btnBuild
             // 
             this.btnBuild.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBuild.Location = new System.Drawing.Point(632, 136);
+            this.btnBuild.Location = new System.Drawing.Point(658, 130);
             this.btnBuild.Name = "btnBuild";
             this.btnBuild.Size = new System.Drawing.Size(103, 23);
             this.btnBuild.TabIndex = 1;
@@ -77,7 +82,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tbBaseDirectory.Location = new System.Drawing.Point(6, 19);
             this.tbBaseDirectory.Name = "tbBaseDirectory";
-            this.tbBaseDirectory.Size = new System.Drawing.Size(608, 20);
+            this.tbBaseDirectory.Size = new System.Drawing.Size(640, 20);
             this.tbBaseDirectory.TabIndex = 2;
             // 
             // gbBaseDirectory
@@ -86,9 +91,9 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.gbBaseDirectory.Controls.Add(this.btnBaseDirectorySelect);
             this.gbBaseDirectory.Controls.Add(this.tbBaseDirectory);
-            this.gbBaseDirectory.Location = new System.Drawing.Point(12, 12);
+            this.gbBaseDirectory.Location = new System.Drawing.Point(6, 6);
             this.gbBaseDirectory.Name = "gbBaseDirectory";
-            this.gbBaseDirectory.Size = new System.Drawing.Size(723, 46);
+            this.gbBaseDirectory.Size = new System.Drawing.Size(755, 46);
             this.gbBaseDirectory.TabIndex = 3;
             this.gbBaseDirectory.TabStop = false;
             this.gbBaseDirectory.Text = "Base Directory";
@@ -96,7 +101,7 @@
             // btnBaseDirectorySelect
             // 
             this.btnBaseDirectorySelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBaseDirectorySelect.Location = new System.Drawing.Point(620, 17);
+            this.btnBaseDirectorySelect.Location = new System.Drawing.Point(652, 17);
             this.btnBaseDirectorySelect.Name = "btnBaseDirectorySelect";
             this.btnBaseDirectorySelect.Size = new System.Drawing.Size(95, 23);
             this.btnBaseDirectorySelect.TabIndex = 3;
@@ -109,7 +114,7 @@
             this.gbOptions.Controls.Add(this.cbBurnBootloader);
             this.gbOptions.Controls.Add(this.cbCleanFirst);
             this.gbOptions.Controls.Add(this.cbGenerateSerial);
-            this.gbOptions.Location = new System.Drawing.Point(12, 64);
+            this.gbOptions.Location = new System.Drawing.Point(6, 58);
             this.gbOptions.Name = "gbOptions";
             this.gbOptions.Size = new System.Drawing.Size(272, 66);
             this.gbOptions.TabIndex = 4;
@@ -154,7 +159,7 @@
             // 
             this.gbProgrammer.Controls.Add(this.lblISPSerialPort);
             this.gbProgrammer.Controls.Add(this.cboxISPSerialPort);
-            this.gbProgrammer.Location = new System.Drawing.Point(290, 64);
+            this.gbProgrammer.Location = new System.Drawing.Point(284, 58);
             this.gbProgrammer.Name = "gbProgrammer";
             this.gbProgrammer.Size = new System.Drawing.Size(220, 66);
             this.gbProgrammer.TabIndex = 5;
@@ -183,24 +188,12 @@
             this.gbCapabilities.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.gbCapabilities.Controls.Add(this.cbTemperatureCompensation);
             this.gbCapabilities.Controls.Add(this.cbAbsolutePositioning);
-            this.gbCapabilities.Location = new System.Drawing.Point(516, 64);
+            this.gbCapabilities.Location = new System.Drawing.Point(510, 58);
             this.gbCapabilities.Name = "gbCapabilities";
-            this.gbCapabilities.Size = new System.Drawing.Size(219, 66);
+            this.gbCapabilities.Size = new System.Drawing.Size(251, 66);
             this.gbCapabilities.TabIndex = 6;
             this.gbCapabilities.TabStop = false;
             this.gbCapabilities.Text = "Capabilities";
-            // 
-            // cbAbsolutePositioning
-            // 
-            this.cbAbsolutePositioning.AutoSize = true;
-            this.cbAbsolutePositioning.Checked = true;
-            this.cbAbsolutePositioning.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbAbsolutePositioning.Location = new System.Drawing.Point(6, 19);
-            this.cbAbsolutePositioning.Name = "cbAbsolutePositioning";
-            this.cbAbsolutePositioning.Size = new System.Drawing.Size(121, 17);
-            this.cbAbsolutePositioning.TabIndex = 0;
-            this.cbAbsolutePositioning.Text = "Absolute Positioning";
-            this.cbAbsolutePositioning.UseVisualStyleBackColor = true;
             // 
             // cbTemperatureCompensation
             // 
@@ -214,17 +207,63 @@
             this.cbTemperatureCompensation.Text = "Temperature Compensation";
             this.cbTemperatureCompensation.UseVisualStyleBackColor = true;
             // 
+            // cbAbsolutePositioning
+            // 
+            this.cbAbsolutePositioning.AutoSize = true;
+            this.cbAbsolutePositioning.Checked = true;
+            this.cbAbsolutePositioning.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbAbsolutePositioning.Location = new System.Drawing.Point(6, 19);
+            this.cbAbsolutePositioning.Name = "cbAbsolutePositioning";
+            this.cbAbsolutePositioning.Size = new System.Drawing.Size(121, 17);
+            this.cbAbsolutePositioning.TabIndex = 0;
+            this.cbAbsolutePositioning.Text = "Absolute Positioning";
+            this.cbAbsolutePositioning.UseVisualStyleBackColor = true;
+            // 
+            // tabControl
+            // 
+            this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl.Controls.Add(this.tpProgram);
+            this.tabControl.Controls.Add(this.tpTest);
+            this.tabControl.Location = new System.Drawing.Point(12, 12);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(775, 443);
+            this.tabControl.TabIndex = 7;
+            // 
+            // tpProgram
+            // 
+            this.tpProgram.Controls.Add(this.gbBaseDirectory);
+            this.tpProgram.Controls.Add(this.gbCapabilities);
+            this.tpProgram.Controls.Add(this.lbLog);
+            this.tpProgram.Controls.Add(this.gbProgrammer);
+            this.tpProgram.Controls.Add(this.btnBuild);
+            this.tpProgram.Controls.Add(this.gbOptions);
+            this.tpProgram.Location = new System.Drawing.Point(4, 22);
+            this.tpProgram.Name = "tpProgram";
+            this.tpProgram.Padding = new System.Windows.Forms.Padding(3);
+            this.tpProgram.Size = new System.Drawing.Size(767, 417);
+            this.tpProgram.TabIndex = 0;
+            this.tpProgram.Text = "Program";
+            this.tpProgram.UseVisualStyleBackColor = true;
+            // 
+            // tpTest
+            // 
+            this.tpTest.Location = new System.Drawing.Point(4, 22);
+            this.tpTest.Name = "tpTest";
+            this.tpTest.Padding = new System.Windows.Forms.Padding(3);
+            this.tpTest.Size = new System.Drawing.Size(767, 417);
+            this.tpTest.TabIndex = 1;
+            this.tpTest.Text = "Test";
+            this.tpTest.UseVisualStyleBackColor = true;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(747, 441);
-            this.Controls.Add(this.gbCapabilities);
-            this.Controls.Add(this.gbProgrammer);
-            this.Controls.Add(this.gbOptions);
-            this.Controls.Add(this.gbBaseDirectory);
-            this.Controls.Add(this.btnBuild);
-            this.Controls.Add(this.lbLog);
+            this.ClientSize = new System.Drawing.Size(799, 467);
+            this.Controls.Add(this.tabControl);
             this.MinimumSize = new System.Drawing.Size(763, 479);
             this.Name = "MainWindow";
             this.ShowIcon = false;
@@ -238,6 +277,8 @@
             this.gbProgrammer.PerformLayout();
             this.gbCapabilities.ResumeLayout(false);
             this.gbCapabilities.PerformLayout();
+            this.tabControl.ResumeLayout(false);
+            this.tpProgram.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -259,6 +300,9 @@
         private System.Windows.Forms.GroupBox gbCapabilities;
         private System.Windows.Forms.CheckBox cbTemperatureCompensation;
         private System.Windows.Forms.CheckBox cbAbsolutePositioning;
+        private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.TabPage tpProgram;
+        private System.Windows.Forms.TabPage tpTest;
     }
 }
 
