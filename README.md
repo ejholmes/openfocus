@@ -14,7 +14,7 @@ Features include:
 Installation
 ------------
 
-Prerequisites: [ASCOM Platform 5.5][acom]
+Prerequisites: [ASCOM Platform 5.5][ascom]
 
 To download the most recent driver installer, visit the [downloads][downloads] page.
 
