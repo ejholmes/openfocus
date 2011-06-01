@@ -23,6 +23,19 @@ namespace ASCOM.OpenFocus
                 Profile.CreateSubKey(ASCOM.OpenFocus.Focuser.s_csDriverID, Serial);
             }
 
+            public UInt16 Position
+            {
+                get
+                {
+                    String val = Read("Position", Serial);
+                    if (String.IsNullOrEmpty(val))
+                        return 0;
+                    else
+                        return UInt16.Parse(val);
+                }
+                set { Write("Position", value.ToString(), Serial); }
+            }
+
             public UInt16 MaxPosition
             {
                 get

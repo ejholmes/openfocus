@@ -49,8 +49,6 @@ namespace Cortex.OpenFocus
         private static UsbDeviceFinder UsbFinder = new UsbDeviceFinder(Vendor_ID, Product_ID);
         private static UsbDevice device;
 
-        public static String Serial = String.Empty;
-
         #region public methods
         public static List<string> ListDevices()
         {
@@ -74,8 +72,6 @@ namespace Cortex.OpenFocus
         {
             if (!String.IsNullOrEmpty(serial))
                 device = UsbDevice.OpenUsbDevice(new UsbDeviceFinder(serial));
-            else if (!String.IsNullOrEmpty(Serial))
-                device = UsbDevice.OpenUsbDevice(new UsbDeviceFinder(Serial));
             else
                 device = UsbDevice.OpenUsbDevice(UsbFinder);
 

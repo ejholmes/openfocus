@@ -16,9 +16,12 @@ namespace ASCOM.OpenFocus
     [ComVisible(false)]					// Form not registered for COM!
     public partial class SetupDialogForm : Form
     {
-        public SetupDialogForm()
+        private Focuser focuser;
+
+        public SetupDialogForm(Focuser f)
         {
             InitializeComponent();
+            focuser = f;
         }
 
         void SetupDialogForm_Shown(object sender, System.EventArgs e)
@@ -74,17 +77,14 @@ namespace ASCOM.OpenFocus
             }
             #endregion
 
-            this.lblDriverVersion.Text = "Driver v" + Config.Version.ToString();
+            this.lblDriverVersion.Text = "Driver v" + Config.Version.ToString(); 
         }
 
         private void SaveValues()
         {
             #region Devices
             if (this.cbDevices.SelectedItem != null)
-            {
-                Device.Serial = ((KeyValuePair)this.cbDevices.SelectedItem).Value.ToString();
-                Config.DefaultDevice = Device.Serial;
-            }
+                Config.DefaultDevice = ((KeyValuePair)this.cbDevices.SelectedItem).Value.ToString();
             #endregion
 
             #region Temperature Units

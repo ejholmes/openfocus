@@ -51,19 +51,6 @@ namespace ASCOM.OpenFocus
             set { Write("DefaultDevice", value); }
         }
 
-        public static UInt16 Position
-        {
-            get
-            {
-                String val = Read("Position");
-                if (String.IsNullOrEmpty(val))
-                    return 0;
-                else
-                    return UInt16.Parse(val);
-            }
-            set { Write("Position", value.ToString()); }
-        }
-
         public static Version Version
         {
             get { return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version; }

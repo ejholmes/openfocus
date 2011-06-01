@@ -22,6 +22,10 @@ namespace ASCOM.OpenFocus
         private Timer TempCompTimer = new Timer(10000);
         private double LastTemperature = 0;
 
+        public String Serial = String.Empty;
+
+        private Config.Device DeviceConfig;
+
         //
         // Constructor - Must be public for COM registration!
         //
@@ -95,9 +99,10 @@ namespace ASCOM.OpenFocus
                 switch (value)
                 {
                     case true:
-                        this._Link = Device.Connect();
-                        if (Config.Position != 0)
-                            Device.Position = Config.Position;
+                        DeviceConfig = new Config.Device(Serial);
+                        this._Link = Device.Connect(Serial);
+                        if (DeviceConfig.Position != 0)
+                            Device.Position = DeviceConfig.Position;
                         break;
                     case false:
                         if (this._Link)
@@ -105,7 +110,7 @@ namespace ASCOM.OpenFocus
                             if (this.IsMoving)
                                 Device.Halt();
                             /* Save the last position before disconnecting */
-                            Config.Position = Device.Position;
+                            DeviceConfig.Position = Device.Position;
                             Device.Disconnect();
                             this._Link = false;
                         }
@@ -137,7 +142,7 @@ namespace ASCOM.OpenFocus
 
         public void SetupDialog()
         {
-            SetupDialogForm F = new SetupDialogForm();
+            SetupDialogForm F = new SetupDialogForm(this);
             F.ShowDialog();
         }
 
@@ -189,7 +194,7 @@ namespace ASCOM.OpenFocus
             if (LastTemperature != 0 && !IsMoving)
             {
                 double delta = CurrentTemperature - LastTemperature;
-                Move((int)(Position + (new Config.Device(Device.Serial).TemperatureCoefficient * delta)));
+                Move((int)(Position + (DeviceConfig.TemperatureCoefficient * delta)));
             }
 
             LastTemperature = CurrentTemperature;
