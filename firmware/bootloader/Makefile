@@ -1,32 +1,20 @@
 # Name: Makefile
 # Author: Eric J. Holmes
 # Copyright: Copyright (c) 2010 Eric J. Holmes
-# License: GPL v2.1
-
-# This is a prototype Makefile. Modify it according to your needs.
-# You should at least check the settings for
-# DEVICE ....... The AVR device you compile for
-# CLOCK ........ Target AVR clock rate in Hertz
-# OBJECTS ...... The object files created from your source files. This list is
-#                usually the same as the list of source files with suffix ".o".
-# PROGRAMMER ... Options to avrdude which define the hardware you use for
-#                uploading to the AVR and the interface where this hardware
-#                is connected.
-# FUSES ........ Parameters for avrdude to flash the fuses appropriately.
 
 DEVICE     = atmega328p
 CLOCK      = 16000000
 PORT       = com5
 PROGRAMMER = -c avrisp
-OBJECTS    = usbdrv/usbdrv.o usbdrv/usbdrvasm.o usbdrv/oddebug.o main.o
+OBJECTS    = ../usbdrv/usbdrv.o ../usbdrv/usbdrvasm.o ../usbdrv/oddebug.o main.o
 FUSES      = -U hfuse:w:0xca:m -U lfuse:w:0xff:m
-# For atmega328p, the bootloader address for a 2048 word boot section is at address 7800
+# For atmega328p, the bootloader address for a 1024 word boot section is at address 7800
 ADDRESS    = 7800
 LDFLAGS   += -Wl,--relax,--gc-sections -Wl,--section-start=.text=$(ADDRESS)
 CFLAGS 	   = 
 
 AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE) -P $(PORT) -b 19200
-COMPILE = avr-gcc -Wall -Os -Iusbdrv -I. -DF_CPU=$(CLOCK) -mmcu=$(DEVICE) -DDEBUG_LEVEL=0 $(CFLAGS)
+COMPILE = avr-gcc -Wall -Os -I../usbdrv -I. -DF_CPU=$(CLOCK) -mmcu=$(DEVICE) -DDEBUG_LEVEL=0 $(CFLAGS)
 
 # symbolic targets:
 all:	main.hex
