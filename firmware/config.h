@@ -1,15 +1,7 @@
-#ifdef __CONFIG_H_
+#ifndef __CONFIG_H_
 #define __CONFIG_H_ 
 
-/* Circuit board revision */
-#ifndef BRD_REV
-    #define BRD_REV 4
-#endif
-
-/* Firmware Version */
-// #ifndef USB_CFG_DEVICE_VERSION
-    #define USB_CFG_DEVICE_VERSION  0x01, 0x00 /* Minor, Major */
-// #endif
+#include "requests.h"
 
 /* Number of times the sensor is sampled each request */
 #ifndef TEMP_SENSOR_COUNT
@@ -20,5 +12,17 @@
 #ifndef TEMP_SENSOR_PIN
     #define TEMP_SENSOR_PIN 0
 #endif
+
+/* Absolute positioning */
+#ifndef ABSOLUTE_POSITIONING_ENABLED
+	#define ABSOLUTE_POSITIONING_ENABLED 1
+#endif
+
+/* Temperature Compensation */
+#ifndef TEMPERATURE_COMPENSATION_ENABLED
+	#define TEMPERATURE_COMPENSATION_ENABLED 1
+#endif
+
+#define CAPABILITY(enable, cap) (enable & cap)
 
 #endif /* __CONFIG_H_ */

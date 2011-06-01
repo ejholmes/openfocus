@@ -5,21 +5,15 @@
 #include <util/delay.h>
 #include <avr/eeprom.h>
 
-#include "config.h"
+#include "requests.h"
 #include "usbdrv.h"
 #include "focuser.h"
 #include "temperature.h"
 #include "util.h"
 
-#ifndef TEMP_SENSOR_COUNT
-    #define TEMP_SENSOR_COUNT 3
-#endif
+#include "config.h"
 
-#ifndef TEMP_SENSOR_PIN
-    #define TEMP_SENSOR_PIN 0
-#endif
-
-const uint8_t capabilities = CAP_ABSOLUTE | CAP_TEMP_COMP;
+static PROGMEM uint8_t capabilities = CAPABILITY(ABSOLUTE_POSITIONING_ENABLED, CAP_ABSOLUTE) | CAPABILITY(TEMPERATURE_COMPENSATION_ENABLED, CAP_TEMP_COMP);
 
 usbMsgLen_t usbFunctionSetup(uchar data[8])
 {

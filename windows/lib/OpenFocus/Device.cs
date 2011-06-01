@@ -10,14 +10,14 @@ namespace Cortex.OpenFocus
     public class Device
     {
         /* Device capabilities */
-        private struct Capabilities
+        private struct Capability
         {
             public const byte AbsolutePositioning = 0x01;
             public const byte TemperatureCompensation = 0x02;
         }
 
         /* USB Requests */
-        private struct Requests
+        private struct Request
         {
             public const byte MoveTo = 0x00;
             public const byte Halt = 0x01;
@@ -36,8 +36,6 @@ namespace Cortex.OpenFocus
             public const string Celsius = "0";
             public const string Fahrenheit = "1";
         }
-
-        private static byte _Capabilities;
 
         public static Int16 Vendor_ID = 0x20a0;
         public static Int16 Product_ID = 0x416b;
@@ -87,8 +85,6 @@ namespace Cortex.OpenFocus
                 usbDev.ClaimInterface(0);
             }
 
-            GetCapabilities();
-
             return true;
         }
 
@@ -98,20 +94,7 @@ namespace Cortex.OpenFocus
             get { return device.Info; }
         }
 
-        /* Gets the device's capabilites as a single byte */
-        public static void GetCapabilities()
-        {
-            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Requests.GetCapabilities, 0, 0, 0);
-
-            int expected = 1;
-            int transfered;
-            byte[] buffer = new byte[expected];
-            device.ControlTransfer(ref packet, buffer, expected, out transfered);
-
-            if (transfered != expected) throw new Exception("Error Communicating With Device");
-
-            _Capabilities = buffer[0];
-        }
+        
 
         /* Disconnect the device */
         public static void Disconnect()
@@ -122,7 +105,7 @@ namespace Cortex.OpenFocus
         /* Move focuser to position */
         public static void MoveTo(Int16 position)
         {
-            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Requests.MoveTo, (short)position, 2, 1);
+            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.MoveTo, (short)position, 2, 1);
 
             int transfered;
             object buffer = null;
@@ -132,7 +115,7 @@ namespace Cortex.OpenFocus
         /* Halt focuser */
         public static void Halt()
         {
-            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Requests.Halt, 0, 0, 0);
+            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.Halt, 0, 0, 0);
 
             int transfered;
             object buffer = null;
@@ -141,7 +124,7 @@ namespace Cortex.OpenFocus
 
         public static void RebootToBootloader()
         {
-            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Requests.RebootToBootloader, 0, 0, 0);
+            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.RebootToBootloader, 0, 0, 0);
 
             int transfered;
             object buffer = null;
@@ -153,7 +136,7 @@ namespace Cortex.OpenFocus
         {
             get
             {
-                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Requests.IsMoving, 0, 0, 0);
+                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Request.IsMoving, 0, 0, 0);
 
                 int expected = 1;
                 int transfered;
@@ -171,7 +154,7 @@ namespace Cortex.OpenFocus
         {
             set
             {
-                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Requests.SetPosition, (short)value, 2, 1);
+                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.SetPosition, (short)value, 2, 1);
 
                 int transfered;
                 object buffer = null;
@@ -179,7 +162,7 @@ namespace Cortex.OpenFocus
             }
             get
             {
-                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Requests.GetPosition, 0, 0, 0);
+                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Request.GetPosition, 0, 0, 0);
 
                 int expected = 2;
                 int transfered;
@@ -201,7 +184,7 @@ namespace Cortex.OpenFocus
             }
             set
             {
-                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Requests.SetTemperatureCompensation, (short)((value) ? 1 : 0), 1, 1);
+                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.SetTemperatureCompensation, (short)((value) ? 1 : 0), 1, 1);
 
                 int transfered;
                 object buffer = null;
@@ -216,7 +199,7 @@ namespace Cortex.OpenFocus
         {
             get
             {
-                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Requests.GetTemperature, 0, 0, 0);
+                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Request.GetTemperature, 0, 0, 0);
 
                 int expected = 2;
                 int transfered;
@@ -232,16 +215,34 @@ namespace Cortex.OpenFocus
             }
         }
 
+        /* Gets the device's capabilites as a single byte */
+        private static byte Capabilities
+        {
+            get
+            {
+                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Request.GetCapabilities, 0, 0, 0);
+
+                int expected = 1;
+                int transfered;
+                byte[] buffer = new byte[expected];
+                device.ControlTransfer(ref packet, buffer, expected, out transfered);
+
+                if (transfered != expected) throw new Exception("Error Communicating With Device");
+
+                return buffer[0];
+            }
+        }
+
         /* Returns true if focuser is capable of absolute positioning */
         public static bool Absolute
         {
-            get { return ((_Capabilities & Capabilities.AbsolutePositioning) == Capabilities.AbsolutePositioning) ? true : false; }
+            get { return ((Capabilities & Capability.AbsolutePositioning) == Capability.AbsolutePositioning) ? true : false; }
         }
 
         /* Returns true if focuser is capable of temperature compensation */
         public static bool TempCompAvailable
         {
-            get { return ((_Capabilities & Capabilities.TemperatureCompensation) == Capabilities.TemperatureCompensation) ? true : false; }
+            get { return ((Capabilities & Capability.TemperatureCompensation) == Capability.TemperatureCompensation) ? true : false; }
         }
         #endregion
     }

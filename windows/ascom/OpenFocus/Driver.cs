@@ -169,6 +169,8 @@ namespace ASCOM.OpenFocus
         {
             get
             {
+                if (!TempCompAvailable)
+                    throw new Exception("Temperature compensation is not available");
                 double kelvin = Device.Temperature;
                 double celsius = kelvin - 273.15;
 

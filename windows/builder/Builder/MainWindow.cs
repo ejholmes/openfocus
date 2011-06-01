@@ -140,9 +140,13 @@ namespace Builder
 
             if (this.cbAbsolutePositioning.Checked)
                 Defines.Add("ABSOLUTE_POSITIONING_ENABLED=1");
+            else
+                Defines.Add("ABSOLUTE_POSITIONING_ENABLED=0");
 
             if (this.cbTemperatureCompensation.Checked)
                 Defines.Add("TEMPERATURE_COMPENSATION_ENABLED=1");
+            else
+                Defines.Add("TEMPERATURE_COMPENSATION_ENABLED=0");
 
             StringBuilder CFLAGS = new StringBuilder();
 
