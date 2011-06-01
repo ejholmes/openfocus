@@ -20,10 +20,8 @@ OutputDir="."
 OutputBaseFilename="OpenFocus Setup"
 Compression=lzma/Normal
 SolidCompression=false
-; Put there by Platform if Driver Installer Support selected
 WizardImageFile="C:\Program Files\ASCOM\InstallGen\Resources\WizardImage.bmp"
 LicenseFile="LICENSE.txt"
-; {cf}\ASCOM\Uninstall\Focuser folder created by Platform, always
 UninstallFilesDir="{cf}\ASCOM\Uninstall\Focuser\OpenFocus"
 PrivilegesRequired=admin
 ArchitecturesInstallIn64BitMode=x64 ia64
@@ -33,12 +31,10 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Dirs]
 Name: "{cf}\ASCOM\Uninstall\Focuser\OpenFocus"
-; TODO: Add subfolders below {app} as needed (e.g. Name: "{app}\MyFolder")
 
 [Icons]
 Name: "{group}\Uninstall OpenFocus Driver"; Filename: "{uninstallexe}"
 
-;  Add an option to install the source files
 [Tasks]
 Name: ascom; Description: Install the ASCOM driver;
 Name: win32; Description: Install the Windows driver;
@@ -60,11 +56,7 @@ Source: "driver\x86\libusb0_x86.dll"; DestName: "libusb0.dll"; DestDir: "{sys}";
 Source: "driver\amd64\libusb0.dll"; DestDir: "{sys}"; Flags: uninsneveruninstall replacesameversion restartreplace promptifolder; Check: IsX64; Tasks: win32
 Source: "driver\ia64\libusb0.dll"; DestDir: {sys}; Flags: uninsneveruninstall replacesameversion restartreplace promptifolder; Check: IsI64; Tasks: win32
 
-; Only if driver is .NET
 [Run]
-; touch the HID .inf file to break its digital signature
-; this is only required if the device is a mouse or a keyboard !!
-;Filename: "rundll32"; Parameters: "libusb0.dll,usb_touch_inf_file_np_rundll {win}\inf\input.inf"
 
 ; invoke libusb's DLL to install the .inf file
 Filename: "rundll32"; Parameters: "libusb0.dll,usb_install_driver_np_rundll {app}\driver\OpenFocus.inf"; StatusMsg: "Installing driver (this may take a few seconds) ..."; Tasks: win32
@@ -72,7 +64,6 @@ Filename: "rundll32"; Parameters: "libusb0.dll,usb_install_driver_np_rundll {app
 ; Only for .NET assembly/in-proc drivers
 Filename: "{%FrameworkDir|{win}\Microsoft.NET\Framework}\V2.0.50727\regasm.exe"; Parameters: "/codebase ""{app}\OpenFocus.dll"""; Flags: runhidden; StatusMsg: "Registering driver with ASCOM..."; Tasks: ascom
 
-; Only if driver is .NET
 [UninstallRun]
 ; Only for .NET assembly/in-proc drivers
 Filename: "{%FrameworkDir|{win}\Microsoft.NET\Framework}\V2.0.50727\regasm.exe"; Parameters: "-u ""{app}\OpenFocus.dll"""; Flags: runhidden
