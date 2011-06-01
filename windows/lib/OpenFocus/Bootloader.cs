@@ -92,7 +92,7 @@ namespace Cortex.OpenFocus
                 }
                 catch (DeviceNotFoundException) /* If this is reach, the device probably not connected */
                 {
-                    Logger.Write("Device not found!");
+                    Logger.Write("Device not found!", Logger.LogType.Error);
                     return;
                 }
             }

@@ -35,7 +35,13 @@ namespace Builder
 
         void Logger_LoggerWrite(object sender, LoggerEventArgs e)
         {
+            if (e.Type == Logger.LogType.Error)
+            {
+                this.lbLog.Font = new Font(this.lbLog.Font, this.lbLog.Font.Style | FontStyle.Bold);
+            }
+
             this.lbLog.Items.Add(e.Text);
+
             if (e.Text == String.Empty)
             {
                 int current = this.lbLog.SelectedIndex;
@@ -115,10 +121,6 @@ namespace Builder
         private void BuildBurnFirmware()
         {
             CurrentDirectory = @"\firmware";
-            Guid guid = GenerateGUID();
-
-            /* Generate a GUID based serial, split to individual characters and join with commas */
-            string tokenized = String.Join(",", guid.ToString().ToCharArray().Select(x => "'" + x.ToString() + "'").ToArray());
 
             Logger.Write("Cleaning firmware directory...");
             Make("clean");
@@ -128,15 +130,19 @@ namespace Builder
 
             if (this.cbGenerateSerial.Checked)
             {
+                Guid guid = GenerateGUID();
+
+                /* Generate a GUID based serial, split to individual characters and join with commas */
+                string tokenized = String.Join(",", guid.ToString().ToCharArray().Select(x => "'" + x.ToString() + "'").ToArray());
                 Defines.Add("USB_CFG_SERIAL_NUMBER=" + tokenized);
                 Defines.Add("USB_CFG_SERIAL_NUMBER_LEN=" + guid.ToString().ToCharArray().Length);
             }
 
             if (this.cbAbsolutePositioning.Checked)
-                Defines.Add("CAN_ABSOLUTE_POSITION=1");
+                Defines.Add("ABSOLUTE_POSITIONING_ENABLED=1");
 
             if (this.cbTemperatureCompensation.Checked)
-                Defines.Add("CAN_TEMPERATURE_COMPENSATE=1");
+                Defines.Add("TEMPERATURE_COMPENSATION_ENABLED=1");
 
             StringBuilder CFLAGS = new StringBuilder();
 

@@ -66,10 +66,12 @@
             this.lbLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbLog.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbLog.FormattingEnabled = true;
+            this.lbLog.ItemHeight = 15;
             this.lbLog.Location = new System.Drawing.Point(6, 159);
             this.lbLog.Name = "lbLog";
-            this.lbLog.Size = new System.Drawing.Size(755, 251);
+            this.lbLog.Size = new System.Drawing.Size(755, 244);
             this.lbLog.TabIndex = 0;
             // 
             // btnBuild
