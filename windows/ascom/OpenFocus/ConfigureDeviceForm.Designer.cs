@@ -48,6 +48,7 @@
             this.SerialNumber = new System.Windows.Forms.Label();
             this.lblSerial = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.btnFocusMaxImport = new System.Windows.Forms.Button();
             this.gbPositionSettings.SuspendLayout();
             this.gbTemperatureCompensation.SuspendLayout();
             this.gbDeviceInfo.SuspendLayout();
@@ -73,7 +74,7 @@
             // 
             // gbPositionSettings
             // 
-            this.gbPositionSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.gbPositionSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.gbPositionSettings.Controls.Add(this.btnSetPosition);
             this.gbPositionSettings.Controls.Add(this.lblMaxPosition);
@@ -88,11 +89,11 @@
             // btnSetPosition
             // 
             this.btnSetPosition.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnSetPosition.Location = new System.Drawing.Point(63, 45);
+            this.btnSetPosition.Location = new System.Drawing.Point(105, 45);
             this.btnSetPosition.Name = "btnSetPosition";
-            this.btnSetPosition.Size = new System.Drawing.Size(127, 23);
+            this.btnSetPosition.Size = new System.Drawing.Size(146, 23);
             this.btnSetPosition.TabIndex = 2;
-            this.btnSetPosition.Text = "Set Current Position";
+            this.btnSetPosition.Text = "Set Current Position...";
             this.btnSetPosition.UseVisualStyleBackColor = true;
             this.btnSetPosition.Click += new System.EventHandler(this.btnSetPosition_Click);
             // 
@@ -117,13 +118,14 @@
             // 
             // gbTemperatureCompensation
             // 
-            this.gbTemperatureCompensation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.gbTemperatureCompensation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbTemperatureCompensation.Controls.Add(this.btnFocusMaxImport);
             this.gbTemperatureCompensation.Controls.Add(this.label1);
             this.gbTemperatureCompensation.Controls.Add(this.tbTemperatureCoefficient);
             this.gbTemperatureCompensation.Location = new System.Drawing.Point(12, 200);
             this.gbTemperatureCompensation.Name = "gbTemperatureCompensation";
-            this.gbTemperatureCompensation.Size = new System.Drawing.Size(257, 49);
+            this.gbTemperatureCompensation.Size = new System.Drawing.Size(257, 79);
             this.gbTemperatureCompensation.TabIndex = 3;
             this.gbTemperatureCompensation.TabStop = false;
             this.gbTemperatureCompensation.Text = "Temperature Compensation";
@@ -153,7 +155,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(194, 255);
+            this.btnCancel.Location = new System.Drawing.Point(194, 286);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 4;
@@ -164,7 +166,7 @@
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSave.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnSave.Location = new System.Drawing.Point(113, 255);
+            this.btnSave.Location = new System.Drawing.Point(113, 286);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 5;
@@ -237,13 +239,23 @@
             this.lblSerial.TabIndex = 0;
             this.lblSerial.Text = "Serial #:";
             // 
+            // btnFocusMaxImport
+            // 
+            this.btnFocusMaxImport.Location = new System.Drawing.Point(110, 45);
+            this.btnFocusMaxImport.Name = "btnFocusMaxImport";
+            this.btnFocusMaxImport.Size = new System.Drawing.Size(141, 23);
+            this.btnFocusMaxImport.TabIndex = 3;
+            this.btnFocusMaxImport.Text = "Import FocusMax Data...";
+            this.btnFocusMaxImport.UseVisualStyleBackColor = true;
+            this.btnFocusMaxImport.Click += new System.EventHandler(this.btnFocusMaxImport_Click);
+            // 
             // ConfigureDeviceForm
             // 
             this.AcceptButton = this.btnSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(282, 285);
+            this.ClientSize = new System.Drawing.Size(282, 316);
             this.Controls.Add(this.gbDeviceInfo);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnCancel);
@@ -305,5 +317,6 @@
         private System.Windows.Forms.Label lblProduct;
         private System.Windows.Forms.Label FirmwareVersion;
         private System.Windows.Forms.Label lblFirmwareVersion;
+        private System.Windows.Forms.Button btnFocusMaxImport;
     }
 }

@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C# Express 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{AF7644E5-B0E0-4DEC-80B1-6999846F623E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cortex", "..\lib\Cortex.csproj", "{82E0EE74-DE1B-49D6-9413-BC85029C13A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenFocus", "..\ascom\OpenFocus\OpenFocus.csproj", "{AEDD8AFE-62B2-4773-9584-69ED72C8F799}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AF7644E5-B0E0-4DEC-80B1-6999846F623E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF7644E5-B0E0-4DEC-80B1-6999846F623E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF7644E5-B0E0-4DEC-80B1-6999846F623E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF7644E5-B0E0-4DEC-80B1-6999846F623E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82E0EE74-DE1B-49D6-9413-BC85029C13A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82E0EE74-DE1B-49D6-9413-BC85029C13A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82E0EE74-DE1B-49D6-9413-BC85029C13A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82E0EE74-DE1B-49D6-9413-BC85029C13A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEDD8AFE-62B2-4773-9584-69ED72C8F799}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEDD8AFE-62B2-4773-9584-69ED72C8F799}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEDD8AFE-62B2-4773-9584-69ED72C8F799}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEDD8AFE-62B2-4773-9584-69ED72C8F799}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

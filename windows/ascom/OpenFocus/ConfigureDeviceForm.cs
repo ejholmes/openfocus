@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 using LibUsbDotNet;
 using LibUsbDotNet.Info;
@@ -70,6 +71,21 @@ namespace ASCOM.OpenFocus
                     Cortex.OpenFocus.Device.Position = UInt16.Parse(setPosition.Position);
 
                     Cortex.OpenFocus.Device.Disconnect();
+                }
+            }
+        }
+
+        private void btnFocusMaxImport_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog dialog = new OpenFileDialog())
+            {
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    FocusMax.Point[] points = FocusMax.ParseFile(dialog.FileName);
+
+                    double slope = FocusMax.Slope(points);
+
+                    this.tbTemperatureCoefficient.Text = Math.Round(slope, 2).ToString();
                 }
             }
         }
