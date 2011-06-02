@@ -21,6 +21,8 @@ namespace Builder
         String CurrentDirectory = String.Empty;
         String BaseDirectory = String.Empty;
 
+        Device dev = new Device();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -222,7 +224,7 @@ namespace Builder
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            if (this.btnConnect.Text == "Connect" && Device.Connect())
+            if (this.btnConnect.Text == "Connect" && dev.Connect())
             {
                 this.btnTemperatureTestStart.Enabled = true;
 
@@ -230,7 +232,7 @@ namespace Builder
             }
             else if (this.btnConnect.Text == "Disconnect")
             {
-                Device.Disconnect();
+                dev.Disconnect();
                 this.btnConnect.Text = "Connect";
             }
         }
@@ -248,7 +250,7 @@ namespace Builder
 
         void tempTimer_Tick(object sender, EventArgs e)
         {
-            double temperature = Device.Temperature;
+            double temperature = dev.Temperature;
 
             this.lbTemperatureLog.Items.Add("Temp: " + temperature.ToString());
 

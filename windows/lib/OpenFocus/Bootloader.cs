@@ -82,10 +82,11 @@ namespace Cortex.OpenFocus
             {
                 try /* Try connecting to the device and rebooting it into the bootloader */
                 {
-                    Device.Connect();
+                    Device dev = new Device();
+                    dev.Connect();
                     Logger.Write("Rebooting device into firmware update mode...");
-                    Device.RebootToBootloader();
-                    Device.Disconnect();
+                    dev.RebootToBootloader();
+                    dev.Disconnect();
                     System.Threading.Thread.Sleep(2000);
                     UploadFile(file); /* If successful, wait 2 seconds and then retry */
                     return;

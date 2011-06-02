@@ -42,10 +42,10 @@ namespace Cortex.OpenFocus
         public static String ManufacturerString = "Cortex Astronomy (cortexastronomy.com)";
         public static String ProductString = "OpenFocus";
 
-        private static bool TempCompEnabled = false;
+        private bool TempCompEnabled = false;
 
         private static UsbDeviceFinder UsbFinder = new UsbDeviceFinder(Vendor_ID, Product_ID);
-        private static UsbDevice device;
+        private UsbDevice device;
 
         #region public methods
         public static List<string> ListDevices()
@@ -61,12 +61,12 @@ namespace Cortex.OpenFocus
             return serials;
         }
 
-        public static bool Connect()
+        public bool Connect()
         {
             return Connect(String.Empty);
         }
 
-        public static bool Connect(string serial)
+        public bool Connect(string serial)
         {
             if (!String.IsNullOrEmpty(serial))
                 device = UsbDevice.OpenUsbDevice(new UsbDeviceFinder(serial));
@@ -88,24 +88,24 @@ namespace Cortex.OpenFocus
             return true;
         }
 
-        public static String Serial
+        public String Serial
         {
             get { return device.Info.SerialString; }
         }
 
-        public static Version FirmwareVersion
+        public Version FirmwareVersion
         {
             get { return new Version(device.Info.Descriptor.BcdDevice >> 8, 0xff & device.Info.Descriptor.BcdDevice); }
         }
 
         /* Disconnect the device */
-        public static void Disconnect()
+        public void Disconnect()
         {
             device.Close();
         }
 
         /* Move focuser to position */
-        public static void MoveTo(Int16 position)
+        public void MoveTo(Int16 position)
         {
             UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.MoveTo, (short)position, 2, 1);
 
@@ -115,7 +115,7 @@ namespace Cortex.OpenFocus
         }
 
         /* Halt focuser */
-        public static void Halt()
+        public void Halt()
         {
             UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.Halt, 0, 0, 0);
 
@@ -124,7 +124,7 @@ namespace Cortex.OpenFocus
             device.ControlTransfer(ref packet, buffer, 0, out transfered);
         }
 
-        public static void RebootToBootloader()
+        public void RebootToBootloader()
         {
             UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.RebootToBootloader, 0, 0, 0);
 
@@ -134,7 +134,7 @@ namespace Cortex.OpenFocus
         }
 
         /* Returns true if moving, false if halted */
-        public static bool IsMoving
+        public bool IsMoving
         {
             get
             {
@@ -152,7 +152,7 @@ namespace Cortex.OpenFocus
         }
 
         /* Current focuser position */
-        public static UInt16 Position
+        public UInt16 Position
         {
             set
             {
@@ -178,7 +178,7 @@ namespace Cortex.OpenFocus
         }
 
         /* true to turn on temperature compensation, false to turn off */
-        public static bool TempComp
+        public bool TempComp
         {
             get
             {
@@ -197,7 +197,7 @@ namespace Cortex.OpenFocus
         }
 
         /* Current temperature */
-        public static double Temperature
+        public double Temperature
         {
             get
             {
@@ -218,7 +218,7 @@ namespace Cortex.OpenFocus
         }
 
         /* Gets the device's capabilites as a single byte */
-        private static byte Capabilities
+        private byte Capabilities
         {
             get
             {
@@ -236,13 +236,13 @@ namespace Cortex.OpenFocus
         }
 
         /* Returns true if focuser is capable of absolute positioning */
-        public static bool Absolute
+        public bool Absolute
         {
             get { return ((Capabilities & Capability.AbsolutePositioning) == Capability.AbsolutePositioning) ? true : false; }
         }
 
         /* Returns true if focuser is capable of temperature compensation */
-        public static bool TempCompAvailable
+        public bool TempCompAvailable
         {
             get { return ((Capabilities & Capability.TemperatureCompensation) == Capability.TemperatureCompensation) ? true : false; }
         }

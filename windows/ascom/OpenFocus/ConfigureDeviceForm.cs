@@ -28,9 +28,10 @@ namespace ASCOM.OpenFocus
 
         private void LoadValues()
         {
-            Cortex.OpenFocus.Device.Connect(Serial);
-            Version firmware = Cortex.OpenFocus.Device.FirmwareVersion;
-            Cortex.OpenFocus.Device.Disconnect();
+            Cortex.OpenFocus.Device dev = new Device();
+            dev.Connect(Serial);
+            Version firmware = dev.FirmwareVersion;
+            dev.Disconnect();
 
             this.tbName.Text                       = Device.Name;
             this.tbMaxPosition.Text                = Device.MaxPosition.ToString();
@@ -59,11 +60,12 @@ namespace ASCOM.OpenFocus
             {
                 if (setPosition.ShowDialog(this) == DialogResult.OK)
                 {
-                    Cortex.OpenFocus.Device.Connect(Serial);
+                    Cortex.OpenFocus.Device dev = new Device();
+                    dev.Connect(Serial);
 
-                    Cortex.OpenFocus.Device.Position = UInt16.Parse(setPosition.Position);
+                    dev.Position = UInt16.Parse(setPosition.Position);
 
-                    Cortex.OpenFocus.Device.Disconnect();
+                    dev.Disconnect();
                 }
             }
         }

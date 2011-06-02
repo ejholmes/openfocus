@@ -74,10 +74,11 @@ namespace FirmwareUpdater
             {
                 try
                 {
-                    Device.Connect();
+                    Device dev = new Device();
+                    dev.Connect();
                     Logger.Write("Rebooting device into firmware update mode...");
-                    Device.RebootToBootloader();
-                    Device.Disconnect();
+                    dev.RebootToBootloader();
+                    dev.Disconnect();
                     System.Threading.Thread.Sleep(2000);
                     Application.DoEvents();
                     btnFindDevice_Click(null, null);

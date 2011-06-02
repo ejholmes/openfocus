@@ -25,6 +25,8 @@ namespace ASCOM.OpenFocus
 
         private Config.Device DeviceConfig;
 
+        private Device dev = new Device();
+
         //
         // Constructor - Must be public for COM registration!
         //
@@ -77,17 +79,17 @@ namespace ASCOM.OpenFocus
 
         public bool Absolute
         {
-            get { return Device.Absolute; }
+            get { return dev.Absolute; }
         }
 
         public void Halt()
         {
-            Device.Halt();
+            dev.Halt();
         }
 
         public bool IsMoving
         {
-            get { return Device.IsMoving; }
+            get { return dev.IsMoving; }
         }
 
         public bool Link
@@ -98,19 +100,20 @@ namespace ASCOM.OpenFocus
                 switch (value)
                 {
                     case true:
-                        this.Connected = Device.Connect(Serial);
-                        DeviceConfig = new Config.Device(Device.Serial);
+                        Serial = Config.DefaultDevice;
+                        this.Connected = dev.Connect(Serial);
+                        DeviceConfig = new Config.Device(dev.Serial);
                         if (DeviceConfig.Position != 0)
-                            Device.Position = DeviceConfig.Position;
+                            dev.Position = DeviceConfig.Position;
                         break;
                     case false:
                         if (this.Connected)
                         {
                             if (this.IsMoving)
-                                Device.Halt();
+                                dev.Halt();
                             /* Save the last position before disconnecting */
-                            DeviceConfig.Position = Device.Position;
-                            Device.Disconnect();
+                            DeviceConfig.Position = dev.Position;
+                            dev.Disconnect();
                             this.Connected = false;
                         }
                         break;
@@ -131,12 +134,12 @@ namespace ASCOM.OpenFocus
         public void Move(int val)
         {
             if (val >= 0)
-                Device.MoveTo((Int16)val);
+                dev.MoveTo((Int16)val);
         }
 
         public int Position
         {
-            get { return Device.Position; }
+            get { return dev.Position; }
         }
 
         public void SetupDialog()
@@ -153,14 +156,14 @@ namespace ASCOM.OpenFocus
         /* Set to true to enable temperature compensation */
         public bool TempComp
         {
-            get { return Device.TempComp; }
-            set { TempCompTimer.Enabled = value; Device.TempComp = value; }
+            get { return dev.TempComp; }
+            set { TempCompTimer.Enabled = value; dev.TempComp = value; }
         }
 
         /* Asks the device if it can do temperature compensation */
         public bool TempCompAvailable
         {
-            get { return Device.TempCompAvailable; }
+            get { return dev.TempCompAvailable; }
         }
 
         /* Gets a temperature reading from the device */
@@ -170,7 +173,7 @@ namespace ASCOM.OpenFocus
             {
                 if (!TempCompAvailable)
                     throw new Exception("Temperature compensation is not available");
-                double kelvin = Device.Temperature;
+                double kelvin = dev.Temperature;
                 double celsius = kelvin - 273.15;
 
                 if (Config.Units == Device.TemperatureUnits.Celsius)
@@ -190,7 +193,7 @@ namespace ASCOM.OpenFocus
          */
         private void TempCompTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            double CurrentTemperature = Device.Temperature;
+            double CurrentTemperature = dev.Temperature;
 
             if (LastTemperature != 0 && !IsMoving)
             {
