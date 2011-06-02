@@ -10,6 +10,7 @@ Features include:
 * Repeatable positions by using a high resolution stepper motor and absolute positioning.
 * Temperature Sensing and Compensation for combating thermal expansion and contraction while imaging.
 * Firmware Upgradable.
+* Quickly and easily import FocusMax temperature compensation data logs.
 
 Installation
 ------------
