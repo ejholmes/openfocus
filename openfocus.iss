@@ -6,10 +6,11 @@
 AppName=OpenFocus Driver
 AppVerName=OpenFocus Driver v0.1
 AppVersion=0.1
-AppPublisher=Eric Holmes <eric@ejholmes.net>
-AppPublisherURL=mailto:eric@ejholmes.net
-AppSupportURL=http://tech.groups.yahoo.com/group/ASCOM-Talk/
-AppUpdatesURL=http://ascom-standards.org/
+AppPublisher=Cortex Astronomy
+AppPublisherURL=http://www.cortexastronomy.com
+AppCopyright=Copyright (c) 2011 Eric J. Holmes
+AppSupportURL=https://github.com/CortexAstronomy/OpenFocus/wiki
+AppUpdatesURL=https://github.com/CortexAstronomy/OpenFocus/downloads
 VersionInfoVersion=0.1
 MinVersion=0,5.0.2195sp4
 DefaultDirName="{pf}\OpenFocus"
