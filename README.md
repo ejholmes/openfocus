@@ -18,10 +18,12 @@ Prerequisites: [ASCOM Platform 5.5][ascom]
 
 To download the most recent driver installer, visit the [downloads][downloads] page.
 
+To update your device to the most recent firmware version, visit the [wiki article][updatefirmware].
+
 
 Building from source
 -------------------
-See the [wiki article][wiki] for instructions on building from source.
+See the [wiki article][buildfromsource] for instructions on building from source.
 
 [vusb]:http://www.obdev.at/products/vusb/index.html
 [libusb]:http://www.libusb.org/
@@ -31,4 +33,5 @@ See the [wiki article][wiki] for instructions on building from source.
 [ascom]:http://ascom-standards.org/
 [c#]:http://www.microsoft.com/express/Downloads/#2008-Visual-CS
 [downloads]:https://github.com/CortexAstronomy/OpenFocus/downloads
-[wiki]:https://github.com/CortexAstronomy/OpenFocus/wiki/Building
+[buildfromsource]:https://github.com/CortexAstronomy/OpenFocus/wiki/Building
+[updatefirmware]:https://github.com/CortexAstronomy/OpenFocus/wiki/HowTo%3A-Update-Firmware
