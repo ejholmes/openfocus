@@ -13,7 +13,10 @@ Features include:
 
 Installation
 ------------
-Download the latest setup executable from the [downloads][downloads] page.
+
+Prerequisites: [ASCOM Platform 5.5][ascom]
+
+To download the most recent driver installer, visit the [downloads][downloads] page.
 
 
 Building from source
