@@ -8,9 +8,9 @@ the [V-USB stack][vusb] and [libusb][libusb] and also includes an
 Features include:
 
 * Repeatable positions by using a high resolution stepper motor and absolute positioning.
-* Temperature Sensing and Compensation for combating thermal expansion and contraction while imaging.
-* Firmware Upgradeable.
-* Quickly and easily import FocusMax temperature compensation data logs.
+* [Temperature Sensing and Compensation][wiki:tempcomp] for combating thermal expansion and contraction while imaging.
+* [Firmware Upgradeable][wiki:updatefirmware].
+* Quickly and easily [import FocusMax temperature compensation data logs][wiki:tempcomp].
 
 Installation
 ------------
@@ -19,12 +19,12 @@ Prerequisites: [ASCOM Platform 5.5][ascom]
 
 To download the most recent driver installer, visit the [downloads][downloads] page.
 
-To update your device to the most recent firmware version, visit the [wiki article][updatefirmware].
+To update your device to the most recent firmware version, visit the [wiki article][wiki:updatefirmware].
 
 
 Building from source
 -------------------
-See the [wiki article][buildfromsource] for instructions on building from source.
+See the [wiki article][wiki:build] for instructions on building from source.
 
 [vusb]:http://www.obdev.at/products/vusb/index.html
 [libusb]:http://www.libusb.org/
@@ -34,5 +34,6 @@ See the [wiki article][buildfromsource] for instructions on building from source
 [ascom]:http://ascom-standards.org/
 [c#]:http://www.microsoft.com/express/Downloads/#2008-Visual-CS
 [downloads]:https://github.com/CortexAstronomy/OpenFocus/downloads
-[buildfromsource]:https://github.com/CortexAstronomy/OpenFocus/wiki/Building
-[updatefirmware]:https://github.com/CortexAstronomy/OpenFocus/wiki/HowTo%3A-Update-Firmware
+[wiki:build]:https://github.com/CortexAstronomy/OpenFocus/wiki/Building
+[wiki:updatefirmware]:https://github.com/CortexAstronomy/OpenFocus/wiki/HowTo%3A-Update-Firmware
+[wiki:tempcomp]:https://github.com/CortexAstronomy/OpenFocus/wiki/HowTo%3A-Temperature-Compensation
