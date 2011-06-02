@@ -9,15 +9,15 @@ namespace ASCOM.OpenFocus
 {
     public class FocusMax
     {
-        public struct Point
+        public struct DataPoint
         {
             public double temperature;
             public UInt16 position;
         }
 
-        public static Point[] ParseFile(string filename)
+        public static DataPoint[] ParseFile(string filename)
         {
-            List<Point> points = new List<Point>();
+            List<DataPoint> points = new List<DataPoint>();
 
             StreamReader fp = new StreamReader(filename);
 
@@ -29,7 +29,7 @@ namespace ASCOM.OpenFocus
 
                 try
                 {
-                    Point p;
+                    DataPoint p;
                     p.temperature = double.Parse(tokens[1]);
                     p.position = UInt16.Parse(tokens[3]);
                     points.Add(p);
@@ -42,7 +42,7 @@ namespace ASCOM.OpenFocus
             return points.ToArray();
         }
 
-        public static double Slope(Point[] points)
+        public static double Slope(DataPoint[] points)
         {
             double xAvg = 0, yAvg = 0;
 

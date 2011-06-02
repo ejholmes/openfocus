@@ -76,7 +76,7 @@ namespace ASCOM.OpenFocus
             {
                 if (dialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    FocusMax.Point[] points = FocusMax.ParseFile(dialog.FileName);
+                    FocusMax.DataPoint[] points = FocusMax.ParseFile(dialog.FileName);
 
                     double slope = FocusMax.Slope(points);
 
