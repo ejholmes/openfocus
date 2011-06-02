@@ -37,10 +37,10 @@ namespace Cortex.OpenFocus
             public const string Fahrenheit = "1";
         }
 
-        public static Int16 Vendor_ID = 0x20a0;
-        public static Int16 Product_ID = 0x416b;
-        public static String ManufacturerString = "Cortex Astronomy (cortexastronomy.com)";
-        public static String ProductString = "OpenFocus";
+        public const Int16 Vendor_ID = 0x20a0;
+        public const Int16 Product_ID = 0x416b;
+        public const String ManufacturerString = "Cortex Astronomy (cortexastronomy.com)";
+        public const String ProductString = "OpenFocus";
 
         private bool TempCompEnabled = false;
 
