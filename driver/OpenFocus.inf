@@ -1,5 +1,11 @@
 ; OpenFocus.inf
 ; Copyright (c) 2010 libusb-win32 (GNU LGPL)
+[Strings]
+DeviceName="OpenFocus"
+VendorName="Cortex Astronomy"
+SourceName="OpenFocus Install Disk"
+DeviceID="VID_20A0&PID_416B"
+
 [Version]
 Signature = "$Windows NT$"
 Class     = "USB"
@@ -16,7 +22,7 @@ DriverVer = 04/08/2011, 1.2.4.0
 ;--------------------------------------------------------------------------
 
 [SourceDisksNames]
-1 = %OpenFocus_DiskName%
+1 = %SourceName%
 
 [SourceDisksFiles.x86]
 libusb0.sys = 1,x86
@@ -55,34 +61,34 @@ libusb0.dll, libusb0_x86.dll
 ; libusb-win32 device driver
 ;--------------------------------------------------------------------------
 
-[OpenFocus_DEV.NT]
+[LIBUSB_WIN32_DEV.NT]
 CopyFiles = libusb_files_sys, libusb_files_dll_x86
 
-[OpenFocus_DEV.NTAMD64]
+[LIBUSB_WIN32_DEV.NTAMD64]
 CopyFiles = libusb_files_sys, libusb_files_dll, libusb_files_dll_wow64
 
-[OpenFocus_DEV.NTIA64]
+[LIBUSB_WIN32_DEV.NTIA64]
 CopyFiles = libusb_files_sys, libusb_files_dll, libusb_files_dll_wow64
 
-[OpenFocus_DEV.NT.HW]
+[LIBUSB_WIN32_DEV.NT.HW]
 DelReg = libusb_del_reg_hw
 AddReg = libusb_add_reg_hw
 
-[OpenFocus_DEV.NTAMD64.HW]
+[LIBUSB_WIN32_DEV.NTAMD64.HW]
 DelReg = libusb_del_reg_hw
 AddReg = libusb_add_reg_hw
 
-[OpenFocus_DEV.NTIA64.HW]
+[LIBUSB_WIN32_DEV.NTIA64.HW]
 DelReg = libusb_del_reg_hw
 AddReg = libusb_add_reg_hw
 
-[OpenFocus_DEV.NT.Services]
+[LIBUSB_WIN32_DEV.NT.Services]
 AddService = libusb0, 0x00000002, libusb_add_service
 
-[OpenFocus_DEV.NTAMD64.Services]
+[LIBUSB_WIN32_DEV.NTAMD64.Services]
 AddService = libusb0, 0x00000002, libusb_add_service
 
-[OpenFocus_DEV.NTIA64.Services]
+[LIBUSB_WIN32_DEV.NTIA64.Services]
 AddService = libusb0, 0x00000002, libusb_add_service
 
 ; Older versions of this .inf file installed filter drivers. They are not
@@ -119,16 +125,13 @@ ServiceBinary  = %12%\libusb0.sys
 ; inf-wizard utility.
 ;
 [Devices]
-"OpenFocus"=OpenFocus_DEV, USB\VID_20A0&PID_416B
+%DeviceName%=LIBUSB_WIN32_DEV, USB\%DeviceID%
 
 [Devices.NT]
-"OpenFocus"=OpenFocus_DEV, USB\VID_20A0&PID_416B
+%DeviceName%=LIBUSB_WIN32_DEV, USB\%DeviceID%
 
 [Devices.NTAMD64]
-"OpenFocus"=OpenFocus_DEV, USB\VID_20A0&PID_416B
+%DeviceName%=LIBUSB_WIN32_DEV, USB\%DeviceID%
 
 [Devices.NTIA64]
-"OpenFocus"=OpenFocus_DEV, USB\VID_20A0&PID_416B
-
-[Strings]
-OpenFocus_DiskName="OpenFocus Install Disk"
+%DeviceName%=LIBUSB_WIN32_DEV, USB\%DeviceID%
