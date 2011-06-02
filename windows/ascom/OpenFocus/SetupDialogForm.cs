@@ -16,12 +16,11 @@ namespace ASCOM.OpenFocus
     [ComVisible(false)]					// Form not registered for COM!
     public partial class SetupDialogForm : Form
     {
-        private Focuser focuser;
+        public string Serial;
 
-        public SetupDialogForm(Focuser f)
+        public SetupDialogForm()
         {
             InitializeComponent();
-            focuser = f;
         }
 
         void SetupDialogForm_Shown(object sender, System.EventArgs e)

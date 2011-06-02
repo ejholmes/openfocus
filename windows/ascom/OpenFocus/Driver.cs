@@ -101,7 +101,14 @@ namespace ASCOM.OpenFocus
                 {
                     case true:
                         Serial = Config.DefaultDevice;
-                        this.Connected = dev.Connect(Serial);
+                        try
+                        {
+                            this.Connected = dev.Connect(Serial);
+                        }
+                        catch (DeviceNotFoundException)
+                        {
+                            this.Connected = dev.Connect();
+                        }
                         DeviceConfig = new Config.Device(dev.Serial);
                         if (DeviceConfig.Position != 0)
                             dev.Position = DeviceConfig.Position;
@@ -144,7 +151,7 @@ namespace ASCOM.OpenFocus
 
         public void SetupDialog()
         {
-            SetupDialogForm F = new SetupDialogForm(this);
+            SetupDialogForm F = new SetupDialogForm();
             F.ShowDialog();
         }
 
