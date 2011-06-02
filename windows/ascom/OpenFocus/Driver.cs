@@ -17,12 +17,11 @@ namespace ASCOM.OpenFocus
         public static string s_csDriverDescription = "OpenFocus";
         public static string s_csDeviceType = "Focuser";
 
-        private bool _Link = false;
+        private bool Connected              = false;
+        private double LastTemperature      = 0;
 
-        private Timer TempCompTimer = new Timer(10000);
-        private double LastTemperature = 0;
-
-        public String Serial = String.Empty;
+        private Timer TempCompTimer         = new Timer(10000);
+        public String Serial                = String.Empty;
 
         private Config.Device DeviceConfig;
 
@@ -93,26 +92,26 @@ namespace ASCOM.OpenFocus
 
         public bool Link
         {
-            get { return this._Link; }
+            get { return this.Connected; }
             set
             {
                 switch (value)
                 {
                     case true:
-                        DeviceConfig = new Config.Device(Serial);
-                        this._Link = Device.Connect(Serial);
+                        this.Connected = Device.Connect(Serial);
+                        DeviceConfig = new Config.Device(Device.Serial);
                         if (DeviceConfig.Position != 0)
                             Device.Position = DeviceConfig.Position;
                         break;
                     case false:
-                        if (this._Link)
+                        if (this.Connected)
                         {
                             if (this.IsMoving)
                                 Device.Halt();
                             /* Save the last position before disconnecting */
                             DeviceConfig.Position = Device.Position;
                             Device.Disconnect();
-                            this._Link = false;
+                            this.Connected = false;
                         }
                         break;
                 }
@@ -121,12 +120,12 @@ namespace ASCOM.OpenFocus
 
         public int MaxIncrement
         {
-            get { return 10000; }
+            get { return DeviceConfig.MaxPosition; }
         }
 
         public int MaxStep
         {
-            get { return 10000; }
+            get { return DeviceConfig.MaxPosition; }
         }
 
         public void Move(int val)
@@ -148,7 +147,7 @@ namespace ASCOM.OpenFocus
 
         public double StepSize
         {
-            get { return 2; }
+            get { return DeviceConfig.StepSize; }
         }
 
         /* Set to true to enable temperature compensation */

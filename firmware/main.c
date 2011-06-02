@@ -14,6 +14,7 @@
 #include "config.h"
 
 static PROGMEM uint8_t capabilities = CAPABILITY(ABSOLUTE_POSITIONING_ENABLED, CAP_ABSOLUTE) | CAPABILITY(TEMPERATURE_COMPENSATION_ENABLED, CAP_TEMP_COMP);
+//static PROGMEM uint8_t capabilities = CAP_ABSOLUTE | CAP_TEMP_COMP;
 
 usbMsgLen_t usbFunctionSetup(uchar data[8])
 {

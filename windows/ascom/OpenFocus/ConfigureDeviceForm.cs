@@ -7,10 +7,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 
-using LibUsbDotNet;
-using LibUsbDotNet.Info;
-using LibUsbDotNet.Main;
-
 using Cortex;
 using Cortex.OpenFocus;
 
@@ -33,10 +29,8 @@ namespace ASCOM.OpenFocus
         private void LoadValues()
         {
             Cortex.OpenFocus.Device.Connect(Serial);
-            UsbDeviceInfo info = Cortex.OpenFocus.Device.Descriptor;
+            Version firmware = Cortex.OpenFocus.Device.FirmwareVersion;
             Cortex.OpenFocus.Device.Disconnect();
-
-            Version firmware = new Version(info.Descriptor.BcdDevice >> 8, 0xff & info.Descriptor.BcdDevice);
 
             this.tbName.Text                       = Device.Name;
             this.tbMaxPosition.Text                = Device.MaxPosition.ToString();
@@ -44,7 +38,6 @@ namespace ASCOM.OpenFocus
 
             this.SerialNumber.Text                  = Serial;
             this.toolTip.SetToolTip(this.SerialNumber, Serial);
-            this.Product.Text                       = info.ProductString;
             this.FirmwareVersion.Text               = firmware.ToString();
         }
 

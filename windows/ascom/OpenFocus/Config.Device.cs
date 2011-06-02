@@ -13,7 +13,8 @@ namespace ASCOM.OpenFocus
         public class Device
         {
             private const UInt16 _MaxPosition                = 10000;
-            private const double _TemperatureCoefficient    = 0.0;
+            private const double _TemperatureCoefficient     = 0.0;
+            private const double _StepSize                   = 2.0;
 
             private String Serial;
 
@@ -76,6 +77,19 @@ namespace ASCOM.OpenFocus
                         return double.Parse(val);
                 }
                 set { Write("TemperatureCoefficient", value.ToString(), Serial); }
+            }
+
+            public double StepSize
+            {
+                get
+                {
+                    String val = Read("StepSize", Serial);
+                    if (String.IsNullOrEmpty(val))
+                        return _StepSize;
+                    else
+                        return double.Parse(val);
+                }
+                set { Write("StepSize", value.ToString(), Serial); }
             }
         }
     }

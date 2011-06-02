@@ -23,6 +23,6 @@
 	#define TEMPERATURE_COMPENSATION_ENABLED 1
 #endif
 
-#define CAPABILITY(enable, cap) (enable & cap)
+#define CAPABILITY(enable, cap) ((enable == 1) ? cap : 0)
 
 #endif /* __CONFIG_H_ */

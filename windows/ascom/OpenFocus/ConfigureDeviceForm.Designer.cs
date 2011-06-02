@@ -36,6 +36,7 @@
             this.lblMaxPosition = new System.Windows.Forms.Label();
             this.tbMaxPosition = new System.Windows.Forms.TextBox();
             this.gbTemperatureCompensation = new System.Windows.Forms.GroupBox();
+            this.btnFocusMaxImport = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.tbTemperatureCoefficient = new System.Windows.Forms.TextBox();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -43,12 +44,9 @@
             this.gbDeviceInfo = new System.Windows.Forms.GroupBox();
             this.FirmwareVersion = new System.Windows.Forms.Label();
             this.lblFirmwareVersion = new System.Windows.Forms.Label();
-            this.Product = new System.Windows.Forms.Label();
-            this.lblProduct = new System.Windows.Forms.Label();
             this.SerialNumber = new System.Windows.Forms.Label();
             this.lblSerial = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.btnFocusMaxImport = new System.Windows.Forms.Button();
             this.gbPositionSettings.SuspendLayout();
             this.gbTemperatureCompensation.SuspendLayout();
             this.gbDeviceInfo.SuspendLayout();
@@ -57,7 +55,7 @@
             // lblName
             // 
             this.lblName.AutoSize = true;
-            this.lblName.Location = new System.Drawing.Point(26, 9);
+            this.lblName.Location = new System.Drawing.Point(12, 9);
             this.lblName.Name = "lblName";
             this.lblName.Size = new System.Drawing.Size(35, 13);
             this.lblName.TabIndex = 0;
@@ -67,9 +65,9 @@
             // 
             this.tbName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbName.Location = new System.Drawing.Point(67, 6);
+            this.tbName.Location = new System.Drawing.Point(53, 6);
             this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(202, 20);
+            this.tbName.Size = new System.Drawing.Size(216, 20);
             this.tbName.TabIndex = 1;
             // 
             // gbPositionSettings
@@ -79,7 +77,7 @@
             this.gbPositionSettings.Controls.Add(this.btnSetPosition);
             this.gbPositionSettings.Controls.Add(this.lblMaxPosition);
             this.gbPositionSettings.Controls.Add(this.tbMaxPosition);
-            this.gbPositionSettings.Location = new System.Drawing.Point(12, 116);
+            this.gbPositionSettings.Location = new System.Drawing.Point(12, 102);
             this.gbPositionSettings.Name = "gbPositionSettings";
             this.gbPositionSettings.Size = new System.Drawing.Size(257, 78);
             this.gbPositionSettings.TabIndex = 2;
@@ -101,7 +99,7 @@
             // 
             this.lblMaxPosition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblMaxPosition.AutoSize = true;
-            this.lblMaxPosition.Location = new System.Drawing.Point(6, 22);
+            this.lblMaxPosition.Location = new System.Drawing.Point(29, 22);
             this.lblMaxPosition.Name = "lblMaxPosition";
             this.lblMaxPosition.Size = new System.Drawing.Size(67, 13);
             this.lblMaxPosition.TabIndex = 1;
@@ -110,9 +108,9 @@
             // tbMaxPosition
             // 
             this.tbMaxPosition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbMaxPosition.Location = new System.Drawing.Point(79, 19);
+            this.tbMaxPosition.Location = new System.Drawing.Point(105, 19);
             this.tbMaxPosition.Name = "tbMaxPosition";
-            this.tbMaxPosition.Size = new System.Drawing.Size(172, 20);
+            this.tbMaxPosition.Size = new System.Drawing.Size(146, 20);
             this.tbMaxPosition.TabIndex = 0;
             this.tbMaxPosition.Validating += new System.ComponentModel.CancelEventHandler(this.tbMaxPosition_Validating);
             // 
@@ -123,12 +121,22 @@
             this.gbTemperatureCompensation.Controls.Add(this.btnFocusMaxImport);
             this.gbTemperatureCompensation.Controls.Add(this.label1);
             this.gbTemperatureCompensation.Controls.Add(this.tbTemperatureCoefficient);
-            this.gbTemperatureCompensation.Location = new System.Drawing.Point(12, 200);
+            this.gbTemperatureCompensation.Location = new System.Drawing.Point(12, 186);
             this.gbTemperatureCompensation.Name = "gbTemperatureCompensation";
             this.gbTemperatureCompensation.Size = new System.Drawing.Size(257, 79);
             this.gbTemperatureCompensation.TabIndex = 3;
             this.gbTemperatureCompensation.TabStop = false;
             this.gbTemperatureCompensation.Text = "Temperature Compensation";
+            // 
+            // btnFocusMaxImport
+            // 
+            this.btnFocusMaxImport.Location = new System.Drawing.Point(110, 45);
+            this.btnFocusMaxImport.Name = "btnFocusMaxImport";
+            this.btnFocusMaxImport.Size = new System.Drawing.Size(141, 23);
+            this.btnFocusMaxImport.TabIndex = 3;
+            this.btnFocusMaxImport.Text = "Import FocusMax Data...";
+            this.btnFocusMaxImport.UseVisualStyleBackColor = true;
+            this.btnFocusMaxImport.Click += new System.EventHandler(this.btnFocusMaxImport_Click);
             // 
             // label1
             // 
@@ -155,7 +163,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(194, 286);
+            this.btnCancel.Location = new System.Drawing.Point(194, 274);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 4;
@@ -166,7 +174,7 @@
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSave.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnSave.Location = new System.Drawing.Point(113, 286);
+            this.btnSave.Location = new System.Drawing.Point(113, 274);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 5;
@@ -180,74 +188,46 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.gbDeviceInfo.Controls.Add(this.FirmwareVersion);
             this.gbDeviceInfo.Controls.Add(this.lblFirmwareVersion);
-            this.gbDeviceInfo.Controls.Add(this.Product);
-            this.gbDeviceInfo.Controls.Add(this.lblProduct);
             this.gbDeviceInfo.Controls.Add(this.SerialNumber);
             this.gbDeviceInfo.Controls.Add(this.lblSerial);
             this.gbDeviceInfo.Location = new System.Drawing.Point(12, 32);
             this.gbDeviceInfo.Name = "gbDeviceInfo";
-            this.gbDeviceInfo.Size = new System.Drawing.Size(257, 78);
+            this.gbDeviceInfo.Size = new System.Drawing.Size(257, 64);
             this.gbDeviceInfo.TabIndex = 6;
             this.gbDeviceInfo.TabStop = false;
             this.gbDeviceInfo.Text = "Device Information";
             // 
             // FirmwareVersion
             // 
-            this.FirmwareVersion.Location = new System.Drawing.Point(102, 56);
+            this.FirmwareVersion.Location = new System.Drawing.Point(102, 41);
             this.FirmwareVersion.Name = "FirmwareVersion";
-            this.FirmwareVersion.Size = new System.Drawing.Size(149, 13);
+            this.FirmwareVersion.Size = new System.Drawing.Size(149, 12);
             this.FirmwareVersion.TabIndex = 5;
             // 
             // lblFirmwareVersion
             // 
             this.lblFirmwareVersion.AutoSize = true;
-            this.lblFirmwareVersion.Location = new System.Drawing.Point(6, 56);
+            this.lblFirmwareVersion.Location = new System.Drawing.Point(6, 41);
             this.lblFirmwareVersion.Name = "lblFirmwareVersion";
             this.lblFirmwareVersion.Size = new System.Drawing.Size(90, 13);
             this.lblFirmwareVersion.TabIndex = 4;
             this.lblFirmwareVersion.Text = "Firmware Version:";
             // 
-            // Product
-            // 
-            this.Product.Location = new System.Drawing.Point(56, 36);
-            this.Product.Name = "Product";
-            this.Product.Size = new System.Drawing.Size(195, 13);
-            this.Product.TabIndex = 3;
-            // 
-            // lblProduct
-            // 
-            this.lblProduct.AutoSize = true;
-            this.lblProduct.Location = new System.Drawing.Point(6, 36);
-            this.lblProduct.Name = "lblProduct";
-            this.lblProduct.Size = new System.Drawing.Size(47, 13);
-            this.lblProduct.TabIndex = 2;
-            this.lblProduct.Text = "Product:";
-            // 
             // SerialNumber
             // 
-            this.SerialNumber.Location = new System.Drawing.Point(58, 16);
+            this.SerialNumber.Location = new System.Drawing.Point(58, 23);
             this.SerialNumber.Name = "SerialNumber";
-            this.SerialNumber.Size = new System.Drawing.Size(193, 13);
+            this.SerialNumber.Size = new System.Drawing.Size(193, 14);
             this.SerialNumber.TabIndex = 1;
             // 
             // lblSerial
             // 
             this.lblSerial.AutoSize = true;
-            this.lblSerial.Location = new System.Drawing.Point(6, 16);
+            this.lblSerial.Location = new System.Drawing.Point(6, 23);
             this.lblSerial.Name = "lblSerial";
             this.lblSerial.Size = new System.Drawing.Size(46, 13);
             this.lblSerial.TabIndex = 0;
             this.lblSerial.Text = "Serial #:";
-            // 
-            // btnFocusMaxImport
-            // 
-            this.btnFocusMaxImport.Location = new System.Drawing.Point(110, 45);
-            this.btnFocusMaxImport.Name = "btnFocusMaxImport";
-            this.btnFocusMaxImport.Size = new System.Drawing.Size(141, 23);
-            this.btnFocusMaxImport.TabIndex = 3;
-            this.btnFocusMaxImport.Text = "Import FocusMax Data...";
-            this.btnFocusMaxImport.UseVisualStyleBackColor = true;
-            this.btnFocusMaxImport.Click += new System.EventHandler(this.btnFocusMaxImport_Click);
             // 
             // ConfigureDeviceForm
             // 
@@ -255,7 +235,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(282, 316);
+            this.ClientSize = new System.Drawing.Size(282, 309);
             this.Controls.Add(this.gbDeviceInfo);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnCancel);
@@ -313,8 +293,6 @@
         private System.Windows.Forms.GroupBox gbDeviceInfo;
         private System.Windows.Forms.Label lblSerial;
         private System.Windows.Forms.Label SerialNumber;
-        private System.Windows.Forms.Label Product;
-        private System.Windows.Forms.Label lblProduct;
         private System.Windows.Forms.Label FirmwareVersion;
         private System.Windows.Forms.Label lblFirmwareVersion;
         private System.Windows.Forms.Button btnFocusMaxImport;

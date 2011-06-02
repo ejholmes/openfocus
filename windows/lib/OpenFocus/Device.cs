@@ -88,10 +88,14 @@ namespace Cortex.OpenFocus
             return true;
         }
 
-        /* Returns the descriptor from the USB device */
-        public static UsbDeviceInfo Descriptor
+        public static String Serial
         {
-            get { return device.Info; }
+            get { return device.Info.SerialString; }
+        }
+
+        public static Version FirmwareVersion
+        {
+            get { return new Version(device.Info.Descriptor.BcdDevice >> 8, 0xff & device.Info.Descriptor.BcdDevice); }
         }
 
         /* Disconnect the device */
