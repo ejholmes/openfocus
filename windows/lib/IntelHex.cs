@@ -12,25 +12,25 @@ namespace Cortex
 {
     public class IntelHex
     {
-        private struct RecordTypes
+        private enum RecordType
         {
-            public const Byte Data = 0x00;
-            public const Byte EndOfFile = 0x01;
-            public const Byte ExtendedSegmentAddress = 0x02;
-            public const Byte StartSegmentAddress = 0x03;
-            public const Byte ExtendedLinearAddress = 0x04;
-            public const Byte StartLinearAddres = 0x05;
+            Data = 0x00,
+            EndOfFile = 0x01,
+            ExtendedSegmentAddress = 0x02,
+            StartSegmentAddress = 0x03,
+            ExtendedLinearAddress = 0x04,
+            StartLinearAddres = 0x05
         }
 
         private class Line
         {
-            public Byte Start           = (Byte)':';
-            public Byte ByteCount       = 0x10;
-            public UInt16 Address       = 0x0000;
-            public Byte RecordType      = RecordTypes.Data;
+            public Byte Start               = (Byte)':';
+            public Byte ByteCount           = 0x10;
+            public UInt16 Address           = 0x0000;
+            public RecordType RecordType    = RecordType.Data;
             public Byte[] Data;
-            public Byte CheckSum        = 0x00;
-            public Byte End             = (Byte)'\n';
+            public Byte CheckSum            = 0x00;
+            public Byte End                 = (Byte)'\n';
 
             public override string ToString()
             {
@@ -38,7 +38,7 @@ namespace Cortex
                 sb.Append((Char)Start);
                 sb.Append(String.Format("{0:X2}", ByteCount));
                 sb.Append(String.Format("{0:X4}", Address));
-                sb.Append(String.Format("{0:X2}", RecordType));
+                sb.Append(String.Format("{0:X2}", (Byte)RecordType));
                 for (int i = 0; i < Data.Length; i++)
                 {
                     sb.Append(String.Format("{0:X2}", Data[i]));
@@ -52,14 +52,14 @@ namespace Cortex
 
         private static Byte[] dataBuffer = new Byte[65536 + 256];
 
-        public static Byte[] Prase(String file, uint pagesize)
+        public static Byte[] Parse(String file, uint pagesize)
         {
             FileStream fp = File.OpenRead(file);
             Line line;
             int address = 0;
 
             line = ParseLine(fp); 
-            while (line.RecordType != 0x01)
+            while (line.RecordType != RecordType.EndOfFile)
             {
                 address = line.Address;
                 for (int i = 0; i < line.Data.Length; i++)
@@ -98,7 +98,7 @@ namespace Cortex
                 {
                     current.ByteCount = (Byte)(data.Length - i);
                     current.Address = (UInt16)i;
-                    current.RecordType = RecordTypes.EndOfFile;
+                    current.RecordType = RecordType.EndOfFile;
 
                     current.Data = new Byte[data.Length - i];
                     Buffer.BlockCopy(data, i, current.Data, 0, data.Length - i);
@@ -141,7 +141,7 @@ namespace Cortex
             fp.Seek(1, SeekOrigin.Current); /* Read Start */
             line.ByteCount = (Byte)ReadBytes(fp, 2);
             line.Address = (UInt16)ReadBytes(fp, 4);
-            line.RecordType = (Byte)ReadBytes(fp, 2);
+            line.RecordType = (RecordType)ReadBytes(fp, 2);
 
             line.Data = new Byte[line.ByteCount];
             for (int i = 0; i < line.ByteCount; i++)
@@ -160,7 +160,7 @@ namespace Cortex
             int sum = 0;
             sum += line.ByteCount;
             sum += (line.Address & 0xff) + ((line.Address >> 8) & 0xff);
-            sum += line.RecordType;
+            sum += (Byte)line.RecordType;
 
             for (int i = 0; i < line.Data.Length; i++)
             {
