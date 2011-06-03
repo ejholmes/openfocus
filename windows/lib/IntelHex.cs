@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Cortex
 {
-    public class IntelHexParser
+    public class IntelHex
     {
         public class IntelHexLine
         {

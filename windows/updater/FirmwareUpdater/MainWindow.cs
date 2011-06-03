@@ -22,12 +22,15 @@ namespace FirmwareUpdater
         Byte[] dataBuffer;
 
         bool done = true;
+        bool wait = true;
 
         public MainWindow()
         {
             InitializeComponent();
 
             Logger.LoggerWrite += new Logger.LoggerWriteEventHandler(Logger_LoggerWrite);
+
+            Logger.Write(this.Text + " version " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
         }
 
         void Logger_LoggerWrite(object sender, LoggerEventArgs e)
@@ -79,8 +82,11 @@ namespace FirmwareUpdater
                     Logger.Write("Rebooting device into firmware update mode...");
                     dev.RebootToBootloader();
                     dev.Disconnect();
-                    System.Threading.Thread.Sleep(2000);
-                    Application.DoEvents();
+                    while (wait)
+                    {
+                        System.Threading.Thread.Sleep(200);
+                        Application.DoEvents();
+                    }
                     btnFindDevice_Click(null, null);
                 }
                 catch (DeviceNotFoundException)
@@ -100,7 +106,7 @@ namespace FirmwareUpdater
             {
                 try
                 {
-                    dataBuffer = IntelHexParser.ParseFile(dialog.FileName, PageSize);
+                    dataBuffer = IntelHex.ParseFile(dialog.FileName, PageSize);
 
                     if (dataBuffer.Length > (FlashSize - 2048))
                     {
@@ -141,6 +147,18 @@ namespace FirmwareUpdater
             this.btnFindDevice.Enabled = false;
             this.btnLocateFirmware.Enabled = false;
             this.btnUpload.Enabled = false;
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            const int WM_DEVICECHANGE = 0x0219;
+            const int DBT_DEVNODES_CHANGED = 0x0007;
+            if (m.Msg == WM_DEVICECHANGE && m.WParam.ToInt32() == DBT_DEVNODES_CHANGED)
+            {
+                if (Bootloader.ListDevices() != null)
+                    wait = false;
+            }
+            base.WndProc(ref m);
         }
     }
 }

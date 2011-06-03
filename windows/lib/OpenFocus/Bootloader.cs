@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 using LibUsbDotNet;
 using LibUsbDotNet.Info;
@@ -19,6 +21,19 @@ namespace Cortex.OpenFocus
             public const byte Reboot = 0x01;
             public const byte WriteBlock = 0x02;
             public const byte GetReport = 0x03;
+        }
+
+        public static List<string> ListDevices()
+        {
+            List<string> serials = new List<string>();
+            UsbRegDeviceList regList = UsbDevice.AllDevices.FindAll(finder);
+
+            if (regList.Count == 0) return null;
+
+            foreach (UsbRegistry regDevice in regList)
+                serials.Add(regDevice.Device.Info.SerialString);
+
+            return serials;
         }
 
         public static void Connect()
@@ -122,7 +137,7 @@ namespace Cortex.OpenFocus
             
             try
             {
-                data = IntelHexParser.ParseFile(file, PageSize);
+                data = IntelHex.ParseFile(file, PageSize);
 
                 if (data.Length > (FlashSize - 2048))
                 {

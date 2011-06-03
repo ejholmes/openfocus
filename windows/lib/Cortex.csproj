@@ -51,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions.cs" />
-    <Compile Include="IntelHexParser.cs" />
+    <Compile Include="IntelHex.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="OpenFocus\Bootloader.cs" />
     <Compile Include="OpenFocus\Device.cs" />

@@ -17,25 +17,25 @@ namespace Cortex
 
     public class ChecksumMismatchException : Exception
     {
-        private IntelHexParser.IntelHexLine _Line = new IntelHexParser.IntelHexLine();
+        private IntelHex.IntelHexLine _Line = new IntelHex.IntelHexLine();
         private int _TowsComplement;
 
         public ChecksumMismatchException(string errorMessage) : base(errorMessage) { }
 
-        public ChecksumMismatchException(string errorMessage, IntelHexParser.IntelHexLine line)
+        public ChecksumMismatchException(string errorMessage, IntelHex.IntelHexLine line)
             : base(errorMessage)
         {
             _Line = line;
         }
 
-        public ChecksumMismatchException(string errorMessage, IntelHexParser.IntelHexLine line, int towsComplement)
+        public ChecksumMismatchException(string errorMessage, IntelHex.IntelHexLine line, int towsComplement)
             : base(errorMessage)
         {
             _Line = line;
             _TowsComplement = towsComplement;
         }
 
-        public IntelHexParser.IntelHexLine Line
+        public IntelHex.IntelHexLine Line
         {
             get { return _Line; }
         }
