@@ -10,20 +10,13 @@ namespace Cortex
 {
     public class IntelHex
     {
-        public class IntelHexLine
+        private struct Line
         {
-            public Byte[] start = new Byte[1];
-            public Byte[] byte_count = new Byte[2];
-            public Byte[] address = new Byte[4];
-            public Byte[] record_type = new Byte[2];
-            public Byte[] data = new Byte[16];
-            public Byte[] checksum = new Byte[2];
-            public Byte[] end = new Byte[2];
-
-            public override string ToString()
-            {
-                return base.ToString();
-            }
+            public Byte ByteCount;
+            public UInt16 Address;
+            public Byte RecordType;
+            public Byte[] Data;
+            public Byte CheckSum;
         }
 
         private static Byte[] dataBuffer = new Byte[65536 + 256];
@@ -31,20 +24,19 @@ namespace Cortex
         public static Byte[] ParseFile(String file, uint pagesize)
         {
             FileStream fp = File.OpenRead(file);
-            IntelHexLine line;
+            Line line;
             int address = 0;
 
-            while ((line = ParseLine(fp)) != null)
+            line = ParseLine(fp); 
+            while (line.RecordType != 0x01)
             {
-                address = ParseHex(line.address);
-                for (int i = 0; i < line.data.Length; i += 2)
+                address = line.Address;
+                for (int i = 0; i < line.Data.Length; i++)
                 {
-                    Byte[] b = new Byte[2];
-                    b[0] = line.data[i];
-                    b[1] = line.data[i + 1];
-                    dataBuffer[address] = (Byte)ParseHex(b);
+                    dataBuffer[address] = line.Data[i];
                     address++;
                 }
+                line = ParseLine(fp);
             }
 
             fp.Close();
@@ -58,59 +50,51 @@ namespace Cortex
             return returnBuffer;
         }
 
-        private static IntelHexLine ParseLine(FileStream fp)
+        private static Line ParseLine(FileStream fp)
         {
-            IntelHexLine line = new IntelHexLine();
+            Line line = new Line();
 
-            fp.Read(line.start, 0, line.start.Length); /* Read Start */
-            fp.Read(line.byte_count, 0, line.byte_count.Length); /* Data Count */
-            fp.Read(line.address, 0, line.address.Length); /* Read Address */
-            fp.Read(line.record_type, 0, line.record_type.Length); /* Read record type */
+            fp.Seek(1, SeekOrigin.Current); /* Read Start */
+            line.ByteCount = (Byte)ReadBytes(fp, 2);
+            line.Address = (UInt16)ReadBytes(fp, 4);
+            line.RecordType = (Byte)ReadBytes(fp, 2);
 
-            line.data = new Byte[ParseHex(line.byte_count) * 2];
-            fp.Read(line.data, 0, ParseHex(line.byte_count) * 2); /* Read Data */
+            line.Data = new Byte[line.ByteCount];
+            for (int i = 0; i < line.ByteCount; i++)
+                line.Data[i] = (Byte)ReadBytes(fp, 2);
 
-            fp.Read(line.checksum, 0, line.checksum.Length); /* Read Checksum */
-            fp.Read(line.end, 0, line.end.Length); /* Read End of line */
+            line.CheckSum = (Byte)ReadBytes(fp, 2);
+            fp.Seek(2, SeekOrigin.Current); /* Read End */
 
             VerifyChecksum(line);
-
-            if (ParseHex(line.record_type) == 0x01) /* End of file */
-                return null;
 
             return line;
         }
 
-        private static void VerifyChecksum(IntelHexLine line)
+        private static void VerifyChecksum(Line line)
         {
             int sum = 0;
-            sum += ParseHex(line.byte_count);
+            sum += line.ByteCount;
+            sum += (line.Address & 0xff) + ((line.Address >> 8) & 0xff);
+            sum += line.RecordType;
 
-            /* Split address into bytes */
-            for (int i = 0; i < line.address.Length; i += 2)
+            for (int i = 0; i < line.Data.Length; i++)
             {
-                sum += (Byte)ParseHex(new Byte[2] {
-                    line.address[i], 
-                    line.address[i + 1]
-                });
-            }
-
-            sum += ParseHex(line.record_type);
-
-            /* Split data in bytes */
-            for (int i = 0; i < line.data.Length; i += 2)
-            {
-                sum += (Byte)ParseHex(new Byte[2] {
-                    line.data[i],
-                    line.data[i + 1]
-                });
+                sum += line.Data[i];
             }
 
             int twos_comp = (~sum + 1) & 0xff;
-            int checksum = ParseHex(line.checksum);
+            int checksum = line.CheckSum;
 
             if (twos_comp != checksum)
-                throw new ChecksumMismatchException("Checksum mismatch!", line, twos_comp);
+                throw new ChecksumMismatchException("Checksum mismatch!");
+        }
+
+        private static int ReadBytes(FileStream fp, int length)
+        {
+            Byte[] b = new Byte[length];
+            fp.Read(b, 0, b.Length);
+            return ParseHex(b);
         }
 
         private static int ParseHex(Byte[] bytes)
