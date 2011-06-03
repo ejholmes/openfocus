@@ -81,7 +81,10 @@ namespace Builder
             }
             this.btnConnect.Enabled = false;
             this.btnBuild.Enabled = false;
-            BuildBurnBootloader();
+
+            if (this.cbBurnBootloader.Checked)
+                BuildBurnBootloader();
+            WriteEEPROM();
             BuildBurnFirmware();
 
             Logger.Write();
@@ -94,7 +97,6 @@ namespace Builder
             Logger.Write("Generating new GUID for seral number...");
             Guid guid = Guid.NewGuid();
             Logger.Write("GUID: " + guid.ToString());
-            Logger.Write("");
 
             return guid;
         }
@@ -109,15 +111,37 @@ namespace Builder
             }
             Logger.Write("Building bootloader...");
             Make();
-            
-            if (this.cbBurnBootloader.Checked)
-            {
-                Logger.Write("Flashing to device...");
-                Make("install", true);
-                Logger.Write("Bootloader flashed to device");
-            }
 
-            Logger.Write("");
+            Logger.Write("Flashing to device...");
+            Make("install", true);
+            Logger.Write("Bootloader flashed to device");
+        }
+
+        private void WriteEEPROM()
+        {
+            if (this.cbGenerateSerial.Checked)
+            {
+                String guid = GenerateGUID().ToString();
+                if (this.cbEEPROM.Checked)
+                {
+                    Byte[] data = new Byte[(guid.Length * 2) + 1]; /* Allocate space for unicode GUID and 1 byte for bootloader condition */
+                    data[0] = 1; /* Reboot into bootloader after flashing bootloader */
+                    Buffer.BlockCopy(Encoding.Unicode.GetBytes(guid), 0, data, 1, guid.Length * 2);
+                    IntelHexFile file = IntelHexFile.Create(data, 8);
+
+                    String EEPROMFile = @"\firmware\bootloader\eeprom.hex";
+
+                    StreamWriter writer = new StreamWriter(BaseDirectory + EEPROMFile, false);
+                    Logger.Write("EEPROM DATA:");
+                    foreach (IntelHexFileLine line in file.Lines)
+                    {
+                        writer.WriteLine(line.ToString());
+                        Logger.Write(line.ToString());
+                    }
+                    writer.Close();
+                    Make("eeprom", true);
+                }
+            }
         }
 
         private void BuildBurnFirmware()
@@ -130,15 +154,8 @@ namespace Builder
 
             List<string> Defines = new List<string>();
 
-            if (this.cbGenerateSerial.Checked)
-            {
-                Guid guid = GenerateGUID();
-
-                /* Generate a GUID based serial, split to individual characters and join with commas */
-                string tokenized = String.Join(",", guid.ToString().ToCharArray().Select(x => "'" + x.ToString() + "'").ToArray());
-                Defines.Add("USB_CFG_SERIAL_NUMBER=" + tokenized);
-                Defines.Add("USB_CFG_SERIAL_NUMBER_LEN=" + guid.ToString().ToCharArray().Length);
-            }
+            if (this.cbEEPROM.Checked)
+                Defines.Add("EEPROM_SERIAL_NUMBER");
 
             if (this.cbAbsolutePositioning.Checked)
                 Defines.Add("ABSOLUTE_POSITIONING_ENABLED=1");
@@ -174,10 +191,6 @@ namespace Builder
             {
                 UploadFirmware();
             }
-
-            
-            
-            Logger.Write("");
         }
 
         private void UploadFirmware()
@@ -206,18 +219,16 @@ namespace Builder
             make.StartInfo.WorkingDirectory = BaseDirectory + CurrentDirectory;
             make.StartInfo.Arguments = " " + Args;
             make.StartInfo.ErrorDialog = false;
-            make.StartInfo.UseShellExecute = false;
-            make.StartInfo.RedirectStandardOutput = true;
+            make.StartInfo.UseShellExecute = !redirect;
+            make.StartInfo.RedirectStandardOutput = redirect;
             make.Start();
 
             string line = String.Empty;
 
-            Logger.Write("");
+            Logger.Write();
 
             while (!String.IsNullOrEmpty((line = make.StandardOutput.ReadLine())))
                 Logger.Write(line);
-
-            Logger.Write("");
 
             make.WaitForExit();
         }

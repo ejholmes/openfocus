@@ -34,6 +34,7 @@
             this.gbBaseDirectory = new System.Windows.Forms.GroupBox();
             this.btnBaseDirectorySelect = new System.Windows.Forms.Button();
             this.gbOptions = new System.Windows.Forms.GroupBox();
+            this.cbEEPROM = new System.Windows.Forms.CheckBox();
             this.cbBurnBootloader = new System.Windows.Forms.CheckBox();
             this.cbCleanFirst = new System.Windows.Forms.CheckBox();
             this.cbGenerateSerial = new System.Windows.Forms.CheckBox();
@@ -51,7 +52,6 @@
             this.btnTemperatureTestStart = new System.Windows.Forms.Button();
             this.lbTemperatureLog = new System.Windows.Forms.ListBox();
             this.btnConnect = new System.Windows.Forms.Button();
-            this.cbEEPROM = new System.Windows.Forms.CheckBox();
             this.gbBaseDirectory.SuspendLayout();
             this.gbOptions.SuspendLayout();
             this.gbProgrammer.SuspendLayout();
@@ -130,9 +130,23 @@
             this.gbOptions.TabStop = false;
             this.gbOptions.Text = "Options";
             // 
+            // cbEEPROM
+            // 
+            this.cbEEPROM.AutoSize = true;
+            this.cbEEPROM.Checked = true;
+            this.cbEEPROM.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbEEPROM.Location = new System.Drawing.Point(163, 42);
+            this.cbEEPROM.Name = "cbEEPROM";
+            this.cbEEPROM.Size = new System.Drawing.Size(100, 17);
+            this.cbEEPROM.TabIndex = 3;
+            this.cbEEPROM.Text = "Write EEPROM";
+            this.cbEEPROM.UseVisualStyleBackColor = true;
+            // 
             // cbBurnBootloader
             // 
             this.cbBurnBootloader.AutoSize = true;
+            this.cbBurnBootloader.Checked = true;
+            this.cbBurnBootloader.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbBurnBootloader.Location = new System.Drawing.Point(163, 19);
             this.cbBurnBootloader.Name = "cbBurnBootloader";
             this.cbBurnBootloader.Size = new System.Drawing.Size(101, 17);
@@ -319,16 +333,6 @@
             this.btnConnect.Text = "Connect";
             this.btnConnect.UseVisualStyleBackColor = true;
             this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
-            // 
-            // cbEEPROM
-            // 
-            this.cbEEPROM.AutoSize = true;
-            this.cbEEPROM.Location = new System.Drawing.Point(163, 42);
-            this.cbEEPROM.Name = "cbEEPROM";
-            this.cbEEPROM.Size = new System.Drawing.Size(100, 17);
-            this.cbEEPROM.TabIndex = 3;
-            this.cbEEPROM.Text = "Write EEPROM";
-            this.cbEEPROM.UseVisualStyleBackColor = true;
             // 
             // MainWindow
             // 
