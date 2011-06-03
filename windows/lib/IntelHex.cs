@@ -12,84 +12,46 @@ namespace Cortex
 {
     public class IntelHex
     {
-        private enum RecordType
+        public static IntelHexFile ParseString(String data, uint pagesize)
         {
-            Data = 0x00,
-            EndOfFile = 0x01,
-            ExtendedSegmentAddress = 0x02,
-            StartSegmentAddress = 0x03,
-            ExtendedLinearAddress = 0x04,
-            StartLinearAddres = 0x05
+            MemoryStream fp = new MemoryStream(Encoding.Default.GetBytes(data));
+            return Parse(fp, pagesize);
         }
 
-        private class Line
+        public static IntelHexFile Parse(String file, uint pagesize)
         {
-            public Byte Start               = (Byte)':';
-            public Byte ByteCount           = 0x10;
-            public UInt16 Address           = 0x0000;
-            public RecordType RecordType    = RecordType.Data;
-            public Byte[] Data;
-            public Byte CheckSum            = 0x00;
-            public Byte End                 = (Byte)'\n';
-
-            public override string ToString()
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.Append((Char)Start);
-                sb.Append(String.Format("{0:X2}", ByteCount));
-                sb.Append(String.Format("{0:X4}", Address));
-                sb.Append(String.Format("{0:X2}", (Byte)RecordType));
-                for (int i = 0; i < Data.Length; i++)
-                {
-                    sb.Append(String.Format("{0:X2}", Data[i]));
-                }
-                sb.Append(String.Format("{0:X2}", CheckSum));
-                sb.Append((Char)End);
-
-                return sb.ToString();
-            }
+            FileStream fstream = File.OpenRead(file);
+            MemoryStream fp = new MemoryStream();
+            fp.SetLength(fstream.Length);
+            fstream.Read(fp.GetBuffer(), 0, (int)fstream.Length);
+            return Parse(fp, pagesize);
         }
 
-        private static Byte[] dataBuffer = new Byte[65536 + 256];
-
-        public static Byte[] Parse(String file, uint pagesize)
+        public static IntelHexFile Parse(MemoryStream fp, uint pagesize)
         {
-            FileStream fp = File.OpenRead(file);
-            Line line;
-            int address = 0;
+            IntelHexFile file = new IntelHexFile();
+            IntelHexFileLine current;
 
-            line = ParseLine(fp); 
-            while (line.RecordType != RecordType.EndOfFile)
+            current = ParseLine(fp); 
+            while (current.RecordType != RecordType.EndOfFile)
             {
-                address = line.Address;
-                for (int i = 0; i < line.Data.Length; i++)
-                {
-                    dataBuffer[address] = line.Data[i];
-                    address++;
-                }
-                line = ParseLine(fp);
+                file.AddLine(current);
+                current = ParseLine(fp);
             }
 
             fp.Close();
 
-            uint mask = pagesize - 1;
-            int endaddress = (int)((address + mask) & ~mask);
-
-            Byte[] returnBuffer = new Byte[endaddress];
-            Buffer.BlockCopy(dataBuffer, 0, returnBuffer, 0, endaddress);
-
-            return returnBuffer;
+            return file;
         }
 
-        public static string Create(Byte[] data, int ByteCount)
+        public static IntelHexFile Create(Byte[] data, int ByteCount)
         {
-            StringBuilder sb = new StringBuilder();
-            List<Line> lines = new List<Line>();
-            Line current;
+            IntelHexFile file = new IntelHexFile();
+            IntelHexFileLine current;
 
             for (int i = 0;;)
             {
-                current = new Line();
+                current = new IntelHexFileLine();
                 if (i == data.Length)
                 {
                     break;
@@ -105,7 +67,7 @@ namespace Cortex
 
                     current.CheckSum = (Byte)TwosCompliment(current);
 
-                    lines.Add(current);
+                    file.AddLine(current);
 
                     break;
                 }
@@ -119,24 +81,19 @@ namespace Cortex
 
                     current.CheckSum = (Byte)TwosCompliment(current);
 
-                    lines.Add(current);
+                    file.AddLine(current);
                 }
 
                 
                 i += ByteCount;
             }
 
-            foreach (Line l in lines)
-            {
-                sb.Append(l.ToString());
-            }
-
-            return sb.ToString();
+            return file;
         }
 
-        private static Line ParseLine(FileStream fp)
+        private static IntelHexFileLine ParseLine(MemoryStream fp)
         {
-            Line line = new Line();
+            IntelHexFileLine line = new IntelHexFileLine();
 
             fp.Seek(1, SeekOrigin.Current); /* Read Start */
             line.ByteCount = (Byte)ReadBytes(fp, 2);
@@ -155,7 +112,7 @@ namespace Cortex
             return line;
         }
 
-        private static int TwosCompliment(Line line)
+        private static int TwosCompliment(IntelHexFileLine line)
         {
             int sum = 0;
             sum += line.ByteCount;
@@ -172,13 +129,13 @@ namespace Cortex
             return twos_comp;
         }
 
-        private static void VerifyChecksum(Line line)
+        private static void VerifyChecksum(IntelHexFileLine line)
         {
             if (TwosCompliment(line) != line.CheckSum)
                 throw new ChecksumMismatchException("Checksum mismatch!");
         }
 
-        private static int ReadBytes(FileStream fp, int length)
+        private static int ReadBytes(MemoryStream fp, int length)
         {
             Byte[] b = new Byte[length];
             fp.Read(b, 0, b.Length);
@@ -196,6 +153,102 @@ namespace Cortex
             for (int i = 0; i < bytes.Length; i++)
                 temp[i] = (Char)bytes[i];
             return Int32.Parse(new String(temp), System.Globalization.NumberStyles.HexNumber);
+        }
+    }
+
+    public enum RecordType
+    {
+        Data = 0x00,
+        EndOfFile = 0x01,
+        ExtendedSegmentAddress = 0x02,
+        StartSegmentAddress = 0x03,
+        ExtendedLinearAddress = 0x04,
+        StartLinearAddres = 0x05
+    }
+
+    public class IntelHexFileLine
+    {
+        public Byte Start = (Byte)':';
+        public Byte ByteCount = 0x10;
+        public UInt16 Address = 0x0000;
+        public RecordType RecordType = RecordType.Data;
+        public Byte[] Data;
+        public Byte CheckSum = 0x00;
+        public Byte End = (Byte)'\n';
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append((Char)Start);
+            sb.Append(String.Format("{0:X2}", ByteCount));
+            sb.Append(String.Format("{0:X4}", Address));
+            sb.Append(String.Format("{0:X2}", (Byte)RecordType));
+            for (int i = 0; i < Data.Length; i++)
+            {
+                sb.Append(String.Format("{0:X2}", Data[i]));
+            }
+            sb.Append(String.Format("{0:X2}", CheckSum));
+            sb.Append((Char)End);
+
+            return sb.ToString();
+        }
+    }
+
+    public class IntelHexFile
+    {
+        private List<IntelHexFileLine> _Lines = new List<IntelHexFileLine>();
+        private uint _PageSize = 128;
+
+        public void AddLine(IntelHexFileLine line)
+        {
+            _Lines.Add(line);
+        }
+
+        public List<IntelHexFileLine> Lines
+        {
+            get { return _Lines; }
+        }
+
+        public Byte[] Data
+        {
+            get
+            {
+                Byte[] dataBuffer = new Byte[65536 + 256];
+                int address = 0;
+                foreach (IntelHexFileLine line in _Lines)
+                {
+                    for (int i = 0; i < line.Data.Length; i++)
+                    {
+                        dataBuffer[address] = line.Data[i];
+                        address++;
+                    }
+                }
+                uint mask = _PageSize - 1;
+                int endaddress = (int)((address + mask) & ~mask);
+
+                Byte[] returnBuffer = new Byte[endaddress];
+                Buffer.BlockCopy(dataBuffer, 0, returnBuffer, 0, endaddress);
+
+                return returnBuffer;
+            }
+        }
+
+        public uint PageSize
+        {
+            get { return _PageSize; }
+            set { _PageSize = value; }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (IntelHexFileLine line in _Lines)
+            {
+                sb.Append(line.ToString());
+            }
+
+            return sb.ToString();
         }
     }
 }
