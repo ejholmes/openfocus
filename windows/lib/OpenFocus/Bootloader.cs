@@ -1,40 +1,63 @@
 ﻿using System;
 
+using LibUsbDotNet;
+using LibUsbDotNet.Info;
+using LibUsbDotNet.Main;
+
 namespace Cortex.OpenFocus
 {
     public class Bootloader
     {
         private const Int16 Vendor_ID = 0x16c0;
-        private const Int16 Product_ID = 0x05df;
+        private const Int16 Product_ID = 0x05dc;
 
-        struct ReportID
+        private static UsbDeviceFinder finder = new UsbDeviceFinder(Vendor_ID, Product_ID);
+        private static UsbDevice device;
+
+        private struct Request
         {
-            public static byte GetInfo = 0x01;
-            public static byte WriteBlock = 0x02;
-            public static byte Reboot = 0x01;
+            public const byte Reboot = 0x01;
+            public const byte WriteBlock = 0x02;
+            public const byte GetReport = 0x03;
         }
-
-        static HID hid = new HID();
 
         public static void Connect()
         {
-            hid.Open(Vendor_ID, Product_ID, null);
+            device = UsbDevice.OpenUsbDevice(finder);
+
+            if (device == null)
+                throw new DeviceNotFoundException("Device not found!");
+
+            IUsbDevice usbDev = device as IUsbDevice;
+            if (!ReferenceEquals(usbDev, null))
+            {
+                usbDev.SetConfiguration(1);
+                usbDev.ClaimInterface(0);
+            }
         }
 
         public static void Disconnect()
         {
-            hid.Close();
+            device.Close();
+        }
+
+        private static Byte[] GetReport()
+        {
+            int expected = 6;
+            Byte[] data = new Byte[expected];
+            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Request.GetReport, 0, 0, 0);
+            int transfered;
+            device.ControlTransfer(ref packet, data, data.Length, out transfered);
+
+            return data;
         }
 
         public static UInt16 PageSize
         {
             get
             {
-                Byte[] data = new Byte[7];
-                data[0] = ReportID.GetInfo;
-                data = hid.GetFeatureReport(data);
-
-                return (UInt16)((data[2] << 8) | data[1]);
+                Byte[] data = GetReport();
+                return (UInt16)((data[1] << 8) | data[0]);
             }
         }
 
@@ -42,11 +65,8 @@ namespace Cortex.OpenFocus
         {
             get
             {
-                Byte[] data = new Byte[7];
-                data[0] = ReportID.GetInfo;
-                data = hid.GetFeatureReport(data);
-
-                return (UInt16)((data[6] << 24) | (data[5] << 16) | (data[4] << 8) | data[3]);
+                Byte[] data = GetReport();
+                return (UInt16)((data[5] << 24) | (data[4] << 16) | (data[3] << 8) | data[2]);
             }
         }
 
@@ -54,11 +74,13 @@ namespace Cortex.OpenFocus
         {
             Byte[] b = new Byte[4 + data.Length];
 
-            b[0] = ReportID.WriteBlock;
+            b[0] = 0;
             Buffer.BlockCopy(ToUsbInt(address, 3), 0, b, 1, 3); /* Copy the 3 least significant bytes */
             Buffer.BlockCopy(data, 0, b, 4, 128);
 
-            hid.SendFeatureReport(b);
+            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.WriteBlock, 0, 0, 0);
+            int transfered;
+            device.ControlTransfer(ref packet, b, b.Length, out transfered);
         }
 
         public static void UploadFile(string file)
@@ -133,9 +155,10 @@ namespace Cortex.OpenFocus
 
         public static void Reboot()
         {
-            Byte[] data = new Byte[7];
-            data[0] = ReportID.Reboot;
-            hid.SendFeatureReport(data);
+            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.Reboot, 0, 0, 0);
+            int transfered;
+            object buffer = null;
+            device.ControlTransfer(ref packet, buffer, 0, out transfered);
 
             Disconnect();
         }

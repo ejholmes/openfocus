@@ -33,6 +33,10 @@ static void leaveBootloader() __attribute__((__noreturn__));
 
 #include "usbdrv.h"
 
+#define USB_RQ_REBOOT 		0x01
+#define USB_RQ_WRITE_BLOCK 	0x02
+#define USB_RQ_GET_REPORT 	0x03
+
 /* ------------------------------------------------------------------------ */
 
 #ifndef ulong
@@ -52,34 +56,6 @@ static addr_t           currentAddress; /* in bytes */
 static uchar            offset;         /* data already processed in current transfer */
 #if BOOTLOADER_CAN_EXIT
 static uchar            exitMainloop;
-#endif
-
-PROGMEM char usbHidReportDescriptor[33] = {
-    0x06, 0x00, 0xff,              // USAGE_PAGE (Generic Desktop)
-    0x09, 0x01,                    // USAGE (Vendor Usage 1)
-    0xa1, 0x01,                    // COLLECTION (Application)
-    0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
-    0x26, 0xff, 0x00,              //   LOGICAL_MAXIMUM (255)
-    0x75, 0x08,                    //   REPORT_SIZE (8)
-
-    0x85, 0x01,                    //   REPORT_ID (1)
-    0x95, 0x06,                    //   REPORT_COUNT (6)
-    0x09, 0x00,                    //   USAGE (Undefined)
-    0xb2, 0x02, 0x01,              //   FEATURE (Data,Var,Abs,Buf)
-
-    0x85, 0x02,                    //   REPORT_ID (2)
-    0x95, 0x83,                    //   REPORT_COUNT (131)
-    0x09, 0x00,                    //   USAGE (Undefined)
-    0xb2, 0x02, 0x01,              //   FEATURE (Data,Var,Abs,Buf)
-    0xc0                           // END_COLLECTION
-};
-
-/* allow compatibility with avrusbboot's bootloaderconfig.h: */
-#ifdef BOOTLOADER_INIT
-#   define bootLoaderInit()         BOOTLOADER_INIT
-#endif
-#ifdef BOOTLOADER_CONDITION
-#   define bootLoaderCondition()    BOOTLOADER_CONDITION
 #endif
 
 /* compatibility with ATMega88 and other new devices: */
@@ -115,8 +91,7 @@ static void leaveBootloader()
 usbMsgLen_t   usbFunctionSetup(uchar data[8])
 {
 	usbRequest_t    *rq = (void *)data;
-	static uchar    replyBuffer[7] = {
-        1,                              /* report ID */
+	static uchar    replyBuffer[6] = {
         SPM_PAGESIZE & 0xff,
         SPM_PAGESIZE >> 8,
         ((long)FLASHEND + 1) & 0xff,
@@ -125,19 +100,19 @@ usbMsgLen_t   usbFunctionSetup(uchar data[8])
         (((long)FLASHEND + 1) >> 24) & 0xff
     };
 
-    if(rq->bRequest == USBRQ_HID_SET_REPORT){
-        if(rq->wValue.bytes[0] == 2){
-            offset = 0;
-            return USB_NO_MSG;
-        }
+    if (rq->bRequest == USB_RQ_WRITE_BLOCK) {
+		offset = 0;
+		return USB_NO_MSG;
+	}
 #if BOOTLOADER_CAN_EXIT
-        else{
-            exitMainloop = 1;
-        }
+	else if (rq->bRequest == USB_RQ_REBOOT) {
+		exitMainloop = 1;
+		return USB_NO_MSG;
+	}
 #endif
-    }else if(rq->bRequest == USBRQ_HID_GET_REPORT){
+	else if (rq->bRequest == USB_RQ_GET_REPORT) {
         usbMsgPtr = replyBuffer;
-        return 7;
+        return 6;
     }
     return 0;
 }

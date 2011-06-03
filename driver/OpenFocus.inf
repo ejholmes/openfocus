@@ -1,10 +1,12 @@
 ; OpenFocus.inf
 ; Copyright (c) 2010 libusb-win32 (GNU LGPL)
 [Strings]
-DeviceName="OpenFocus"
 VendorName="Cortex Astronomy"
 SourceName="OpenFocus Install Disk"
+DeviceName="OpenFocus"
 DeviceID="VID_20A0&PID_416B"
+BootloaderName="OpenFocus Bootloader"
+BootloaderID="VID_16C0&PID_05DC"
 
 [Version]
 Signature = "$Windows NT$"
@@ -126,12 +128,16 @@ ServiceBinary  = %12%\libusb0.sys
 ;
 [Devices]
 %DeviceName%=LIBUSB_WIN32_DEV, USB\%DeviceID%
+%BootloaderName%=LIBUSB_WIN32_DEV, USB\%BootloaderID%
 
 [Devices.NT]
 %DeviceName%=LIBUSB_WIN32_DEV, USB\%DeviceID%
+%BootloaderName%=LIBUSB_WIN32_DEV, USB\%BootloaderID%
 
 [Devices.NTAMD64]
 %DeviceName%=LIBUSB_WIN32_DEV, USB\%DeviceID%
+%BootloaderName%=LIBUSB_WIN32_DEV, USB\%BootloaderID%
 
 [Devices.NTIA64]
 %DeviceName%=LIBUSB_WIN32_DEV, USB\%DeviceID%
+%BootloaderName%=LIBUSB_WIN32_DEV, USB\%BootloaderID%
