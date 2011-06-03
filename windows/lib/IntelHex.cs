@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 /* 
  * Intel 16 byte hex format
- * Start Code (1) | Byte Count (2) | Address (4) | Record Type (2) | Data (16) | CheckSum (2) | End Line (2)
+ * Start Code (1) | Byte Count (2) | Address (4) | Record Type (2) | Data (32) | CheckSum (2) | End Line (2)
  */
 
 namespace Cortex
@@ -21,6 +21,7 @@ namespace Cortex
             MemoryStream fp = new MemoryStream();
             fp.SetLength(fstream.Length);
             fstream.Read(fp.GetBuffer(), 0, (int)fstream.Length);
+            fstream.Close();
             return Open(fp);
         }
 
@@ -57,10 +58,20 @@ namespace Cortex
                 {
                     current.ByteCount = (Byte)(data.Length - i);
                     current.Address = (UInt16)i;
-                    current.RecordType = RecordType.EndOfFile;
 
                     current.Data = new Byte[data.Length - i];
                     Buffer.BlockCopy(data, i, current.Data, 0, data.Length - i);
+
+                    current.CheckSum = (Byte)TwosCompliment(current);
+
+                    file.AddLine(current);
+
+                    current = new IntelHexFileLine();
+                    current.ByteCount = 0;
+                    current.Address = 0;
+                    current.RecordType = RecordType.EndOfFile;
+
+                    current.Data = new Byte[0];
 
                     current.CheckSum = (Byte)TwosCompliment(current);
 
@@ -152,9 +163,19 @@ namespace Cortex
             return Int32.Parse(new String(temp), System.Globalization.NumberStyles.HexNumber);
         }
 
+        Byte[] dataBuffer = new Byte[65536 + 256];
+        int address = 0;
+
         public void AddLine(IntelHexFileLine line)
         {
             _Lines.Add(line);
+
+            address = line.Address;
+            for (int i = 0; i < line.Data.Length; i++)
+            {
+                dataBuffer[address] = line.Data[i];
+                address++;
+            }
         }
 
         public List<IntelHexFileLine> Lines
@@ -166,16 +187,6 @@ namespace Cortex
         {
             get
             {
-                Byte[] dataBuffer = new Byte[65536 + 256];
-                int address = 0;
-                foreach (IntelHexFileLine line in _Lines)
-                {
-                    for (int i = 0; i < line.Data.Length; i++)
-                    {
-                        dataBuffer[address] = line.Data[i];
-                        address++;
-                    }
-                }
                 uint mask = _PageSize - 1;
                 int endaddress = (int)((address + mask) & ~mask);
 
@@ -195,12 +206,8 @@ namespace Cortex
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-
             foreach (IntelHexFileLine line in _Lines)
-            {
                 sb.Append(line.ToString());
-            }
-
             return sb.ToString();
         }
     }
@@ -215,6 +222,7 @@ namespace Cortex
         StartLinearAddres = 0x05
     }
 
+    /* Structure for an intel hex line in an intel hex file */
     public class IntelHexFileLine
     {
         public Byte Start = (Byte)':';

@@ -43,6 +43,9 @@ fuse:
 	
 lock:
 	$(AVRDUDE) -U lock:w:0x2f:m
+	
+eeprom:
+	$(AVRDUDE) -U eeprom:w:eeprom.hex:i
 
 # Xcode uses the Makefile targets "", "clean" and "install"
 install: flash fuse lock

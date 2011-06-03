@@ -51,6 +51,7 @@
             this.btnTemperatureTestStart = new System.Windows.Forms.Button();
             this.lbTemperatureLog = new System.Windows.Forms.ListBox();
             this.btnConnect = new System.Windows.Forms.Button();
+            this.cbEEPROM = new System.Windows.Forms.CheckBox();
             this.gbBaseDirectory.SuspendLayout();
             this.gbOptions.SuspendLayout();
             this.gbProgrammer.SuspendLayout();
@@ -118,6 +119,7 @@
             // 
             // gbOptions
             // 
+            this.gbOptions.Controls.Add(this.cbEEPROM);
             this.gbOptions.Controls.Add(this.cbBurnBootloader);
             this.gbOptions.Controls.Add(this.cbCleanFirst);
             this.gbOptions.Controls.Add(this.cbGenerateSerial);
@@ -318,6 +320,16 @@
             this.btnConnect.UseVisualStyleBackColor = true;
             this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
+            // cbEEPROM
+            // 
+            this.cbEEPROM.AutoSize = true;
+            this.cbEEPROM.Location = new System.Drawing.Point(163, 42);
+            this.cbEEPROM.Name = "cbEEPROM";
+            this.cbEEPROM.Size = new System.Drawing.Size(100, 17);
+            this.cbEEPROM.TabIndex = 3;
+            this.cbEEPROM.Text = "Write EEPROM";
+            this.cbEEPROM.UseVisualStyleBackColor = true;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -370,6 +382,7 @@
         private System.Windows.Forms.Button btnTemperatureTestStop;
         private System.Windows.Forms.Button btnTemperatureTestStart;
         private System.Windows.Forms.ListBox lbTemperatureLog;
+        private System.Windows.Forms.CheckBox cbEEPROM;
     }
 }
 

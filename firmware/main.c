@@ -18,19 +18,12 @@
 #define GUIDLENGTH 36
 
 static PROGMEM uint8_t capabilities = CAPABILITY(ABSOLUTE_POSITIONING_ENABLED, CAP_ABSOLUTE) | CAPABILITY(TEMPERATURE_COMPENSATION_ENABLED, CAP_TEMP_COMP);
-static uint8_t guid[5] EEMEM = "test";
 
 usbMsgLen_t usbFunctionDescriptor(struct usbRequest *rq)
 {
-	/*eeprom_write_word((uint16_t*)1, 'A');
-	eeprom_write_word((uint16_t*)3, 'A');
-	eeprom_busy_wait();*/
-	
 	static uint16_t serialNumberDescriptor[GUIDLENGTH + 1];
 	serialNumberDescriptor[0] = USB_STRING_DESCRIPTOR_HEADER(GUIDLENGTH);
 	eeprom_read_block(&serialNumberDescriptor[1], (const uint8_t*)1, GUIDLENGTH * 2);
-	//serialNumberDescriptor[1] = (uint16_t)eeprom_read_byte((const uint8_t*)1);
-	//serialNumberDescriptor[2] = (uint16_t)eeprom_read_byte((const uint8_t*)2);
 	
 	switch (rq->wValue.bytes[1])
 	{
