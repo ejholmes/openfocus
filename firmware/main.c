@@ -15,10 +15,13 @@
 
 #include "config.h"
 
-#define GUIDLENGTH 36
+#ifdef EEPROM_SERIAL_NUMBER
+	#define GUIDLENGTH 36
+#endif
 
 static PROGMEM uint8_t capabilities = CAPABILITY(ABSOLUTE_POSITIONING_ENABLED, CAP_ABSOLUTE) | CAPABILITY(TEMPERATURE_COMPENSATION_ENABLED, CAP_TEMP_COMP);
 
+#ifdef EEPROM_SERIAL_NUMBER
 usbMsgLen_t usbFunctionDescriptor(struct usbRequest *rq)
 {
 	static uint16_t serialNumberDescriptor[GUIDLENGTH + 1];
@@ -33,6 +36,7 @@ usbMsgLen_t usbFunctionDescriptor(struct usbRequest *rq)
 	}
 	return 0;
 }
+#endif
 
 usbMsgLen_t usbFunctionSetup(uchar data[8])
 {
