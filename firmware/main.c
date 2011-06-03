@@ -5,6 +5,8 @@
 #include <util/delay.h>
 #include <avr/eeprom.h>
 
+#include <string.h>
+
 #include "requests.h"
 #include "usbdrv.h"
 #include "focuser.h"
@@ -13,8 +15,30 @@
 
 #include "config.h"
 
+#define GUIDLENGTH 36
+
 static PROGMEM uint8_t capabilities = CAPABILITY(ABSOLUTE_POSITIONING_ENABLED, CAP_ABSOLUTE) | CAPABILITY(TEMPERATURE_COMPENSATION_ENABLED, CAP_TEMP_COMP);
-//static PROGMEM uint8_t capabilities = CAP_ABSOLUTE | CAP_TEMP_COMP;
+
+usbMsgLen_t usbFunctionDescriptor(struct usbRequest *rq)
+{
+	/*eeprom_write_word((uint16_t*)1, 'A');
+	eeprom_write_word((uint16_t*)3, 'A');
+	eeprom_busy_wait();*/
+	
+	static uint16_t serialNumberDescriptor[GUIDLENGTH + 1];
+	serialNumberDescriptor[0] = USB_STRING_DESCRIPTOR_HEADER(GUIDLENGTH);
+	eeprom_read_block(&serialNumberDescriptor[1], (const uint8_t*)1, GUIDLENGTH * 2);
+	//serialNumberDescriptor[1] = (uint16_t)eeprom_read_byte((const uint8_t*)1);
+	//serialNumberDescriptor[2] = (uint16_t)eeprom_read_byte((const uint8_t*)2);
+	
+	switch (rq->wValue.bytes[1])
+	{
+		case USBDESCR_STRING:
+			usbMsgPtr = (uchar *)serialNumberDescriptor;
+			return sizeof(serialNumberDescriptor);
+	}
+	return 0;
+}
 
 usbMsgLen_t usbFunctionSetup(uchar data[8])
 {
@@ -51,7 +75,7 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
 		return 0;
 	}
     else if (rq->bRequest == FOCUSER_SET_TEMPERATURE_COMPENSATION) {
-        uint8_t enabled = rq->wValue.bytes[0];
+        //uint8_t enabled = rq->wValue.bytes[0];
         return 0;
     }
     else if (rq->bRequest == FOCUSER_IS_MOVING) {

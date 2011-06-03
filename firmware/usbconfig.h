@@ -255,12 +255,12 @@ section at the end of this file).
  * the macros. See the file USB-IDs-for-free.txt before you assign a name if
  * you use a shared VID/PID.
  */
-#ifndef USB_CFG_SERIAL_NUMBER
-#define USB_CFG_SERIAL_NUMBER   'p', 'r', 'o', 't', 'o', 't', 'y', 'p', 'e' 
-#endif
-#ifndef USB_CFG_SERIAL_NUMBER_LEN
-#define USB_CFG_SERIAL_NUMBER_LEN   9 
-#endif
+//#ifndef USB_CFG_SERIAL_NUMBER
+//#define USB_CFG_SERIAL_NUMBER   'p', 'r', 'o', 't', 'o', 't', 'y', 'p', 'e' 
+//#endif
+//#ifndef USB_CFG_SERIAL_NUMBER_LEN
+//#define USB_CFG_SERIAL_NUMBER_LEN   9 
+//#endif
 /* Same as above for the serial number. If you don't want a serial number,
  * undefine the macros.
  * It may be useful to provide the serial number through other means than at
@@ -352,7 +352,7 @@ section at the end of this file).
 #define USB_CFG_DESCR_PROPS_STRING_0                0
 #define USB_CFG_DESCR_PROPS_STRING_VENDOR           0
 #define USB_CFG_DESCR_PROPS_STRING_PRODUCT          0
-#define USB_CFG_DESCR_PROPS_STRING_SERIAL_NUMBER    0
+#define USB_CFG_DESCR_PROPS_STRING_SERIAL_NUMBER    (USB_PROP_IS_RAM | USB_PROP_IS_DYNAMIC)
 #define USB_CFG_DESCR_PROPS_HID                     0
 #define USB_CFG_DESCR_PROPS_HID_REPORT              0
 #define USB_CFG_DESCR_PROPS_UNKNOWN                 0
