@@ -14,6 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <StartupObject>
     </StartupObject>
+    <ApplicationIcon>..\..\lib\Resources\icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -86,6 +87,9 @@
       <Project>{82E0EE74-DE1B-49D6-9413-BC85029C13A0}</Project>
       <Name>Cortex</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\lib\Resources\icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -128,6 +128,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MainWindow";
+            this.ShowIcon = false;
             this.Text = "Firmware Updater";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
             this.groupBox1.ResumeLayout(false);
