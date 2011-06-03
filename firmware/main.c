@@ -18,6 +18,7 @@
 #define GUIDLENGTH 36
 
 static PROGMEM uint8_t capabilities = CAPABILITY(ABSOLUTE_POSITIONING_ENABLED, CAP_ABSOLUTE) | CAPABILITY(TEMPERATURE_COMPENSATION_ENABLED, CAP_TEMP_COMP);
+static uint8_t guid[5] EEMEM = "test";
 
 usbMsgLen_t usbFunctionDescriptor(struct usbRequest *rq)
 {

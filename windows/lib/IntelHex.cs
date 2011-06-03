@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Text;
 using System.IO;
+using System.Collections.Generic;
 
 /* 
  * Intel 16 byte hex format
@@ -10,18 +12,47 @@ namespace Cortex
 {
     public class IntelHex
     {
-        private struct Line
+        private struct RecordTypes
         {
-            public Byte ByteCount;
-            public UInt16 Address;
-            public Byte RecordType;
+            public const Byte Data = 0x00;
+            public const Byte EndOfFile = 0x01;
+            public const Byte ExtendedSegmentAddress = 0x02;
+            public const Byte StartSegmentAddress = 0x03;
+            public const Byte ExtendedLinearAddress = 0x04;
+            public const Byte StartLinearAddres = 0x05;
+        }
+
+        private class Line
+        {
+            public Byte Start           = (Byte)':';
+            public Byte ByteCount       = 0x10;
+            public UInt16 Address       = 0x0000;
+            public Byte RecordType      = RecordTypes.Data;
             public Byte[] Data;
-            public Byte CheckSum;
+            public Byte CheckSum        = 0x00;
+            public Byte End             = (Byte)'\n';
+
+            public override string ToString()
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append((Char)Start);
+                sb.Append(String.Format("{0:X2}", ByteCount));
+                sb.Append(String.Format("{0:X4}", Address));
+                sb.Append(String.Format("{0:X2}", RecordType));
+                for (int i = 0; i < Data.Length; i++)
+                {
+                    sb.Append(String.Format("{0:X2}", Data[i]));
+                }
+                sb.Append(String.Format("{0:X2}", CheckSum));
+                sb.Append((Char)End);
+
+                return sb.ToString();
+            }
         }
 
         private static Byte[] dataBuffer = new Byte[65536 + 256];
 
-        public static Byte[] ParseFile(String file, uint pagesize)
+        public static Byte[] Prase(String file, uint pagesize)
         {
             FileStream fp = File.OpenRead(file);
             Line line;
@@ -50,6 +81,59 @@ namespace Cortex
             return returnBuffer;
         }
 
+        public static string Create(Byte[] data, int ByteCount)
+        {
+            StringBuilder sb = new StringBuilder();
+            List<Line> lines = new List<Line>();
+            Line current;
+
+            for (int i = 0;;)
+            {
+                current = new Line();
+                if (i == data.Length)
+                {
+                    break;
+                }
+                else if ((data.Length - i) < ByteCount) /* Last Record */
+                {
+                    current.ByteCount = (Byte)(data.Length - i);
+                    current.Address = (UInt16)i;
+                    current.RecordType = RecordTypes.EndOfFile;
+
+                    current.Data = new Byte[data.Length - i];
+                    Buffer.BlockCopy(data, i, current.Data, 0, data.Length - i);
+
+                    current.CheckSum = (Byte)TwosCompliment(current);
+
+                    lines.Add(current);
+
+                    break;
+                }
+                else
+                {
+                    current.ByteCount = (Byte)ByteCount;
+                    current.Address = (UInt16)i;
+
+                    current.Data = new Byte[ByteCount];
+                    Buffer.BlockCopy(data, i, current.Data, 0, ByteCount);
+
+                    current.CheckSum = (Byte)TwosCompliment(current);
+
+                    lines.Add(current);
+                }
+
+                
+                i += ByteCount;
+            }
+
+            foreach (Line l in lines)
+            {
+                sb.Append(l.ToString());
+            }
+
+            return sb.ToString();
+        }
+
         private static Line ParseLine(FileStream fp)
         {
             Line line = new Line();
@@ -71,7 +155,7 @@ namespace Cortex
             return line;
         }
 
-        private static void VerifyChecksum(Line line)
+        private static int TwosCompliment(Line line)
         {
             int sum = 0;
             sum += line.ByteCount;
@@ -84,9 +168,13 @@ namespace Cortex
             }
 
             int twos_comp = (~sum + 1) & 0xff;
-            int checksum = line.CheckSum;
 
-            if (twos_comp != checksum)
+            return twos_comp;
+        }
+
+        private static void VerifyChecksum(Line line)
+        {
+            if (TwosCompliment(line) != line.CheckSum)
                 throw new ChecksumMismatchException("Checksum mismatch!");
         }
 
