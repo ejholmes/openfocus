@@ -82,11 +82,12 @@ namespace FirmwareUpdater
                     Logger.Write("Rebooting device into firmware update mode...");
                     dev.RebootToBootloader();
                     dev.Disconnect();
-                    while (wait)
+                    while (wait) /* Wait for device to reboot and be enumerated by the OS */
                     {
                         System.Threading.Thread.Sleep(200);
                         Application.DoEvents();
                     }
+                    wait = true;
                     btnFindDevice_Click(null, null);
                 }
                 catch (DeviceNotFoundException)
