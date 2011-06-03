@@ -107,7 +107,8 @@ namespace FirmwareUpdater
             {
                 try
                 {
-                    IntelHexFile f = IntelHex.Parse(dialog.FileName, PageSize);
+                    IntelHexFile f = IntelHexFile.Open(dialog.FileName);
+                    f.PageSize = PageSize;
                     dataBuffer = f.Data;
 
                     if (dataBuffer.Length > (FlashSize - 2048))

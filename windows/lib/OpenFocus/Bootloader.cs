@@ -137,7 +137,8 @@ namespace Cortex.OpenFocus
             
             try
             {
-                IntelHexFile f = IntelHex.Parse(file, PageSize);
+                IntelHexFile f = IntelHexFile.Open(file);
+                f.PageSize = PageSize;
                 data = f.Data;
 
                 if (data.Length > (FlashSize - 2048))

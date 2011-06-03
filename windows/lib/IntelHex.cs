@@ -10,33 +10,30 @@ using System.Collections.Generic;
 
 namespace Cortex
 {
-    public class IntelHex
+    public class IntelHexFile
     {
-        public static IntelHexFile ParseString(String data, uint pagesize)
-        {
-            MemoryStream fp = new MemoryStream(Encoding.Default.GetBytes(data));
-            return Parse(fp, pagesize);
-        }
+        private List<IntelHexFileLine> _Lines = new List<IntelHexFileLine>();
+        private uint _PageSize = 128;
 
-        public static IntelHexFile Parse(String file, uint pagesize)
+        public static IntelHexFile Open(String file)
         {
             FileStream fstream = File.OpenRead(file);
             MemoryStream fp = new MemoryStream();
             fp.SetLength(fstream.Length);
             fstream.Read(fp.GetBuffer(), 0, (int)fstream.Length);
-            return Parse(fp, pagesize);
+            return Open(fp);
         }
 
-        public static IntelHexFile Parse(MemoryStream fp, uint pagesize)
+        private static IntelHexFile Open(MemoryStream fp)
         {
             IntelHexFile file = new IntelHexFile();
             IntelHexFileLine current;
 
-            current = ParseLine(fp); 
+            current = file.ParseLine(fp);
             while (current.RecordType != RecordType.EndOfFile)
             {
                 file.AddLine(current);
-                current = ParseLine(fp);
+                current = file.ParseLine(fp);
             }
 
             fp.Close();
@@ -49,7 +46,7 @@ namespace Cortex
             IntelHexFile file = new IntelHexFile();
             IntelHexFileLine current;
 
-            for (int i = 0;;)
+            for (int i = 0; ; )
             {
                 current = new IntelHexFileLine();
                 if (i == data.Length)
@@ -84,14 +81,14 @@ namespace Cortex
                     file.AddLine(current);
                 }
 
-                
+
                 i += ByteCount;
             }
 
             return file;
         }
 
-        private static IntelHexFileLine ParseLine(MemoryStream fp)
+        private IntelHexFileLine ParseLine(MemoryStream fp)
         {
             IntelHexFileLine line = new IntelHexFileLine();
 
@@ -129,75 +126,31 @@ namespace Cortex
             return twos_comp;
         }
 
-        private static void VerifyChecksum(IntelHexFileLine line)
+        private void VerifyChecksum(IntelHexFileLine line)
         {
             if (TwosCompliment(line) != line.CheckSum)
                 throw new ChecksumMismatchException("Checksum mismatch!");
         }
 
-        private static int ReadBytes(MemoryStream fp, int length)
+        private int ReadBytes(MemoryStream fp, int length)
         {
             Byte[] b = new Byte[length];
             fp.Read(b, 0, b.Length);
             return ParseHex(b);
         }
 
-        private static int ParseHex(Byte[] bytes)
+        private int ParseHex(Byte[] bytes)
         {
             return ParseHex(bytes, bytes.Length);
         }
 
-        private static int ParseHex(Byte[] bytes, int count)
+        private int ParseHex(Byte[] bytes, int count)
         {
             Char[] temp = new Char[count];
             for (int i = 0; i < bytes.Length; i++)
                 temp[i] = (Char)bytes[i];
             return Int32.Parse(new String(temp), System.Globalization.NumberStyles.HexNumber);
         }
-    }
-
-    public enum RecordType
-    {
-        Data = 0x00,
-        EndOfFile = 0x01,
-        ExtendedSegmentAddress = 0x02,
-        StartSegmentAddress = 0x03,
-        ExtendedLinearAddress = 0x04,
-        StartLinearAddres = 0x05
-    }
-
-    public class IntelHexFileLine
-    {
-        public Byte Start = (Byte)':';
-        public Byte ByteCount = 0x10;
-        public UInt16 Address = 0x0000;
-        public RecordType RecordType = RecordType.Data;
-        public Byte[] Data;
-        public Byte CheckSum = 0x00;
-        public Byte End = (Byte)'\n';
-
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append((Char)Start);
-            sb.Append(String.Format("{0:X2}", ByteCount));
-            sb.Append(String.Format("{0:X4}", Address));
-            sb.Append(String.Format("{0:X2}", (Byte)RecordType));
-            for (int i = 0; i < Data.Length; i++)
-            {
-                sb.Append(String.Format("{0:X2}", Data[i]));
-            }
-            sb.Append(String.Format("{0:X2}", CheckSum));
-            sb.Append((Char)End);
-
-            return sb.ToString();
-        }
-    }
-
-    public class IntelHexFile
-    {
-        private List<IntelHexFileLine> _Lines = new List<IntelHexFileLine>();
-        private uint _PageSize = 128;
 
         public void AddLine(IntelHexFileLine line)
         {
@@ -247,6 +200,44 @@ namespace Cortex
             {
                 sb.Append(line.ToString());
             }
+
+            return sb.ToString();
+        }
+    }
+
+    public enum RecordType
+    {
+        Data = 0x00,
+        EndOfFile = 0x01,
+        ExtendedSegmentAddress = 0x02,
+        StartSegmentAddress = 0x03,
+        ExtendedLinearAddress = 0x04,
+        StartLinearAddres = 0x05
+    }
+
+    public class IntelHexFileLine
+    {
+        public Byte Start = (Byte)':';
+        public Byte ByteCount = 0x10;
+        public UInt16 Address = 0x0000;
+        public RecordType RecordType = RecordType.Data;
+        public Byte[] Data;
+        public Byte CheckSum = 0x00;
+        public Byte End = (Byte)'\n';
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append((Char)Start);
+            sb.Append(String.Format("{0:X2}", ByteCount));
+            sb.Append(String.Format("{0:X4}", Address));
+            sb.Append(String.Format("{0:X2}", (Byte)RecordType));
+            for (int i = 0; i < Data.Length; i++)
+            {
+                sb.Append(String.Format("{0:X2}", Data[i]));
+            }
+            sb.Append(String.Format("{0:X2}", CheckSum));
+            sb.Append((Char)End);
 
             return sb.ToString();
         }
