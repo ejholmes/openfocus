@@ -101,32 +101,54 @@ void stepper_do_step(int8_t direction)
             step = (direction == FORWARD) ? (step + 1) : (step - 1);
     }
 
-    MOTOR_PINS_OFF();           /* Turn pins off */
-
     switch(step) {              /* Then step */
-        case 0:
-            MOTOR_PORT |= a;
+        case 0: /* a on */
+			if (direction == FORWARD)
+				MOTOR_PORT &= ~d; 
+			else
+				MOTOR_PORT &= ~b;
             break;
-        case 1:
-            MOTOR_PORT |= a | b;
+        case 1: /* a and b on */
+			if (direction == FORWARD)
+				MOTOR_PORT |= b; 
+			else
+				MOTOR_PORT |= a;
             break;
-        case 2:
-            MOTOR_PORT |= b;
+        case 2: /* b on */
+			if (direction == FORWARD)
+				MOTOR_PORT &= ~a;
+			else
+				MOTOR_PORT &= ~c;
             break;
-        case 3:
-            MOTOR_PORT |= b | c;
+        case 3: /* b and c on*/
+			if (direction == FORWARD)
+				MOTOR_PORT |= c;
+			else
+				MOTOR_PORT |= b;
             break;
-        case 4:
-            MOTOR_PORT |= c;
+        case 4: /* c on */
+			if (direction == FORWARD)
+				MOTOR_PORT &= ~b;
+			else
+				MOTOR_PORT &= ~d;
             break;
-        case 5:
-            MOTOR_PORT |= c | d;
+        case 5: /* c and d on */
+			if (direction == FORWARD)
+				MOTOR_PORT |= d;
+			else
+				MOTOR_PORT |= c;
             break;
-        case 6:
-            MOTOR_PORT |= d;
+        case 6: /* d on */
+			if (direction == FORWARD)
+				MOTOR_PORT &= ~c;
+			else
+				MOTOR_PORT &= ~a;
             break;
-        case 7:
-            MOTOR_PORT |= d | a;
+        case 7: /* d and a on */
+			if (direction == FORWARD)
+				MOTOR_PORT |= a;
+			else
+				MOTOR_PORT |= d;
             break;
     }
 
