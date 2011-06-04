@@ -18,6 +18,14 @@ void registerEventCallback(Callback cb)
     step_event_cb = cb;
 }
 
+void pwm_init(void)
+{
+	TCCR1A |= _BV(WGM13) | _BV(WGM12) | _BV(WGM11) | _BV(WGM10); /* Fast PWM with OCR1A output compare */
+	TCCR1B |= _BV(CS11) | _BV(CS10); /* Clock source from XTAL, no prescaler */
+	
+	OCR1A = 0x03; /* 50% duty cycle */
+}
+
 void stepper_init(void)
 {
     MOTOR_DDR  |= _BV(MOTOR_PIN_A) 
@@ -29,7 +37,7 @@ void stepper_init(void)
 
     PWM_DDR |= _BV(PWM1) | _BV(PWM2);           /* Make enable pins outputs */
 
-    PWM_PORT |= _BV(PWM1) | _BV(PWM2);          /* Enable both output ports on the H-Bridge */
+	pwm_init();
 
     TCCR0B |= _BV(CS02) | _BV(CS00);            /* Setup timer with 1024 prescale */
 
@@ -41,6 +49,11 @@ void stepper_release(void)
     MOTOR_PINS_OFF();
 }
 
+void stepper_pwm_hold(void)
+{
+	ENABLE_PINS_OFF();
+	START_PWM();
+}
 
 void stepper_stop(void)
 {
@@ -51,6 +64,8 @@ void stepper_stop(void)
 
 void stepper_step(int16_t steps)
 {
+	STOP_PWM();
+	ENABLE_PINS_ON();
     if (steps > 0) {
         direction = FORWARD;
     }

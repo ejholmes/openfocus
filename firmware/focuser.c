@@ -17,7 +17,8 @@ void step_event_handler(uint8_t evt, void *data)
             current_position += *(int8_t *)data;
             break;
         case EVT_MOVE_COMPLETE:
-            stepper_release();
+            //stepper_release();
+			stepper_pwm_hold();
             is_moving = false;
             break;
     }

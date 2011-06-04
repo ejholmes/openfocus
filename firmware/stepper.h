@@ -44,10 +44,6 @@
 #ifndef __stepper_h_
 #define __stepper_h_
 
-#ifndef STEPS_PER_REV
-    #define STEPS_PER_REV 400
-#endif
-
 /* Motor registers */
 #ifndef MOTOR_DDR
     #define MOTOR_DDR   DDRD
@@ -81,8 +77,14 @@
 #define PWM_PIN     PINB
 
 /* PWM/Enable pins */
-#define PWM1        PB1
-#define PWM2        PB2
+#define PWM1        PB1 /* OC1A */
+#define PWM2        PB2 /* OC1B */
+
+/* PWM Helpers */
+#define ENABLE_PINS_ON() PWM_PORT |= _BV(PWM1) | _BV(PWM2)
+#define ENABLE_PINS_OFF() PWM_PORT &= ~_BV(PWM1) & ~_BV(PWM2)
+#define STOP_PWM() TCCR1A &= ~_BV(COM1A1) & ~_BV(COM1A0) & ~_BV(COM1B1) & ~_BV(COM1B0)
+#define START_PWM() TCCR1A |= _BV(COM1A1) | _BV(COM1A0) | _BV(COM1B1) | _BV(COM1B0) /* Set OC1A/OC1B on compare match, clear OC1A/OC1B at bottom */
 
 /* Helper macro for turning off motor pins */
 #define MOTOR_PINS_OFF() MOTOR_PORT &= ~(_BV(MOTOR_PIN_A) | _BV(MOTOR_PIN_B) | _BV(MOTOR_PIN_C) | _BV(MOTOR_PIN_D))
@@ -120,6 +122,11 @@ void stepper_step(int16_t steps);
  * call this function to release the coils
  */
 void stepper_release(void);
+
+/*
+ * PWM the enable pins for heavy loads
+ */
+void stepper_pwm_hold(void);
 
 /*
  * Stops the stepper motor
