@@ -52,7 +52,7 @@ namespace Cortex
                 current = new IntelHexFileLine();
                 if (i == data.Length)
                 {
-                    break;
+                    goto EndOfFile;
                 }
                 else if ((data.Length - i) < ByteCount) /* Last Record */
                 {
@@ -66,18 +66,7 @@ namespace Cortex
 
                     file.AddLine(current);
 
-                    current = new IntelHexFileLine();
-                    current.ByteCount = 0;
-                    current.Address = 0;
-                    current.RecordType = RecordType.EndOfFile;
-
-                    current.Data = new Byte[0];
-
-                    current.CheckSum = (Byte)TwosCompliment(current);
-
-                    file.AddLine(current);
-
-                    break;
+                    goto EndOfFile;
                 }
                 else
                 {
@@ -95,6 +84,15 @@ namespace Cortex
 
                 i += ByteCount;
             }
+
+EndOfFile: /* End of hex file */
+            current = new IntelHexFileLine();
+            current.ByteCount = 0;
+            current.Address = 0;
+            current.RecordType = RecordType.EndOfFile;
+            current.Data = new Byte[0];
+            current.CheckSum = (Byte)TwosCompliment(current);
+            file.AddLine(current);
 
             return file;
         }

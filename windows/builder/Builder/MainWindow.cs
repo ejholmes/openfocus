@@ -113,7 +113,9 @@ namespace Builder
             Make();
 
             Logger.Write("Flashing to device...");
+#if !TEST
             Make("install", true);
+#endif
             Logger.Write("Bootloader flashed to device");
         }
 
@@ -139,7 +141,9 @@ namespace Builder
                         Logger.Write(line.ToString());
                     }
                     writer.Close();
+#if !TEST
                     Make("eeprom", true);
+#endif
                 }
             }
         }
@@ -183,6 +187,7 @@ namespace Builder
 
             Make(CFLAGS.ToString());
 
+#if !TEST
             if (!this.cbBurnBootloader.Checked || (this.cbBurnBootloader.Checked && MessageBox.Show("Push the firmware button on the device", 
                 "Device reboot required", 
                 MessageBoxButtons.OKCancel, 
@@ -191,6 +196,7 @@ namespace Builder
             {
                 UploadFirmware();
             }
+#endif
         }
 
         private void UploadFirmware()
