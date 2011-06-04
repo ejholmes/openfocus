@@ -5,8 +5,8 @@ VendorName="Cortex Astronomy"
 SourceName="OpenFocus Install Disk"
 DeviceName="OpenFocus"
 DeviceID="VID_20A0&PID_416B"
-BootloaderName="OpenFocus Bootloader"
-BootloaderID="VID_16C0&PID_05DC"
+BootloaderName="OpenFocus Firmware Update Mode"
+BootloaderID="VID_20A0&PID_416D"
 
 [Version]
 Signature = "$Windows NT$"

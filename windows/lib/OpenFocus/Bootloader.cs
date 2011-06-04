@@ -10,8 +10,8 @@ namespace Cortex.OpenFocus
 {
     public class Bootloader
     {
-        private const Int16 Vendor_ID = 0x16c0;
-        private const Int16 Product_ID = 0x05dc;
+        private const Int16 Vendor_ID = 0x20a0;
+        private const Int16 Product_ID = 0x416d;
 
         private static UsbDeviceFinder finder = new UsbDeviceFinder(Vendor_ID, Product_ID);
         private static UsbDevice device;
