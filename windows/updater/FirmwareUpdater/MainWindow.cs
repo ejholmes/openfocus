@@ -53,7 +53,11 @@ namespace FirmwareUpdater
             if (!done)
             {
                 Logger.Write("No data uploaded...rebooting");
-                Bootloader.Reboot();
+                try
+                {
+                    Bootloader.Reboot();
+                }
+                catch { }
             }
         }
 
@@ -92,6 +96,7 @@ namespace FirmwareUpdater
                 }
                 catch (DeviceNotFoundException)
                 {
+                    done = true;
                     Logger.Write("Device not found!");
                 }
             }
