@@ -84,8 +84,10 @@ namespace Builder
 
             if (this.cbBurnBootloader.Checked)
                 BuildBurnBootloader();
-            WriteEEPROM();
+            
             BuildBurnFirmware();
+            if (this.cbGenerateSerial.Checked)
+                WriteEEPROM();
 
             Logger.Write();
             this.btnBuild.Enabled = true;
@@ -121,30 +123,14 @@ namespace Builder
 
         private void WriteEEPROM()
         {
-            if (this.cbGenerateSerial.Checked)
+            String guid = GenerateGUID().ToString();
+            if (this.cbEEPROM.Checked)
             {
-                String guid = GenerateGUID().ToString();
-                if (this.cbEEPROM.Checked)
-                {
-                    EEPROM eeprom = new EEPROM();
-                    eeprom.StayInBootloader = true;
-                    eeprom.SerialNumber = guid;
-                    IntelHexFile file = IntelHexFile.Create(eeprom.Data, 8);
+                EEPROM eeprom = new EEPROM();
+                eeprom.StayInBootloader = true;
+                eeprom.SerialNumber = guid;
 
-                    String EEPROMFile = @"\firmware\bootloader\eeprom.hex";
-
-                    StreamWriter writer = new StreamWriter(BaseDirectory + EEPROMFile, false);
-                    Logger.Write("EEPROM DATA:");
-                    foreach (IntelHexFileLine line in file.Lines)
-                    {
-                        writer.WriteLine(line.ToString());
-                        Logger.Write(line.ToString());
-                    }
-                    writer.Close();
-#if !TEST
-                    Make("eeprom", true);
-#endif
-                }
+                Bootloader.WriteEeprom(eeprom.Data);
             }
         }
 
@@ -201,7 +187,7 @@ namespace Builder
 
         private void UploadFirmware()
         {
-            Bootloader.UploadFile(BaseDirectory + CurrentDirectory + @"\main.hex");
+            Bootloader.UploadFile(BaseDirectory + CurrentDirectory + @"\main.hex", false);
         }
 
         private void Make()

@@ -21,6 +21,7 @@ namespace Cortex.OpenFocus
             public const byte Reboot = 0x01;
             public const byte WriteBlock = 0x02;
             public const byte GetReport = 0x03;
+            public const byte WriteEeprom = 0x04;
         }
 
         public static List<string> ListDevices()
@@ -85,13 +86,41 @@ namespace Cortex.OpenFocus
             }
         }
 
+        public static void WriteEeprom(Byte[] data)
+        {
+            UInt16 BlockSize = 127;
+            for (UInt16 address = 0; address < data.Length; address += BlockSize)
+            {
+                Byte[] block = new Byte[BlockSize];
+                if ((address + BlockSize) > data.Length)
+                    BlockSize = (UInt16)(data.Length - address);
+                Buffer.BlockCopy(data, (int)address, block, 0, (int)BlockSize);
+
+                Logger.Write("Writing eeprom block 0x" + String.Format("{0:x3}", address) + " ... 0x" + String.Format("{0:x3}", (address + BlockSize)));
+
+                Bootloader.WriteEepromBlock(address, block);
+            }
+        }
+
+        public static void WriteEepromBlock(UInt16 address, Byte[] data)
+        {
+            Byte[] b = new Byte[3 + data.Length];
+
+            Buffer.BlockCopy(ToUsbInt(address, 3), 0, b, 0, 3);
+            Buffer.BlockCopy(data, 0, b, 3, data.Length);
+
+            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.WriteEeprom, 0, 0, 0);
+            int transfered;
+            device.ControlTransfer(ref packet, b, b.Length, out transfered);
+        }
+
         public static void WriteBlock(UInt32 address, Byte[] data)
         {
             Byte[] b = new Byte[4 + data.Length];
 
             b[0] = 0;
             Buffer.BlockCopy(ToUsbInt(address, 3), 0, b, 1, 3); /* Copy the 3 least significant bytes */
-            Buffer.BlockCopy(data, 0, b, 4, 128);
+            Buffer.BlockCopy(data, 0, b, 4, data.Length);
 
             UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.WriteBlock, 0, 0, 0);
             int transfered;
@@ -113,6 +142,11 @@ namespace Cortex.OpenFocus
         }
 
         public static void UploadFile(string file)
+        {
+            UploadFile(file, true);
+        }
+
+        public static void UploadFile(string file, bool reboot)
         {
             Byte[] data = null;
             uint PageSize = 0, FlashSize = 0;
@@ -172,7 +206,8 @@ namespace Cortex.OpenFocus
 
             Logger.Write("Firmware update complete!");
             Logger.Write("Device is rebooting");
-            Bootloader.Reboot();
+            //if (reboot)
+                //Bootloader.Reboot();
         }
 
         public static void Reboot()
