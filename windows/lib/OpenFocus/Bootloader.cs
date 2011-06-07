@@ -98,6 +98,20 @@ namespace Cortex.OpenFocus
             device.ControlTransfer(ref packet, b, b.Length, out transfered);
         }
 
+        public static void WriteFirmware(Byte[] data, uint PageSize)
+        {
+            /* Now that the device is connected, write the data, page by page. */
+            for (uint address = 0; address < data.Length; address += PageSize)
+            {
+                Byte[] page = new Byte[PageSize];
+                Buffer.BlockCopy(data, (int)address, page, 0, (int)PageSize);
+
+                Logger.Write("Writing block 0x" + String.Format("{0:x3}", address) + " ... 0x" + String.Format("{0:x3}", (address + PageSize)));
+
+                Bootloader.WriteBlock(address, page);
+            }
+        }
+
         public static void UploadFile(string file)
         {
             Byte[] data = null;
@@ -154,16 +168,7 @@ namespace Cortex.OpenFocus
                 return;
             }
 
-            /* Now that the device is connected, write the data, page by page. */
-            for (uint address = 0; address < data.Length; address += PageSize)
-            {
-                Byte[] page = new Byte[PageSize];
-                Buffer.BlockCopy(data, (int)address, page, 0, (int)PageSize);
-
-                Logger.Write("Writing block 0x" + String.Format("{0:x3}", address) + " ... 0x" + String.Format("{0:x3}", (address + PageSize)));
-
-                Bootloader.WriteBlock(address, page);
-            }
+            WriteFirmware(data, PageSize);
 
             Logger.Write("Firmware update complete!");
             Logger.Write("Device is rebooting");
