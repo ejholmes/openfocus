@@ -23,7 +23,7 @@ usbMsgLen_t usbFunctionDescriptor(struct usbRequest *rq)
 {
 	int length = eeprom_read_byte((const uint8_t*)EEPROM_ADDRESS_SERIAL_NUMBER_LEN);
 	eeprom_busy_wait();
-	uint16_t serialNumberDescriptor[length + 1];
+	static uint16_t serialNumberDescriptor[MAX_SERIAL_LEN];
 	serialNumberDescriptor[0] = USB_STRING_DESCRIPTOR_HEADER(length);
 	eeprom_read_block(&serialNumberDescriptor[1], (const uint8_t*)EEPROM_ADDRESS_SERIAL_NUMBER, length * 2);
 	
@@ -31,7 +31,7 @@ usbMsgLen_t usbFunctionDescriptor(struct usbRequest *rq)
 	{
 		case USBDESCR_STRING:
 			usbMsgPtr = (uchar *)serialNumberDescriptor;
-			return sizeof(serialNumberDescriptor);
+			return ((length + 1) * sizeof(uint16_t));
 	}
 	return 0;
 }

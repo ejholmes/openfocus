@@ -8,6 +8,8 @@
 
 #include "usbdrv.h"
 
+#define MAX_SERIAL_LEN 255
+
 /* EEPROM Address Map */
 #define EEPROM_ADDRESS_STAY_IN_BOOTLOADER   0x0000
 #define EEPROM_ADDRESS_SERIAL_NUMBER_LEN 	0x0040

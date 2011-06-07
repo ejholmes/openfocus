@@ -410,7 +410,7 @@
             this.gbEEPROMFlags.Controls.Add(this.cbEEPROMStayInBootloader);
             this.gbEEPROMFlags.Location = new System.Drawing.Point(3, 3);
             this.gbEEPROMFlags.Name = "gbEEPROMFlags";
-            this.gbEEPROMFlags.Size = new System.Drawing.Size(195, 45);
+            this.gbEEPROMFlags.Size = new System.Drawing.Size(401, 45);
             this.gbEEPROMFlags.TabIndex = 0;
             this.gbEEPROMFlags.TabStop = false;
             this.gbEEPROMFlags.Text = "Flags";
@@ -418,7 +418,7 @@
             // cbEEPROMStayInBootloader
             // 
             this.cbEEPROMStayInBootloader.AutoSize = true;
-            this.cbEEPROMStayInBootloader.Location = new System.Drawing.Point(6, 19);
+            this.cbEEPROMStayInBootloader.Location = new System.Drawing.Point(11, 19);
             this.cbEEPROMStayInBootloader.Name = "cbEEPROMStayInBootloader";
             this.cbEEPROMStayInBootloader.Size = new System.Drawing.Size(113, 17);
             this.cbEEPROMStayInBootloader.TabIndex = 0;
