@@ -52,6 +52,14 @@
             this.btnTemperatureTestStart = new System.Windows.Forms.Button();
             this.lbTemperatureLog = new System.Windows.Forms.ListBox();
             this.btnConnect = new System.Windows.Forms.Button();
+            this.tpEEPROM = new System.Windows.Forms.TabPage();
+            this.btnEEPROMGenerate = new System.Windows.Forms.Button();
+            this.gbEEPROMOutput = new System.Windows.Forms.GroupBox();
+            this.tbEEPROMOutput = new System.Windows.Forms.RichTextBox();
+            this.gbEEPROMSerialNumber = new System.Windows.Forms.GroupBox();
+            this.tbEEPROMSerialNumber = new System.Windows.Forms.TextBox();
+            this.gbEEPROMFlags = new System.Windows.Forms.GroupBox();
+            this.cbEEPROMStayInBootloader = new System.Windows.Forms.CheckBox();
             this.gbBaseDirectory.SuspendLayout();
             this.gbOptions.SuspendLayout();
             this.gbProgrammer.SuspendLayout();
@@ -60,6 +68,10 @@
             this.tpProgram.SuspendLayout();
             this.tpTesting.SuspendLayout();
             this.gbTemperatureTest.SuspendLayout();
+            this.tpEEPROM.SuspendLayout();
+            this.gbEEPROMOutput.SuspendLayout();
+            this.gbEEPROMSerialNumber.SuspendLayout();
+            this.gbEEPROMFlags.SuspendLayout();
             this.SuspendLayout();
             // 
             // lbLog
@@ -248,6 +260,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.tpProgram);
             this.tabControl.Controls.Add(this.tpTesting);
+            this.tabControl.Controls.Add(this.tpEEPROM);
             this.tabControl.Location = new System.Drawing.Point(12, 12);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
@@ -334,6 +347,84 @@
             this.btnConnect.UseVisualStyleBackColor = true;
             this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
+            // tpEEPROM
+            // 
+            this.tpEEPROM.Controls.Add(this.btnEEPROMGenerate);
+            this.tpEEPROM.Controls.Add(this.gbEEPROMOutput);
+            this.tpEEPROM.Controls.Add(this.gbEEPROMSerialNumber);
+            this.tpEEPROM.Controls.Add(this.gbEEPROMFlags);
+            this.tpEEPROM.Location = new System.Drawing.Point(4, 22);
+            this.tpEEPROM.Name = "tpEEPROM";
+            this.tpEEPROM.Size = new System.Drawing.Size(767, 417);
+            this.tpEEPROM.TabIndex = 2;
+            this.tpEEPROM.Text = "EEPROM";
+            this.tpEEPROM.UseVisualStyleBackColor = true;
+            // 
+            // btnEEPROMGenerate
+            // 
+            this.btnEEPROMGenerate.Location = new System.Drawing.Point(329, 391);
+            this.btnEEPROMGenerate.Name = "btnEEPROMGenerate";
+            this.btnEEPROMGenerate.Size = new System.Drawing.Size(75, 23);
+            this.btnEEPROMGenerate.TabIndex = 5;
+            this.btnEEPROMGenerate.Text = "Generate";
+            this.btnEEPROMGenerate.UseVisualStyleBackColor = true;
+            this.btnEEPROMGenerate.Click += new System.EventHandler(this.btnEEPROMGenerate_Click);
+            // 
+            // gbEEPROMOutput
+            // 
+            this.gbEEPROMOutput.Controls.Add(this.tbEEPROMOutput);
+            this.gbEEPROMOutput.Location = new System.Drawing.Point(3, 109);
+            this.gbEEPROMOutput.Name = "gbEEPROMOutput";
+            this.gbEEPROMOutput.Size = new System.Drawing.Size(401, 276);
+            this.gbEEPROMOutput.TabIndex = 4;
+            this.gbEEPROMOutput.TabStop = false;
+            this.gbEEPROMOutput.Text = "EEPROM";
+            // 
+            // tbEEPROMOutput
+            // 
+            this.tbEEPROMOutput.Location = new System.Drawing.Point(6, 19);
+            this.tbEEPROMOutput.Name = "tbEEPROMOutput";
+            this.tbEEPROMOutput.Size = new System.Drawing.Size(389, 251);
+            this.tbEEPROMOutput.TabIndex = 0;
+            this.tbEEPROMOutput.Text = "";
+            // 
+            // gbEEPROMSerialNumber
+            // 
+            this.gbEEPROMSerialNumber.Controls.Add(this.tbEEPROMSerialNumber);
+            this.gbEEPROMSerialNumber.Location = new System.Drawing.Point(3, 54);
+            this.gbEEPROMSerialNumber.Name = "gbEEPROMSerialNumber";
+            this.gbEEPROMSerialNumber.Size = new System.Drawing.Size(401, 49);
+            this.gbEEPROMSerialNumber.TabIndex = 3;
+            this.gbEEPROMSerialNumber.TabStop = false;
+            this.gbEEPROMSerialNumber.Text = "SerialNumber";
+            // 
+            // tbEEPROMSerialNumber
+            // 
+            this.tbEEPROMSerialNumber.Location = new System.Drawing.Point(6, 19);
+            this.tbEEPROMSerialNumber.Name = "tbEEPROMSerialNumber";
+            this.tbEEPROMSerialNumber.Size = new System.Drawing.Size(389, 20);
+            this.tbEEPROMSerialNumber.TabIndex = 2;
+            // 
+            // gbEEPROMFlags
+            // 
+            this.gbEEPROMFlags.Controls.Add(this.cbEEPROMStayInBootloader);
+            this.gbEEPROMFlags.Location = new System.Drawing.Point(3, 3);
+            this.gbEEPROMFlags.Name = "gbEEPROMFlags";
+            this.gbEEPROMFlags.Size = new System.Drawing.Size(195, 45);
+            this.gbEEPROMFlags.TabIndex = 0;
+            this.gbEEPROMFlags.TabStop = false;
+            this.gbEEPROMFlags.Text = "Flags";
+            // 
+            // cbEEPROMStayInBootloader
+            // 
+            this.cbEEPROMStayInBootloader.AutoSize = true;
+            this.cbEEPROMStayInBootloader.Location = new System.Drawing.Point(6, 19);
+            this.cbEEPROMStayInBootloader.Name = "cbEEPROMStayInBootloader";
+            this.cbEEPROMStayInBootloader.Size = new System.Drawing.Size(113, 17);
+            this.cbEEPROMStayInBootloader.TabIndex = 0;
+            this.cbEEPROMStayInBootloader.Text = "Stay In Bootloader";
+            this.cbEEPROMStayInBootloader.UseVisualStyleBackColor = true;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -357,6 +448,12 @@
             this.tpProgram.ResumeLayout(false);
             this.tpTesting.ResumeLayout(false);
             this.gbTemperatureTest.ResumeLayout(false);
+            this.tpEEPROM.ResumeLayout(false);
+            this.gbEEPROMOutput.ResumeLayout(false);
+            this.gbEEPROMSerialNumber.ResumeLayout(false);
+            this.gbEEPROMSerialNumber.PerformLayout();
+            this.gbEEPROMFlags.ResumeLayout(false);
+            this.gbEEPROMFlags.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -387,6 +484,14 @@
         private System.Windows.Forms.Button btnTemperatureTestStart;
         private System.Windows.Forms.ListBox lbTemperatureLog;
         private System.Windows.Forms.CheckBox cbEEPROM;
+        private System.Windows.Forms.TabPage tpEEPROM;
+        private System.Windows.Forms.GroupBox gbEEPROMSerialNumber;
+        private System.Windows.Forms.TextBox tbEEPROMSerialNumber;
+        private System.Windows.Forms.GroupBox gbEEPROMFlags;
+        private System.Windows.Forms.CheckBox cbEEPROMStayInBootloader;
+        private System.Windows.Forms.Button btnEEPROMGenerate;
+        private System.Windows.Forms.GroupBox gbEEPROMOutput;
+        private System.Windows.Forms.RichTextBox tbEEPROMOutput;
     }
 }
 
