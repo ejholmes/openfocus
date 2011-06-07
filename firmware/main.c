@@ -12,21 +12,20 @@
 #include "focuser.h"
 #include "temperature.h"
 #include "util.h"
+#include "eeprom.h"
 
 #include "config.h"
-
-#ifdef EEPROM_SERIAL_NUMBER
-	#define GUIDLENGTH 36
-#endif
 
 static PROGMEM uint8_t capabilities = CAPABILITY(ABSOLUTE_POSITIONING_ENABLED, CAP_ABSOLUTE) | CAPABILITY(TEMPERATURE_COMPENSATION_ENABLED, CAP_TEMP_COMP);
 
 #ifdef EEPROM_SERIAL_NUMBER
 usbMsgLen_t usbFunctionDescriptor(struct usbRequest *rq)
 {
-	static uint16_t serialNumberDescriptor[GUIDLENGTH + 1];
-	serialNumberDescriptor[0] = USB_STRING_DESCRIPTOR_HEADER(GUIDLENGTH);
-	eeprom_read_block(&serialNumberDescriptor[1], (const uint8_t*)1, GUIDLENGTH * 2);
+	int length = eeprom_read_byte((const uint8_t*)EEPROM_ADDRESS_SERIAL_NUMBER_LEN);
+	eeprom_busy_wait();
+	uint16_t serialNumberDescriptor[length + 1];
+	serialNumberDescriptor[0] = USB_STRING_DESCRIPTOR_HEADER(length);
+	eeprom_read_block(&serialNumberDescriptor[1], (const uint8_t*)EEPROM_ADDRESS_SERIAL_NUMBER, length * 2);
 	
 	switch (rq->wValue.bytes[1])
 	{
@@ -67,9 +66,7 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
         return 0;
     }
 	else if (rq->bRequest == REBOOT_TO_BOOTLOADER) {
-		__EEPUT(0, 1); /* Set to 1 to stay in bootloader */
-		wdt_enable(WDTO_15MS);
-		_delay_ms(14);
+		reboot_to_bootloader();
 		return 0;
 	}
     else if (rq->bRequest == FOCUSER_SET_TEMPERATURE_COMPENSATION) {

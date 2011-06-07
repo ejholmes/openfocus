@@ -29,13 +29,15 @@
 #include <util/delay.h>
 #include <avr/eeprom.h>
 
+#include "../eeprom.h"
+
 static inline void  bootLoaderInit(void)
 {
     PORTD |= _BV(PD7); /* Activiate internal pullup on PD7 */
     _delay_us(10);  /* wait for levels to stabilize */
 }
 
-#define bootLoaderCondition()   (((PIND & _BV(PD7)) == 0) || (eeprom_read_byte((const uint8_t*)0) == 1))  /* True if jumper is set or byte at addr 0 in eeprom is set to 1 */
+#define bootLoaderCondition()   (((PIND & _BV(PD7)) == 0) || eeprom_read_stay_in_bootloader() == 1)  /* True if jumper is set or byte at addr 0 in eeprom is set to 1 */
 
 #endif
 

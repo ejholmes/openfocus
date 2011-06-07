@@ -199,8 +199,8 @@ int __attribute__((noreturn)) main(void)
 	DDRB |= _BV(PB0);
 	
 	if (bootLoaderCondition()) {
-		if (eeprom_read_byte((const uint8_t *)0) != 0)
-			__EEPUT(0, 0); /* If eeprom got us into the bootloader, reset to byte so we don't get stuck */
+		if (eeprom_read_stay_in_bootloader() != 0)
+			eeprom_clear_stay_in_bootloader();
 			
 		PORTB |= _BV(PB0);
 		uchar i = 0, j = 0;
