@@ -17,7 +17,6 @@ namespace ASCOM.OpenFocus
         public static string s_csDriverDescription = "OpenFocus";
         public static string s_csDeviceType = "Focuser";
 
-        private bool Connected              = false;
         private double LastTemperature      = 0;
 
         private Timer TempCompTimer         = new Timer(10000);
@@ -94,7 +93,7 @@ namespace ASCOM.OpenFocus
 
         public bool Link
         {
-            get { return this.Connected; }
+            get { return dev.Connected; }
             set
             {
                 switch (value)
@@ -103,25 +102,24 @@ namespace ASCOM.OpenFocus
                         Serial = Config.DefaultDevice;
                         try
                         {
-                            this.Connected = dev.Connect(Serial);
+                            dev.Connect(Serial);
                         }
                         catch (DeviceNotFoundException)
                         {
-                            this.Connected = dev.Connect();
+                            dev.Connect();
                         }
                         DeviceConfig = new Config.Device(dev.Serial);
                         if (DeviceConfig.Position != 0)
                             dev.Position = DeviceConfig.Position;
                         break;
                     case false:
-                        if (this.Connected)
+                        if (dev.Connected)
                         {
                             if (this.IsMoving)
                                 dev.Halt();
                             /* Save the last position before disconnecting */
                             DeviceConfig.Position = dev.Position;
                             dev.Disconnect();
-                            this.Connected = false;
                         }
                         break;
                 }

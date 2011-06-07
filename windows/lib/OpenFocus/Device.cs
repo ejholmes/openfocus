@@ -88,6 +88,11 @@ namespace Cortex.OpenFocus
             return true;
         }
 
+        public bool Connected
+        {
+            get { return device.IsOpen; }
+        }
+
         public String Serial
         {
             get { return device.Info.SerialString; }
