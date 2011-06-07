@@ -70,7 +70,7 @@ namespace FirmwareUpdater
                 PageSize = Bootloader.PageSize;
                 FlashSize = Bootloader.FlashSize;
 
-                Logger.Write("Device Found!");
+                Logger.Write("Device Found");
                 Logger.Write("Page Size: " + PageSize.ToString() + " bytes");
                 Logger.Write("Flash Size: " + FlashSize.ToString() + " bytes");
 
