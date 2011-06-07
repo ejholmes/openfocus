@@ -89,6 +89,7 @@ namespace Builder
             if (this.cbGenerateSerial.Checked)
                 WriteEEPROM();
 
+            Bootloader.Reboot();
             Logger.Write();
             this.btnBuild.Enabled = true;
             this.btnConnect.Enabled = true;
@@ -187,7 +188,7 @@ namespace Builder
 
         private void UploadFirmware()
         {
-            Bootloader.UploadFile(BaseDirectory + CurrentDirectory + @"\main.hex", false);
+            Bootloader.UploadFile(BaseDirectory + CurrentDirectory + @"\main.hex");
         }
 
         private void Make()

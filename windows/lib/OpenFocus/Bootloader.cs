@@ -88,7 +88,7 @@ namespace Cortex.OpenFocus
 
         public static void WriteEeprom(Byte[] data)
         {
-            UInt16 BlockSize = 127;
+            UInt16 BlockSize = 5;
             for (UInt16 address = 0; address < data.Length; address += BlockSize)
             {
                 Byte[] block = new Byte[BlockSize];
@@ -142,11 +142,6 @@ namespace Cortex.OpenFocus
         }
 
         public static void UploadFile(string file)
-        {
-            UploadFile(file, true);
-        }
-
-        public static void UploadFile(string file, bool reboot)
         {
             Byte[] data = null;
             uint PageSize = 0, FlashSize = 0;
@@ -206,8 +201,6 @@ namespace Cortex.OpenFocus
 
             Logger.Write("Firmware update complete!");
             Logger.Write("Device is rebooting");
-            //if (reboot)
-                //Bootloader.Reboot();
         }
 
         public static void Reboot()
