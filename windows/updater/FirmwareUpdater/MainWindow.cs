@@ -137,15 +137,7 @@ namespace FirmwareUpdater
 
         private void btnUpload_Click(object sender, EventArgs e)
         {
-            for (uint address = 0; address < dataBuffer.Length; address += PageSize)
-            {
-                Byte[] data = new Byte[PageSize];
-                Buffer.BlockCopy(dataBuffer, (int)address, data, 0, (int)PageSize);
-
-                Logger.Write("Writing block 0x" + String.Format("{0:x3}", address) + " ... 0x" + String.Format("{0:x3}", (address + PageSize)));
-
-                Bootloader.WriteBlock(address, data);
-            }
+            Bootloader.WriteFirmware(dataBuffer, PageSize);
 
             Logger.Write("Firmware update complete!");
             Logger.Write("Device is rebooting");
