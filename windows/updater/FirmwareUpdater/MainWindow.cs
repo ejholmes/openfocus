@@ -70,9 +70,9 @@ namespace FirmwareUpdater
                 PageSize = Bootloader.PageSize;
                 FlashSize = Bootloader.FlashSize;
 
-                Logger.Write("Device Found");
-                Logger.Write("Page Size: " + PageSize.ToString() + " bytes");
-                Logger.Write("Flash Size: " + FlashSize.ToString() + " bytes");
+                Logger.Write("Connected");
+                //Logger.Write("Page Size: " + PageSize.ToString() + " bytes");
+                //Logger.Write("Flash Size: " + FlashSize.ToString() + " bytes");
 
                 this.btnLocateFirmware.Enabled = true;
                 this.btnFindDevice.Enabled = false;
@@ -139,9 +139,9 @@ namespace FirmwareUpdater
         {
             Bootloader.WriteFirmware(dataBuffer, PageSize);
 
-            Logger.Write("Firmware update complete!");
             Logger.Write("Device is rebooting");
             Bootloader.Reboot();
+            Logger.Write("Firmware update complete!");
             done = true;
 
             this.btnFindDevice.Enabled = false;
