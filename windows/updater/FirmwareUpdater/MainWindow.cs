@@ -16,8 +16,8 @@ namespace FirmwareUpdater
 {
     public partial class MainWindow : Form
     {
-        uint PageSize = 0;
-        uint FlashSize = 0;
+        UInt16 PageSize = 0;
+        UInt16 FlashSize = 0;
 
         Byte[] dataBuffer;
 
@@ -71,8 +71,10 @@ namespace FirmwareUpdater
                 FlashSize = Bootloader.FlashSize;
 
                 Logger.Write("Connected");
-                //Logger.Write("Page Size: " + PageSize.ToString() + " bytes");
-                //Logger.Write("Flash Size: " + FlashSize.ToString() + " bytes");
+#if DEBUG
+                Logger.Write("Page Size: " + PageSize.ToString() + " bytes");
+                Logger.Write("Flash Size: " + FlashSize.ToString() + " bytes");
+#endif
 
                 this.btnLocateFirmware.Enabled = true;
                 this.btnFindDevice.Enabled = false;

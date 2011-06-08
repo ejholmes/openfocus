@@ -77,7 +77,7 @@ namespace Cortex.OpenFocus
             }
         }
 
-        public static UInt32 FlashSize
+        public static UInt16 FlashSize
         {
             get
             {
@@ -114,23 +114,23 @@ namespace Cortex.OpenFocus
             device.ControlTransfer(ref packet, b, b.Length, out transfered);
         }
 
-        public static void WriteBlock(UInt32 address, Byte[] data)
+        public static void WriteBlock(UInt16 address, Byte[] data)
         {
-            Byte[] b = new Byte[4 + data.Length];
+            Byte[] b = new Byte[2 + data.Length];
 
-            b[0] = 0;
-            Buffer.BlockCopy(ToUsbInt(address, 3), 0, b, 1, 3); /* Copy the 3 least significant bytes */
-            Buffer.BlockCopy(data, 0, b, 4, data.Length);
+            Buffer.BlockCopy(ToUsbInt(address, 2), 0, b, 0, 2); /* Copy the 3 least significant bytes */
+            Buffer.BlockCopy(data, 0, b, 2, data.Length);
 
             UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.WriteBlock, 0, 0, 0);
             int transfered;
             device.ControlTransfer(ref packet, b, b.Length, out transfered);
+            System.Windows.Forms.MessageBox.Show(transfered.ToString());
         }
 
-        public static void WriteFirmware(Byte[] data, uint PageSize)
+        public static void WriteFirmware(Byte[] data, UInt16 PageSize)
         {
             /* Now that the device is connected, write the data, page by page. */
-            for (uint address = 0; address < data.Length; address += PageSize)
+            for (UInt16 address = 0; address < data.Length; address += PageSize)
             {
                 Byte[] page = new Byte[PageSize];
                 Buffer.BlockCopy(data, (int)address, page, 0, (int)PageSize);
@@ -144,7 +144,7 @@ namespace Cortex.OpenFocus
         public static void UploadFile(string file)
         {
             Byte[] data = null;
-            uint PageSize = 0, FlashSize = 0;
+            UInt16 PageSize = 0, FlashSize = 0;
 
             Logger.Write("Attempting to connect to bootloader");
 
