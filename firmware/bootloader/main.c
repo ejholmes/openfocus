@@ -20,6 +20,8 @@
 #include "usbdrv.h"
 #include "../eeprom.h"
 
+static void leaveBootloader() __attribute__((__noreturn__));
+
 static inline void  bootLoaderInit(void)
 {
     PORTD |= _BV(PD7); /* Activiate internal pullup on PD7 */
@@ -126,7 +128,7 @@ uchar usbFunctionWrite(uchar *data, uchar len)
          * accordingly
          * */
         if (startPage) {
-            address = (uint16_t)((data[0] << 8) | (data[1] & 0xff)); /* 2 byte address */
+            address = (uint16_t)((data[1] << 8) | (data[0] & 0xff)); /* 2 byte address */
             pageAddress = address;
 
             /* Remove address from data */
@@ -147,7 +149,7 @@ uchar usbFunctionWrite(uchar *data, uchar len)
 
             /* Fill the page buffer */
             cli();
-            boot_page_fill((uint32_t)address, *(short *)data);
+            boot_page_fill(address, *(short *)data);
             sei();
 
             /* We wrote 2 bytes */
