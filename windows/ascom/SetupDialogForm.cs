@@ -67,10 +67,10 @@ namespace ASCOM.OpenFocus
             #region Temperature Units
             switch (Config.Units)
             {
-                case Device.TemperatureUnits.Celsius:
+                case Config.TemperatureUnits.Celsius:
                     this.rbUnitsCelsius.Checked = true;
                     break;
-                case Device.TemperatureUnits.Fahrenheit:
+                case Config.TemperatureUnits.Fahrenheit:
                     this.rbUnitsFahrenheit.Checked = true;
                     break;
             }
@@ -88,9 +88,9 @@ namespace ASCOM.OpenFocus
 
             #region Temperature Units
             if (this.rbUnitsCelsius.Checked)
-                Config.Units = Device.TemperatureUnits.Celsius;
+                Config.Units = Config.TemperatureUnits.Celsius;
             else if (this.rbUnitsFahrenheit.Checked)
-                Config.Units = Device.TemperatureUnits.Fahrenheit;
+                Config.Units = Config.TemperatureUnits.Fahrenheit;
             #endregion
         }
 

@@ -84,9 +84,12 @@ namespace Builder
 
             if (this.cbBurnBootloader.Checked)
                 BuildBurnBootloader();
-            WriteEEPROM();
+            
             BuildBurnFirmware();
+            if (this.cbGenerateSerial.Checked)
+                WriteEEPROM();
 
+            Bootloader.Reboot();
             Logger.Write();
             this.btnBuild.Enabled = true;
             this.btnConnect.Enabled = true;
@@ -121,30 +124,14 @@ namespace Builder
 
         private void WriteEEPROM()
         {
-            if (this.cbGenerateSerial.Checked)
+            String guid = GenerateGUID().ToString();
+            if (this.cbEEPROM.Checked)
             {
-                String guid = GenerateGUID().ToString();
-                if (this.cbEEPROM.Checked)
-                {
-                    Byte[] data = new Byte[(guid.Length * 2) + 1]; /* Allocate space for unicode GUID and 1 byte for bootloader condition */
-                    data[0] = 1; /* Reboot into bootloader after flashing bootloader */
-                    Buffer.BlockCopy(Encoding.Unicode.GetBytes(guid), 0, data, 1, guid.Length * 2);
-                    IntelHexFile file = IntelHexFile.Create(data, 8);
+                EEPROM eeprom = new EEPROM();
+                eeprom.StayInBootloader = true;
+                eeprom.SerialNumber = guid;
 
-                    String EEPROMFile = @"\firmware\bootloader\eeprom.hex";
-
-                    StreamWriter writer = new StreamWriter(BaseDirectory + EEPROMFile, false);
-                    Logger.Write("EEPROM DATA:");
-                    foreach (IntelHexFileLine line in file.Lines)
-                    {
-                        writer.WriteLine(line.ToString());
-                        Logger.Write(line.ToString());
-                    }
-                    writer.Close();
-#if !TEST
-                    Make("eeprom", true);
-#endif
-                }
+                Bootloader.WriteEeprom(eeprom.Data);
             }
         }
 
@@ -201,7 +188,7 @@ namespace Builder
 
         private void UploadFirmware()
         {
-            Bootloader.UploadFile(BaseDirectory + CurrentDirectory + @"\main.hex");
+            Helper.UploadFile(BaseDirectory + CurrentDirectory + @"\main.hex");
         }
 
         private void Make()
@@ -237,49 +224,6 @@ namespace Builder
                 Logger.Write(line);
 
             make.WaitForExit();
-        }
-
-        private void btnConnect_Click(object sender, EventArgs e)
-        {
-            if (this.btnConnect.Text == "Connect" && dev.Connect())
-            {
-                this.btnTemperatureTestStart.Enabled = true;
-
-                this.btnConnect.Text = "Disconnect";
-            }
-            else if (this.btnConnect.Text == "Disconnect")
-            {
-                dev.Disconnect();
-                this.btnConnect.Text = "Connect";
-            }
-        }
-
-        private void btnTemperatureTestStart_Click(object sender, EventArgs e)
-        {
-            this.btnTemperatureTestStart.Enabled = false;
-            this.btnTemperatureTestStop.Enabled = true;
-
-            tempTimer.Interval = 200;
-            tempTimer.Tick += new EventHandler(tempTimer_Tick);
-
-            tempTimer.Start();
-        }
-
-        void tempTimer_Tick(object sender, EventArgs e)
-        {
-            double temperature = dev.Temperature;
-
-            this.lbTemperatureLog.Items.Add("Temp: " + temperature.ToString());
-
-            this.lbTemperatureLog.SelectedIndex = this.lbTemperatureLog.Items.Count - 1;
-        }
-
-        private void btnTemperatureTestStop_Click(object sender, EventArgs e)
-        {
-            this.btnTemperatureTestStop.Enabled = false;
-            this.btnTemperatureTestStart.Enabled = true;
-
-            tempTimer.Stop();
         }
     }
 }

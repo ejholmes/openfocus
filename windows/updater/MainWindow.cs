@@ -16,8 +16,8 @@ namespace FirmwareUpdater
 {
     public partial class MainWindow : Form
     {
-        uint PageSize = 0;
-        uint FlashSize = 0;
+        UInt16 PageSize = 0;
+        UInt16 FlashSize = 0;
 
         Byte[] dataBuffer;
 
@@ -70,9 +70,11 @@ namespace FirmwareUpdater
                 PageSize = Bootloader.PageSize;
                 FlashSize = Bootloader.FlashSize;
 
-                Logger.Write("Device Found!");
+                Logger.Write("Connected");
+#if DEBUG
                 Logger.Write("Page Size: " + PageSize.ToString() + " bytes");
                 Logger.Write("Flash Size: " + FlashSize.ToString() + " bytes");
+#endif
 
                 this.btnLocateFirmware.Enabled = true;
                 this.btnFindDevice.Enabled = false;
@@ -116,7 +118,7 @@ namespace FirmwareUpdater
                     f.PageSize = PageSize;
                     dataBuffer = f.Data;
 
-                    if (dataBuffer.Length > (FlashSize - 2048))
+                    if (dataBuffer.Length > (FlashSize - 4096))
                     {
                         Logger.Write("File is too large!");
                         return;
@@ -137,19 +139,11 @@ namespace FirmwareUpdater
 
         private void btnUpload_Click(object sender, EventArgs e)
         {
-            for (uint address = 0; address < dataBuffer.Length; address += PageSize)
-            {
-                Byte[] data = new Byte[PageSize];
-                Buffer.BlockCopy(dataBuffer, (int)address, data, 0, (int)PageSize);
+            Bootloader.WriteFlash(dataBuffer);
 
-                Logger.Write("Writing block 0x" + String.Format("{0:x3}", address) + " ... 0x" + String.Format("{0:x3}", (address + PageSize)));
-
-                Bootloader.WriteBlock(address, data);
-            }
-
-            Logger.Write("Firmware update complete!");
             Logger.Write("Device is rebooting");
             Bootloader.Reboot();
+            Logger.Write("Firmware update complete!");
             done = true;
 
             this.btnFindDevice.Enabled = false;

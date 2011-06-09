@@ -8,8 +8,8 @@ the [V-USB stack][vusb] and [libusb][libusb] and also includes an
 Features include:
 
 * Repeatable positions by using a high resolution stepper motor and absolute positioning.
-* [Temperature Sensing and Compensation][wiki:tempcomp] for combating thermal expansion and contraction while imaging.
-* [Firmware Upgradeable][wiki:updatefirmware].
+* [Temperature sensing and compensation][wiki:tempcomp] for combating thermal expansion and contraction while imaging.
+* [Firmware upgradeable][wiki:updatefirmware].
 * Quickly and easily [import FocusMax temperature compensation data logs][wiki:tempcomp].
 
 Installation

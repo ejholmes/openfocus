@@ -4,53 +4,12 @@
  *
  * Based on BootloadHID by Christian Starkjohann (http://www.obdev.at/products/vusb/bootloadhid.html)
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General
- * Public License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA  02111-1307  USA
+ * See LICENSE.txt for licensing information.
  *
  */
 
 #ifndef __usbconfig_h_included__
 #define __usbconfig_h_included__
-
-
-#ifndef __ASSEMBLER__   /* assembler cannot parse function definitions */
-#include <util/delay.h>
-#include <avr/eeprom.h>
-
-static inline void  bootLoaderInit(void)
-{
-    PORTD |= _BV(PD7); /* Activiate internal pullup on PD7 */
-    _delay_us(10);  /* wait for levels to stabilize */
-}
-
-#define bootLoaderCondition()   (((PIND & _BV(PD7)) == 0) || (eeprom_read_byte((const uint8_t*)0) == 1))  /* True if jumper is set or byte at addr 0 in eeprom is set to 1 */
-
-#endif
-
-#define BOOTLOADER_CAN_EXIT     1
-/* If this macro is defined to 1, the boot loader command line utility can
- * initiate a reboot after uploading the FLASH when the "-r" command line
- * option is given. If you define it to 0 or leave it undefined, the "-r"
- * option won't work and you save a couple of bytes in the boot loader. This
- * may be of advantage if you compile with gcc 4 instead of gcc 3 because it
- * generates slightly larger code.
- * If you need to save even more memory, consider using your own vector table.
- * Since only the reset vector and INT0 (the first two vectors) are used,
- * this saves quite a bit of flash. See Alexander Neumann's boot loader for
- * an example: http://git.lochraster.org:2080/?p=fd0/usbload;a=tree
- */
 
 /*
 General Description:
@@ -167,7 +126,7 @@ section at the end of this file).
  * transfers. Set it to 0 if you don't need it and want to save a couple of
  * bytes.
  */
-#define USB_CFG_IMPLEMENT_FN_READ       0
+#define USB_CFG_IMPLEMENT_FN_READ       1
 /* Set this to 1 if you need to send control replies which are generated
  * "on the fly" when usbFunctionRead() is called. If you only want to send
  * data from a static buffer, set it to 0 and return the data from
@@ -330,8 +289,8 @@ tuningOverflow:
 #define USB_CFG_DEVICE_VERSION  0x01, 0x00
 /* Version number of the device: Minor number first, then major number.
  */
-#define USB_CFG_VENDOR_NAME     'C', 'o', 'r', 't', 'e', 'x', ' ', 'A', 's', 't', 'r', 'o', 'n', 'o', 'm', 'y', ' ', '(', 'c', 'o', 'r', 't', 'e', 'x', 'a', 's', 't', 'r', 'o', 'n', 'o', 'm', 'y', '.', 'c', 'o', 'm', ')'
-#define USB_CFG_VENDOR_NAME_LEN 38
+#define USB_CFG_VENDOR_NAME     'C', 'o', 'r', 't', 'e', 'x', ' ', 'A', 's', 't', 'r', 'o', 'n', 'o', 'm', 'y'
+#define USB_CFG_VENDOR_NAME_LEN 16
 /* These two values define the vendor name returned by the USB device. The name
  * must be given as a list of characters under single quotes. The characters
  * are interpreted as Unicode (UTF-16) entities.

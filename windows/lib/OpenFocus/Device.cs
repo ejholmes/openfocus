@@ -30,13 +30,6 @@ namespace Cortex.OpenFocus
             public const byte GetTemperature = 0x13;
         }
 
-        /* Temperature Display Units */
-        public struct TemperatureUnits
-        {
-            public const string Celsius = "0";
-            public const string Fahrenheit = "1";
-        }
-
         public const Int16 Vendor_ID = 0x20a0;
         public const Int16 Product_ID = 0x416b;
         public const String ManufacturerString = "Cortex Astronomy (cortexastronomy.com)";
@@ -73,11 +66,6 @@ namespace Cortex.OpenFocus
             else
                 device = UsbDevice.OpenUsbDevice(UsbFinder);
 
-            /* According to V-USB licensing, we have to check manufacturer string and product string */
-            if (device == null
-                || device.Info.ManufacturerString != ManufacturerString
-                || device.Info.ProductString != ProductString) throw new DeviceNotFoundException("Device not found");
-
             IUsbDevice usbDev = device as IUsbDevice;
             if (!ReferenceEquals(usbDev, null))
             {
@@ -86,6 +74,11 @@ namespace Cortex.OpenFocus
             }
 
             return true;
+        }
+
+        public bool Connected
+        {
+            get { return device.IsOpen; }
         }
 
         public String Serial
@@ -212,6 +205,7 @@ namespace Cortex.OpenFocus
 
                 Int16 adc = (Int16)((buffer[1] << 8) | buffer[0]);
                 double kelvin = (5.00 * (double)adc * 100.00) / 1024.00;
+                kelvin = Math.Round(kelvin, 1); /* See https://github.com/CortexAstronomy/OpenFocus/wiki/LM335-Information */
 
                 return kelvin;
             }

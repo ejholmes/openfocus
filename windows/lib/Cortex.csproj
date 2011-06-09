@@ -55,6 +55,8 @@
     <Compile Include="Logger.cs" />
     <Compile Include="OpenFocus\Bootloader.cs" />
     <Compile Include="OpenFocus\Device.cs" />
+    <Compile Include="OpenFocus\EEPROM.cs" />
+    <Compile Include="OpenFocus\Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
