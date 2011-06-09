@@ -188,7 +188,7 @@ namespace Builder
 
         private void UploadFirmware()
         {
-            Bootloader.UploadFile(BaseDirectory + CurrentDirectory + @"\main.hex");
+            Helper.UploadFile(BaseDirectory + CurrentDirectory + @"\main.hex");
         }
 
         private void Make()

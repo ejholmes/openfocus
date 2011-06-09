@@ -8,7 +8,7 @@ using LibUsbDotNet.Main;
 
 namespace Cortex.OpenFocus
 {
-    public class Bootloader
+    public static class Bootloader
     {
         private const Int16 Vendor_ID = 0x20a0;
         private const Int16 Product_ID = 0x416d;
@@ -19,9 +19,9 @@ namespace Cortex.OpenFocus
         private struct Request
         {
             public const byte Reboot = 0x01;
-            public const byte WriteBlock = 0x02;
+            public const byte WriteFlashBlock = 0x02;
             public const byte GetReport = 0x03;
-            public const byte WriteEeprom = 0x04;
+            public const byte WriteEepromBlock = 0x04;
         }
 
         public static List<string> ListDevices()
@@ -57,6 +57,11 @@ namespace Cortex.OpenFocus
             device.Close();
         }
 
+        public static bool Connected
+        {
+            get { return device.IsOpen; }
+        }
+
         private static Byte[] GetReport()
         {
             int expected = 6;
@@ -86,9 +91,23 @@ namespace Cortex.OpenFocus
             }
         }
 
+        public static void WriteEepromBlock(UInt16 address, Byte[] data)
+        {
+            Byte[] b = new Byte[sizeof(UInt16) + data.Length];
+
+            Buffer.BlockCopy(ToUsbInt(address, sizeof(UInt16)), 0, b, 0, sizeof(UInt16));
+            Buffer.BlockCopy(data, 0, b, sizeof(UInt16), data.Length);
+
+            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.WriteEepromBlock, 0, 0, (short)b.Length);
+            int transfered;
+            device.ControlTransfer(ref packet, b, b.Length, out transfered);
+            if (transfered != b.Length)
+                throw new CommunicationException("Error sending data to device");
+        }
+
         public static void WriteEeprom(Byte[] data)
         {
-            UInt16 BlockSize = 5;
+            UInt16 BlockSize = 6;
             for (UInt16 address = 0; address < data.Length; address += BlockSize)
             {
                 Byte[] block = new Byte[BlockSize];
@@ -102,31 +121,21 @@ namespace Cortex.OpenFocus
             }
         }
 
-        public static void WriteEepromBlock(UInt16 address, Byte[] data)
-        {
-            Byte[] b = new Byte[3 + data.Length];
-
-            Buffer.BlockCopy(ToUsbInt(address, 3), 0, b, 0, 3);
-            Buffer.BlockCopy(data, 0, b, 3, data.Length);
-
-            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.WriteEeprom, 0, 0, 0);
-            int transfered;
-            device.ControlTransfer(ref packet, b, b.Length, out transfered);
-        }
-
         public static void WriteFlashBlock(UInt16 address, Byte[] data)
         {
-            Byte[] b = new Byte[2 + data.Length];
+            Byte[] b = new Byte[sizeof(UInt16) + data.Length];
 
-            Buffer.BlockCopy(ToUsbInt(address, 2), 0, b, 0, 2);
-            Buffer.BlockCopy(data, 0, b, 2, data.Length);
+            Buffer.BlockCopy(ToUsbInt(address, sizeof(UInt16)), 0, b, 0, sizeof(UInt16));
+            Buffer.BlockCopy(data, 0, b, sizeof(UInt16), data.Length);
 
-            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.WriteBlock, 0, 0, (short)b.Length);
+            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.WriteFlashBlock, 0, 0, (short)b.Length);
             int transfered;
             device.ControlTransfer(ref packet, b, b.Length, out transfered);
+            if (transfered != b.Length)
+                throw new CommunicationException("Error sending data to device");
         }
 
-        public static void WriteFirmware(Byte[] data, UInt16 PageSize)
+        public static void WriteFlash(Byte[] data)
         {
             /* Now that the device is connected, write the data, page by page. */
             for (UInt16 address = 0; address < data.Length; address += PageSize)
@@ -138,68 +147,6 @@ namespace Cortex.OpenFocus
 
                 Bootloader.WriteFlashBlock(address, page);
             }
-        }
-
-        public static void UploadFile(string file)
-        {
-            Byte[] data = null;
-            UInt16 PageSize = 0, FlashSize = 0;
-
-            Logger.Write("Attempting to connect to bootloader");
-
-            try /* Try to connect to the bootloader */
-            {
-                Connect();
-                PageSize = Bootloader.PageSize;
-                FlashSize = Bootloader.FlashSize;
-
-                Logger.Write("Device Found!");
-                Logger.Write("Page Size: " + PageSize.ToString() + " bytes");
-                Logger.Write("Flash Size: " + FlashSize.ToString() + " bytes");
-            }
-            catch (DeviceNotFoundException) /* If the device isn't found... */
-            {
-                try /* Try connecting to the device and rebooting it into the bootloader */
-                {
-                    Device dev = new Device();
-                    dev.Connect();
-                    Logger.Write("Rebooting device into firmware update mode...");
-                    dev.RebootToBootloader();
-                    dev.Disconnect();
-                    System.Threading.Thread.Sleep(2000);
-                    UploadFile(file); /* If successful, wait 2 seconds and then retry */
-                    return;
-                }
-                catch (DeviceNotFoundException) /* If this is reach, the device probably not connected */
-                {
-                    Logger.Write("Device not found!", Logger.LogType.Error);
-                    return;
-                }
-            }
-            
-            try
-            {
-                IntelHexFile f = IntelHexFile.Open(file);
-                f.PageSize = PageSize;
-                data = f.Data;
-
-                if (data.Length > (FlashSize - 2048))
-                {
-                    Logger.Write("File is too large!");
-                    return;
-                }
-                Logger.Write("Ready to upload " + data.Length.ToString() + " bytes of data");
-            }
-            catch (ChecksumMismatchException)
-            {
-                Logger.Write("Checksum mismatch! File is not valid.");
-                return;
-            }
-
-            WriteFirmware(data, PageSize);
-
-            Logger.Write("Firmware update complete!");
-            Logger.Write("Device is rebooting");
         }
 
         public static void Reboot()

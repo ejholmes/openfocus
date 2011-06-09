@@ -139,7 +139,7 @@ namespace FirmwareUpdater
 
         private void btnUpload_Click(object sender, EventArgs e)
         {
-            Bootloader.WriteFirmware(dataBuffer, PageSize);
+            Bootloader.WriteFlash(dataBuffer);
 
             Logger.Write("Device is rebooting");
             Bootloader.Reboot();

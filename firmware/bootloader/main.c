@@ -15,6 +15,7 @@
 #include <avr/boot.h>
 #include <string.h>
 #include <util/delay.h>
+#include <avr/eeprom.h>
 
 #include "config.h"
 #include "usbdrv.h"
@@ -34,6 +35,7 @@ static inline void  bootLoaderInit(void)
 #define USB_RQ_WRITE_FLASH_BLOCK  0x02
 #define USB_RQ_GET_REPORT         0x03
 #define USB_RQ_WRITE_EEPROM_BLOCK 0x04
+#define USB_RQ_READ_EEPROM        0x05
 
 #define WRITE_FLASH_BLOCK  0x01
 #define WRITE_EEPROM_BLOCK 0x02
@@ -95,6 +97,9 @@ usbMsgLen_t   usbFunctionSetup(uchar data[8])
         bytesRemaining = rq->wLength.word;
 		return USB_NO_MSG;
 	}
+    else if (rq->bRequest == USB_RQ_READ_EEPROM) {
+        return USB_NO_MSG;
+    }
 	else if (rq->bRequest == USB_RQ_GET_REPORT) {
         usbMsgPtr = replyBuffer;
         return 6;
@@ -108,6 +113,16 @@ usbMsgLen_t   usbFunctionSetup(uchar data[8])
     return 0;
 }
 
+uchar usbFunctionRead(uchar *data, uchar len)
+{
+    uchar i;
+    if (len > bytesRemaining)
+        len = bytesRemaining;
+    bytesRemaining -= len;
+
+    return len;
+}
+
 
 uchar usbFunctionWrite(uchar *data, uchar len)
 {
@@ -117,7 +132,28 @@ uchar usbFunctionWrite(uchar *data, uchar len)
         len = bytesRemaining;
 
     if (cmd == WRITE_EEPROM_BLOCK) {
+        /* startPage is set when we receive a WRITE_FLASH_BLOCK command over
+         * usb.
+         *
+         * We get the address from the first 2 bytes and adjust the data buffer
+         * accordingly
+         * */
+        if (startPage) {
+            address = (uint16_t)((data[1] << 8) | (data[0] & 0xff)); /* 2 byte address */
+            pageAddress = address;
 
+            len -= 2;
+            bytesRemaining -= 2;
+            data += 2;
+        }
+
+        eeprom_write_block(data, (void *)address, len);
+        eeprom_busy_wait();
+
+        address += len;
+        bytesRemaining -= len;
+
+        return bytesRemaining == 0;
     }
     else if (cmd == WRITE_FLASH_BLOCK) {
         /* startPage is set when we receive a WRITE_FLASH_BLOCK command over
@@ -157,13 +193,13 @@ uchar usbFunctionWrite(uchar *data, uchar len)
             len -= 2;
             bytesRemaining -= 2;
 
-            /* bytesRemaining = 0, so we must be at the end of a page */
+            /* 0 bytes remaining, so we must be at the end of a page */
             if (bytesRemaining == 0) {
                 cli();
                 boot_page_write(pageAddress);
                 sei();
                 boot_spm_busy_wait();
-                return 1;
+                return 1; /* Tell the driver that we're done with the data */
             }
 
         } while(len);
