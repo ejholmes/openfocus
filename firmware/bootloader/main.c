@@ -65,18 +65,18 @@ static void leaveBootloader()
 
     GICR = (1 << IVCE);     /* enable change of interrupt vectors */
     GICR = (0 << IVSEL);    /* move interrupts to application flash section */
-/* We must go through a global function pointer variable instead of writing
- *  ((void (*)(void))0)();
- * because the compiler optimizes a constant 0 to "rcall 0" which is not
- * handled correctly by the assembler.
- */
+    /* We must go through a global function pointer variable instead of writing
+     *  ((void (*)(void))0)();
+     * because the compiler optimizes a constant 0 to "rcall 0" which is not
+     * handled correctly by the assembler.
+     */
     nullVector();
 }
 
 usbMsgLen_t   usbFunctionSetup(uchar data[8])
 {
-	usbRequest_t    *rq = (void *)data;
-	static uchar    replyBuffer[8] = {
+    usbRequest_t    *rq = (void *)data;
+    static uchar    replyBuffer[8] = {
         SPM_PAGESIZE & 0xff,
         SPM_PAGESIZE >> 8,
         ((long)FLASHEND + 1) & 0xff,
@@ -91,29 +91,29 @@ usbMsgLen_t   usbFunctionSetup(uchar data[8])
         startPage = 1;
         cmd = WRITE_FLASH_BLOCK;
         bytesRemaining = rq->wLength.word;
-		return USB_NO_MSG;
-	}
-	else if (rq->bRequest == USB_RQ_WRITE_EEPROM_BLOCK) {
+        return USB_NO_MSG;
+    }
+    else if (rq->bRequest == USB_RQ_WRITE_EEPROM_BLOCK) {
         startPage = 1;
         cmd = WRITE_EEPROM_BLOCK;
         bytesRemaining = rq->wLength.word;
-		return USB_NO_MSG;
-	}
+        return USB_NO_MSG;
+    }
     else if (rq->bRequest == USB_RQ_READ_EEPROM_BLOCK) {
         bytesRemaining = rq->wLength.word; /* How much data to transfer */
         address = rq->wValue.word; /* Start address */
         startPage = 1;
         return USB_NO_MSG;
     }
-	else if (rq->bRequest == USB_RQ_GET_REPORT) {
+    else if (rq->bRequest == USB_RQ_GET_REPORT) {
         usbMsgPtr = replyBuffer;
         return sizeof(replyBuffer);
     }
 #if BOOTLOADER_CAN_EXIT
-	else if (rq->bRequest == USB_RQ_REBOOT) {
-		exitMainloop = 1;
-		return 0;
-	}
+    else if (rq->bRequest == USB_RQ_REBOOT) {
+        exitMainloop = 1;
+        return 0;
+    }
 #endif
     return 0;
 }
@@ -214,37 +214,37 @@ uchar usbFunctionWrite(uchar *data, uchar len)
 
 static void initForUsbConnectivity(void)
 {
-	uchar   i = 0;
-	
+    uchar   i = 0;
+
     usbInit();
-	usbDeviceDisconnect();  /* enforce re-enumeration, do this while interrupts are disabled! */
-	i = 0;
-	while (--i) {             /* fake USB disconnect for > 250 ms */
-		wdt_reset();
-		_delay_ms(1);
-	}
-	usbDeviceConnect();
-	DDRD |= _BV(PD0);
-	sei();
+    usbDeviceDisconnect();  /* enforce re-enumeration, do this while interrupts are disabled! */
+    i = 0;
+    while (--i) {             /* fake USB disconnect for > 250 ms */
+        wdt_reset();
+        _delay_ms(1);
+    }
+    usbDeviceConnect();
+    DDRD |= _BV(PD0);
+    sei();
 }
 
 int __attribute__((noreturn)) main(void)
 {
-	bootLoaderInit();
+    bootLoaderInit();
     initStatusLed();
-	
-	if (bootLoaderCondition()) {
-		if (eeprom_read_stay_in_bootloader() != 0)
-			eeprom_clear_stay_in_bootloader();
-			
+
+    if (bootLoaderCondition()) {
+        if (eeprom_read_stay_in_bootloader() != 0)
+            eeprom_clear_stay_in_bootloader();
+
         statusLedOn();
-		uchar i = 0, j = 0;
-		
-		GICR = (1 << IVCE); /* enable change of interrupt vectors */
-		GICR = (1 << IVSEL); /* move interrupts to boot flash section */
-		
-		initForUsbConnectivity();
-		for (;;) { /* main event loop */
+        uchar i = 0, j = 0;
+
+        GICR = (1 << IVCE); /* enable change of interrupt vectors */
+        GICR = (1 << IVSEL); /* move interrupts to boot flash section */
+
+        initForUsbConnectivity();
+        for (;;) { /* main event loop */
             wdt_reset();
             usbPoll();
 #if BOOTLOADER_CAN_EXIT
@@ -256,7 +256,7 @@ int __attribute__((noreturn)) main(void)
             }
 #endif
         }
-	}
-	leaveBootloader();
+    }
+    leaveBootloader();
 }
 

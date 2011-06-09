@@ -103,52 +103,52 @@ void stepper_do_step(int8_t direction)
 
     switch(step) {              /* Then step */
         case 0: /* a on */
-			if (direction == FORWARD)
-				MOTOR_PORT &= ~d; 
-			else
-				MOTOR_PORT &= ~b;
+            if (direction == FORWARD)
+                MOTOR_PORT &= ~d; 
+            else
+                MOTOR_PORT &= ~b;
             break;
         case 1: /* a and b on */
-			if (direction == FORWARD)
-				MOTOR_PORT |= b; 
-			else
-				MOTOR_PORT |= a;
+            if (direction == FORWARD)
+                MOTOR_PORT |= b; 
+            else
+                MOTOR_PORT |= a;
             break;
         case 2: /* b on */
-			if (direction == FORWARD)
-				MOTOR_PORT &= ~a;
-			else
-				MOTOR_PORT &= ~c;
+            if (direction == FORWARD)
+                MOTOR_PORT &= ~a;
+            else
+                MOTOR_PORT &= ~c;
             break;
         case 3: /* b and c on*/
-			if (direction == FORWARD)
-				MOTOR_PORT |= c;
-			else
-				MOTOR_PORT |= b;
+            if (direction == FORWARD)
+                MOTOR_PORT |= c;
+            else
+                MOTOR_PORT |= b;
             break;
         case 4: /* c on */
-			if (direction == FORWARD)
-				MOTOR_PORT &= ~b;
-			else
-				MOTOR_PORT &= ~d;
+            if (direction == FORWARD)
+                MOTOR_PORT &= ~b;
+            else
+                MOTOR_PORT &= ~d;
             break;
         case 5: /* c and d on */
-			if (direction == FORWARD)
-				MOTOR_PORT |= d;
-			else
-				MOTOR_PORT |= c;
+            if (direction == FORWARD)
+                MOTOR_PORT |= d;
+            else
+                MOTOR_PORT |= c;
             break;
         case 6: /* d on */
-			if (direction == FORWARD)
-				MOTOR_PORT &= ~c;
-			else
-				MOTOR_PORT &= ~a;
+            if (direction == FORWARD)
+                MOTOR_PORT &= ~c;
+            else
+                MOTOR_PORT &= ~a;
             break;
         case 7: /* d and a on */
-			if (direction == FORWARD)
-				MOTOR_PORT |= a;
-			else
-				MOTOR_PORT |= d;
+            if (direction == FORWARD)
+                MOTOR_PORT |= a;
+            else
+                MOTOR_PORT |= d;
             break;
     }
 

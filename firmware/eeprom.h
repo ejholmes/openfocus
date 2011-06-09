@@ -19,8 +19,8 @@
 #define eeprom_set_stay_in_bootloader() eeprom_write_byte((uint8_t*)EEPROM_ADDRESS_STAY_IN_BOOTLOADER, 1)
 #define eeprom_clear_stay_in_bootloader() eeprom_write_byte((uint8_t*)EEPROM_ADDRESS_STAY_IN_BOOTLOADER, 0)
 #define reboot_to_bootloader() eeprom_set_stay_in_bootloader(); \
-		wdt_enable(WDTO_15MS); \
-		_delay_ms(14)
+        wdt_enable(WDTO_15MS); \
+        _delay_ms(14)
 
 
 #endif /* __eeprom_h_ */

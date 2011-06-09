@@ -21,19 +21,19 @@ static PROGMEM uint8_t capabilities = CAPABILITY(ABSOLUTE_POSITIONING_ENABLED, C
 #ifdef EEPROM_SERIAL_NUMBER
 usbMsgLen_t usbFunctionDescriptor(struct usbRequest *rq)
 {
-	int length = eeprom_read_byte((const uint8_t*)EEPROM_ADDRESS_SERIAL_NUMBER_LEN);
-	eeprom_busy_wait();
-	static uint16_t serialNumberDescriptor[MAX_SERIAL_LEN];
-	serialNumberDescriptor[0] = USB_STRING_DESCRIPTOR_HEADER(length);
-	eeprom_read_block(&serialNumberDescriptor[1], (const uint8_t*)EEPROM_ADDRESS_SERIAL_NUMBER, length * 2);
-	
-	switch (rq->wValue.bytes[1])
-	{
-		case USBDESCR_STRING:
-			usbMsgPtr = (uchar *)serialNumberDescriptor;
-			return ((length + 1) * sizeof(uint16_t));
-	}
-	return 0;
+    int length = eeprom_read_byte((const uint8_t*)EEPROM_ADDRESS_SERIAL_NUMBER_LEN);
+    eeprom_busy_wait();
+    static uint16_t serialNumberDescriptor[MAX_SERIAL_LEN];
+    serialNumberDescriptor[0] = USB_STRING_DESCRIPTOR_HEADER(length);
+    eeprom_read_block(&serialNumberDescriptor[1], (const uint8_t*)EEPROM_ADDRESS_SERIAL_NUMBER, length * 2);
+
+    switch (rq->wValue.bytes[1])
+    {
+        case USBDESCR_STRING:
+            usbMsgPtr = (uchar *)serialNumberDescriptor;
+            return ((length + 1) * sizeof(uint16_t));
+    }
+    return 0;
 }
 #endif
 
@@ -65,10 +65,10 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
         focuser_set_position(make_uint(l, h));
         return 0;
     }
-	else if (rq->bRequest == REBOOT_TO_BOOTLOADER) {
-		reboot_to_bootloader();
-		return 0;
-	}
+    else if (rq->bRequest == REBOOT_TO_BOOTLOADER) {
+        reboot_to_bootloader();
+        return 0;
+    }
     else if (rq->bRequest == FOCUSER_SET_TEMPERATURE_COMPENSATION) {
         //uint8_t enabled = rq->wValue.bytes[0];
         return 0;
