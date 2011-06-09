@@ -15,36 +15,38 @@
 #include <avr/boot.h>
 #include <string.h>
 #include <util/delay.h>
+#include <avr/eeprom.h>
+
+#include "config.h"
+#include "usbdrv.h"
+#include "../eeprom.h"
 
 static void leaveBootloader() __attribute__((__noreturn__));
 
-#include "usbdrv.h"
+static inline void  bootLoaderInit(void)
+{
+    PORTD |= _BV(PD7); /* Activiate internal pullup on PD7 */
+    _delay_us(10);  /* wait for levels to stabilize */
+}
+
+#define bootLoaderCondition() (((PIND & _BV(PD7)) == 0) || eeprom_read_stay_in_bootloader() == 1)
 
 #define USB_RQ_REBOOT             0x01
 #define USB_RQ_WRITE_FLASH_BLOCK  0x02
 #define USB_RQ_GET_REPORT         0x03
 #define USB_RQ_WRITE_EEPROM_BLOCK 0x04
+#define USB_RQ_READ_EEPROM        0x05
 
-#define WRITE_EEPROM_BLOCK 0x01
-#define WRITE_FLASH_BLOCK 0x02
+#define WRITE_FLASH_BLOCK  0x01
+#define WRITE_EEPROM_BLOCK 0x02
 
-/* ------------------------------------------------------------------------ */
+static uint8_t cmd;
+static uchar bytesRemaining;
+static uint8_t startPage = 0;
+static uint16_t address;
+static uint16_t pageAddress;
 
-#ifndef ulong
-#   define ulong    unsigned long
-#endif
-#ifndef uint
-#   define uint     unsigned int
-#endif
-
-#define addr_t           uint
-
-static addr_t           currentAddress; /* in bytes */
-static uchar            offset;         /* data already processed in current transfer */
-#if BOOTLOADER_CAN_EXIT
-static uchar            exitMainloop;
-#endif
-static uchar            cmd;
+static uchar exitMainloop;
 
 /* compatibility with ATMega88 and other new devices: */
 #ifndef GICR
@@ -55,7 +57,7 @@ static void (*nullVector)(void) __attribute__((__noreturn__));
 
 static void leaveBootloader()
 {
-	PORTB &= ~_BV(PB0);
+    statusLedOff();
     cli();
     boot_rww_enable();
     USB_INTR_ENABLE = 0;
@@ -84,14 +86,20 @@ usbMsgLen_t   usbFunctionSetup(uchar data[8])
     };
 
     if (rq->bRequest == USB_RQ_WRITE_FLASH_BLOCK) {
-		offset = 0;
+        startPage = 1;
         cmd = WRITE_FLASH_BLOCK;
+        bytesRemaining = rq->wLength.word;
 		return USB_NO_MSG;
 	}
 	else if (rq->bRequest == USB_RQ_WRITE_EEPROM_BLOCK) {
+        startPage = 1;
         cmd = WRITE_EEPROM_BLOCK;
+        bytesRemaining = rq->wLength.word;
 		return USB_NO_MSG;
 	}
+    else if (rq->bRequest == USB_RQ_READ_EEPROM) {
+        return USB_NO_MSG;
+    }
 	else if (rq->bRequest == USB_RQ_GET_REPORT) {
         usbMsgPtr = replyBuffer;
         return 6;
@@ -99,86 +107,102 @@ usbMsgLen_t   usbFunctionSetup(uchar data[8])
 #if BOOTLOADER_CAN_EXIT
 	else if (rq->bRequest == USB_RQ_REBOOT) {
 		exitMainloop = 1;
-		return USB_NO_MSG;
+		return 0;
 	}
 #endif
     return 0;
 }
 
+uchar usbFunctionRead(uchar *data, uchar len)
+{
+    uchar i;
+    if (len > bytesRemaining)
+        len = bytesRemaining;
+    bytesRemaining -= len;
+
+    return len;
+}
+
+
 uchar usbFunctionWrite(uchar *data, uchar len)
 {
-	if (cmd == WRITE_EEPROM_BLOCK) {
-		union {
-			addr_t l;
-			uchar c[sizeof(addr_t)];
-		} address;
-		address.c[0] = data[0];
-		address.c[1] = data[1];
-		address.c[2] = data[2];
-		address.c[3] = 0;
-		
-		data += 3;
-		len -= 3;
-		
-		eeprom_write_block(data, (void *)address.l, len);
-		eeprom_busy_wait();
-		
-		return 1;
-	}
-	else if (cmd == WRITE_FLASH_BLOCK) {
-		union {
-			addr_t  l;
-			uint    s[sizeof(addr_t)/2];
-			uchar   c[sizeof(addr_t)];
-        } address;
-		uchar   isLast;
+    if (bytesRemaining == 0)
+        return 1;
+    if (len > bytesRemaining)
+        len = bytesRemaining;
 
-		address.l = currentAddress;
-		if (offset == 0){
-			address.c[0] = data[0];
-			address.c[1] = data[1];
+    // TODO: Fix this
+    if (cmd == WRITE_EEPROM_BLOCK) {
+        /* startPage is set when we receive a WRITE_FLASH_BLOCK command over
+         * usb.
+         *
+         * We get the address from the first 2 bytes and adjust the data buffer
+         * accordingly
+         * */
+        if (startPage) {
+            address = (uint16_t)((data[1] << 8) | (data[0] & 0xff)); /* 2 byte address */
 
-			data += 2;
-			len -= 2;
-		}
-		offset += len;
-		isLast = offset & 0x80; /* != 0 if last block received */
-		do {
-			addr_t prevAddr;
-			uchar pageAddr;
+            len -= 2;
+            bytesRemaining -= 2;
+            data += 2;
+        }
 
-			pageAddr = address.s[0] & (SPM_PAGESIZE - 1);
-			if (pageAddr == 0){              /* if page start: erase */
-				cli();
-				boot_page_erase(address.l); /* erase page */
-				sei();
-				boot_spm_busy_wait();       /* wait until page is erased */
-			}
+        /* eeprom_write_block(data, (void *)address.l, len); */
+        eeprom_write_byte((void *)address, (uint8_t)data[0]);
+        eeprom_busy_wait();
 
-			cli();
-			boot_page_fill(address.l, *(short *)data);
-			sei();
+        return 1;
+    }
+    else if (cmd == WRITE_FLASH_BLOCK) {
+        /* startPage is set when we receive a WRITE_FLASH_BLOCK command over
+         * usb.
+         *
+         * We get the address from the first 2 bytes and adjust the data buffer
+         * accordingly
+         * */
+        if (startPage) {
+            address = (uint16_t)((data[1] << 8) | (data[0] & 0xff)); /* 2 byte address */
+            pageAddress = address;
 
-			prevAddr = address.l;
-			address.l += 2;
-			data += 2;
+            /* Remove address from data */
+            len -= 2;
+            bytesRemaining -= 2;
+            data += 2;
+        }
 
-			/* write page when we cross page boundary */
-			pageAddr = address.s[0] & (SPM_PAGESIZE - 1);
-			if (pageAddr == 0) {
-				cli();
-				boot_page_write(prevAddr);
-				sei();
-				boot_spm_busy_wait();
-			}
+        do {
+            /* if we're at the start of a page, erase the page */
+            if (startPage){
+                cli();
+                boot_page_erase(pageAddress);
+                sei();
+                boot_spm_busy_wait();
+                startPage = 0;
+            }
 
-			len -= 2;
-		} while(len);
+            /* Fill the page buffer */
+            cli();
+            boot_page_fill(address, *(short *)data);
+            sei();
 
-		currentAddress = address.l;
-		return isLast;
-	}
-    return 1;
+            /* We wrote 2 bytes */
+            address += 2;
+            data += 2;
+            len -= 2;
+            bytesRemaining -= 2;
+
+            /* 0 bytes remaining, so we must be at the end of a page */
+            if (bytesRemaining == 0) {
+                cli();
+                boot_page_write(pageAddress);
+                sei();
+                boot_spm_busy_wait();
+                return 1; /* Tell the driver that we're done with the data */
+            }
+
+        } while(len);
+    }
+    return 0;
 }
 
 static void initForUsbConnectivity(void)
@@ -200,13 +224,13 @@ static void initForUsbConnectivity(void)
 int __attribute__((noreturn)) main(void)
 {
 	bootLoaderInit();
-	DDRB |= _BV(PB0);
+    initStatusLed();
 	
 	if (bootLoaderCondition()) {
 		if (eeprom_read_stay_in_bootloader() != 0)
 			eeprom_clear_stay_in_bootloader();
 			
-		PORTB |= _BV(PB0);
+        statusLedOn();
 		uchar i = 0, j = 0;
 		
 		GICR = (1 << IVCE); /* enable change of interrupt vectors */
@@ -228,3 +252,4 @@ int __attribute__((noreturn)) main(void)
 	}
 	leaveBootloader();
 }
+

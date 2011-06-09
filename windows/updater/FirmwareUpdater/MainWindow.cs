@@ -17,7 +17,7 @@ namespace FirmwareUpdater
     public partial class MainWindow : Form
     {
         UInt16 PageSize = 0;
-        UInt32 FlashSize = 0;
+        UInt16 FlashSize = 0;
 
         Byte[] dataBuffer;
 
@@ -139,7 +139,7 @@ namespace FirmwareUpdater
 
         private void btnUpload_Click(object sender, EventArgs e)
         {
-            Bootloader.WriteFirmware(dataBuffer, PageSize);
+            Bootloader.WriteFlash(dataBuffer);
 
             Logger.Write("Device is rebooting");
             Bootloader.Reboot();
