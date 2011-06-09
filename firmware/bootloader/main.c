@@ -86,14 +86,13 @@ usbMsgLen_t   usbFunctionSetup(uchar data[8])
     if (rq->bRequest == USB_RQ_WRITE_FLASH_BLOCK) {
         startPage = 1;
         cmd = WRITE_FLASH_BLOCK;
-        /* bytesRemaining = rq->wLength.bytes[1]; */
-        bytesRemaining = 130;
+        bytesRemaining = rq->wLength.word;
 		return USB_NO_MSG;
 	}
 	else if (rq->bRequest == USB_RQ_WRITE_EEPROM_BLOCK) {
         startPage = 1;
         cmd = WRITE_EEPROM_BLOCK;
-        bytesRemaining = rq->wLength.bytes[1];
+        bytesRemaining = rq->wLength.word;
 		return USB_NO_MSG;
 	}
 	else if (rq->bRequest == USB_RQ_GET_REPORT) {

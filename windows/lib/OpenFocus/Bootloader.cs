@@ -114,17 +114,16 @@ namespace Cortex.OpenFocus
             device.ControlTransfer(ref packet, b, b.Length, out transfered);
         }
 
-        public static void WriteBlock(UInt16 address, Byte[] data)
+        public static void WriteFlashBlock(UInt16 address, Byte[] data)
         {
             Byte[] b = new Byte[2 + data.Length];
 
-            Buffer.BlockCopy(ToUsbInt(address, 2), 0, b, 0, 2); /* Copy the 3 least significant bytes */
+            Buffer.BlockCopy(ToUsbInt(address, 2), 0, b, 0, 2);
             Buffer.BlockCopy(data, 0, b, 2, data.Length);
 
-            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.WriteBlock, 0, 0, 0);
+            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.WriteBlock, 0, 0, (short)b.Length);
             int transfered;
             device.ControlTransfer(ref packet, b, b.Length, out transfered);
-            System.Windows.Forms.MessageBox.Show(transfered.ToString());
         }
 
         public static void WriteFirmware(Byte[] data, UInt16 PageSize)
@@ -137,7 +136,7 @@ namespace Cortex.OpenFocus
 
                 Logger.Write("Writing block 0x" + String.Format("{0:x3}", address) + " ... 0x" + String.Format("{0:x3}", (address + PageSize)));
 
-                Bootloader.WriteBlock(address, page);
+                Bootloader.WriteFlashBlock(address, page);
             }
         }
 
