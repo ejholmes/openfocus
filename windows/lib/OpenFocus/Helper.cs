@@ -7,6 +7,39 @@ namespace Cortex.OpenFocus
 {
     public static class Helper
     {
+        public static void Connect()
+        {
+            try /* Try to connect to the bootloader */
+            {
+                Bootloader.Connect();
+                UInt16 PageSize = Bootloader.PageSize;
+                UInt16 FlashSize = Bootloader.FlashSize;
+
+                Logger.Write("Device Found!");
+                Logger.Write("Page Size: " + PageSize.ToString() + " bytes");
+                Logger.Write("Flash Size: " + FlashSize.ToString() + " bytes");
+            }
+            catch (DeviceNotFoundException) /* If the device isn't found... */
+            {
+                try /* Try connecting to the device and rebooting it into the bootloader */
+                {
+                    Device dev = new Device();
+                    dev.Connect();
+                    Logger.Write("Rebooting device into firmware update mode...");
+                    dev.RebootToBootloader();
+                    dev.Disconnect();
+                    System.Threading.Thread.Sleep(2000);
+                    Connect();
+                    return;
+                }
+                catch (DeviceNotFoundException) /* If this is reach, the device probably not connected */
+                {
+                    Logger.Write("Device not found!", Logger.LogType.Error);
+                    return;
+                }
+            }
+        }
+
         public static void UploadFile(string file)
         {
             Byte[] data = null;

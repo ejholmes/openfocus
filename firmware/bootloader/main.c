@@ -131,24 +131,13 @@ uchar usbFunctionWrite(uchar *data, uchar len)
     if (len > bytesRemaining)
         len = bytesRemaining;
 
-    // TODO: Fix this
     if (cmd == WRITE_EEPROM_BLOCK) {
-        /* startPage is set when we receive a WRITE_FLASH_BLOCK command over
-         * usb.
-         *
-         * We get the address from the first 2 bytes and adjust the data buffer
-         * accordingly
-         * */
-        if (startPage) {
-            address = (uint16_t)((data[1] << 8) | (data[0] & 0xff)); /* 2 byte address */
+        address = (uint16_t)((data[1] << 8) | (data[0] & 0xff)); /* 2 byte address */
 
-            len -= 2;
-            bytesRemaining -= 2;
-            data += 2;
-        }
+        len -= 2;
+        data += 2;
 
-        /* eeprom_write_block(data, (void *)address.l, len); */
-        eeprom_write_byte((void *)address, (uint8_t)data[0]);
+        eeprom_write_block((const void*)data, (void *)address, 2);
         eeprom_busy_wait();
 
         return 1;
@@ -202,7 +191,7 @@ uchar usbFunctionWrite(uchar *data, uchar len)
 
         } while(len);
     }
-    return 0;
+    return 1;
 }
 
 static void initForUsbConnectivity(void)

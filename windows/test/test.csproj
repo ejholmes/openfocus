@@ -91,11 +91,11 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ascom\OpenFocus\OpenFocus.csproj">
+    <ProjectReference Include="..\ascom\OpenFocus.csproj">
       <Project>{AEDD8AFE-62B2-4773-9584-69ED72C8F799}</Project>
       <Name>OpenFocus</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\lib\Cortex.csproj">
+    <ProjectReference Include="..\lib\Cortex.csproj">
       <Project>{82E0EE74-DE1B-49D6-9413-BC85029C13A0}</Project>
       <Name>Cortex</Name>
     </ProjectReference>
