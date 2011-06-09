@@ -30,13 +30,6 @@ namespace Cortex.OpenFocus
             public const byte GetTemperature = 0x13;
         }
 
-        /* Temperature Display Units */
-        public struct TemperatureUnits
-        {
-            public const string Celsius = "0";
-            public const string Fahrenheit = "1";
-        }
-
         public const Int16 Vendor_ID = 0x20a0;
         public const Int16 Product_ID = 0x416b;
         public const String ManufacturerString = "Cortex Astronomy (cortexastronomy.com)";

@@ -181,9 +181,9 @@ namespace ASCOM.OpenFocus
                 double kelvin = dev.Temperature;
                 double celsius = kelvin - 273.15;
 
-                if (Config.Units == Device.TemperatureUnits.Celsius)
+                if (Config.Units == Config.TemperatureUnits.Celsius)
                     return celsius;
-                else if (Config.Units == Device.TemperatureUnits.Fahrenheit)
+                else if (Config.Units == Config.TemperatureUnits.Fahrenheit)
                     return ((9.00 / 5.00) * celsius) + 32;
                 else
                     return celsius;

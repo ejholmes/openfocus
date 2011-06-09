@@ -13,11 +13,18 @@ namespace ASCOM.OpenFocus
 {
     public partial class Config
     {
+        /* Temperature Display Units */
+        public enum TemperatureUnits
+        {
+            Celsius = 0,
+            Fahrenheit = 1
+        }
+
         public static Profile Profile = new Profile();
 
         #region Default Values
 
-        private static String _Units                    = Cortex.OpenFocus.Device.TemperatureUnits.Celsius;
+        private static TemperatureUnits _Units          = TemperatureUnits.Celsius;
         private static String _DefaultDevice            = String.Empty;
 
         #endregion
@@ -25,7 +32,7 @@ namespace ASCOM.OpenFocus
 
         #region Public Static Members
 
-        public static String Units
+        public static TemperatureUnits Units
         {
             get
             {
@@ -33,9 +40,9 @@ namespace ASCOM.OpenFocus
                 if (String.IsNullOrEmpty(val))
                     return _Units;
                 else
-                    return val;
+                    return (TemperatureUnits)(int.Parse(val));
             }
-            set { Write("Units", value.ToString()); }
+            set { Write("Units", ((int)value).ToString()); }
         }
 
         public static String DefaultDevice
