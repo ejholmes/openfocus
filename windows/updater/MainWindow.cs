@@ -118,7 +118,7 @@ namespace FirmwareUpdater
                     f.PageSize = PageSize;
                     dataBuffer = f.Data;
 
-                    if (dataBuffer.Length > (FlashSize - 2048))
+                    if (dataBuffer.Length > (FlashSize - 4096))
                     {
                         Logger.Write("File is too large!");
                         return;

@@ -89,7 +89,7 @@ namespace Builder
             if (this.cbGenerateSerial.Checked)
                 WriteEEPROM();
 
-            //Bootloader.Reboot();
+            Bootloader.Reboot();
             Logger.Write();
             this.btnBuild.Enabled = true;
             this.btnConnect.Enabled = true;
