@@ -35,7 +35,7 @@ static inline void  bootLoaderInit(void)
 #define USB_RQ_WRITE_FLASH_BLOCK  0x02
 #define USB_RQ_GET_REPORT         0x03
 #define USB_RQ_WRITE_EEPROM_BLOCK 0x04
-#define USB_RQ_READ_EEPROM        0x05
+#define USB_RQ_READ_EEPROM_BLOCK  0x05
 
 #define WRITE_FLASH_BLOCK  0x01
 #define WRITE_EEPROM_BLOCK 0x02
@@ -76,13 +76,15 @@ static void leaveBootloader()
 usbMsgLen_t   usbFunctionSetup(uchar data[8])
 {
 	usbRequest_t    *rq = (void *)data;
-	static uchar    replyBuffer[6] = {
+	static uchar    replyBuffer[8] = {
         SPM_PAGESIZE & 0xff,
         SPM_PAGESIZE >> 8,
         ((long)FLASHEND + 1) & 0xff,
         (((long)FLASHEND + 1) >> 8) & 0xff,
         (((long)FLASHEND + 1) >> 16) & 0xff,
-        (((long)FLASHEND + 1) >> 24) & 0xff
+        (((long)FLASHEND + 1) >> 24) & 0xff,
+        (E2END + 1) & 0xff,
+        (E2END +1) >> 8
     };
 
     if (rq->bRequest == USB_RQ_WRITE_FLASH_BLOCK) {
@@ -97,12 +99,15 @@ usbMsgLen_t   usbFunctionSetup(uchar data[8])
         bytesRemaining = rq->wLength.word;
 		return USB_NO_MSG;
 	}
-    else if (rq->bRequest == USB_RQ_READ_EEPROM) {
+    else if (rq->bRequest == USB_RQ_READ_EEPROM_BLOCK) {
+        bytesRemaining = rq->wLength.word; /* How much data to transfer */
+        address = rq->wValue.word; /* Start address */
+        startPage = 1;
         return USB_NO_MSG;
     }
 	else if (rq->bRequest == USB_RQ_GET_REPORT) {
         usbMsgPtr = replyBuffer;
-        return 6;
+        return sizeof(replyBuffer);
     }
 #if BOOTLOADER_CAN_EXIT
 	else if (rq->bRequest == USB_RQ_REBOOT) {
@@ -115,10 +120,23 @@ usbMsgLen_t   usbFunctionSetup(uchar data[8])
 
 uchar usbFunctionRead(uchar *data, uchar len)
 {
-    uchar i;
     if (len > bytesRemaining)
         len = bytesRemaining;
     bytesRemaining -= len;
+
+    uchar length = len;
+
+    if (startPage) {
+        data[0] = address >> 8;
+        data[1] = address & 0xff;
+
+        data += 2;
+        length -= 2;
+        startPage = 0;
+    }
+
+    eeprom_read_block((void *)data, (const void*)address, length);
+    address += length;
 
     return len;
 }

@@ -12,12 +12,11 @@ namespace Cortex.OpenFocus
             try /* Try to connect to the bootloader */
             {
                 Bootloader.Connect();
-                UInt16 PageSize = Bootloader.PageSize;
-                UInt16 FlashSize = Bootloader.FlashSize;
 
                 Logger.Write("Device Found!");
-                Logger.Write("Page Size: " + PageSize.ToString() + " bytes");
-                Logger.Write("Flash Size: " + FlashSize.ToString() + " bytes");
+                Logger.Write("Page Size: " + Bootloader.PageSize.ToString() + " bytes");
+                Logger.Write("Flash Size: " + Bootloader.FlashSize.ToString() + " bytes");
+                Logger.Write("EEPROM Size: " + Bootloader.EEPROMSize.ToString() + " bytes");
             }
             catch (DeviceNotFoundException) /* If the device isn't found... */
             {

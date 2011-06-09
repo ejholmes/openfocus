@@ -23,9 +23,24 @@ namespace Cortex.OpenFocus
             _SerialNumber = new EEPROMVar(Addresses.SerialNumber, (Byte)0);
         }
 
+        public EEPROM(Byte[] data)
+        {
+            Byte stayInBootloader = data[Addresses.StayInBootloader];
+            _StayInBootloader = new EEPROMVar(Addresses.StayInBootloader, stayInBootloader);
+
+            Byte serialNumberLen = data[Addresses.SerialNumberLen];
+            _SerialNumberLen = new EEPROMVar(Addresses.SerialNumberLen, (Byte)serialNumberLen);
+
+            Byte[] serialNumberBytes = new Byte[(serialNumberLen + 1) * 2];
+            Buffer.BlockCopy(data, Addresses.SerialNumber, serialNumberBytes, 0, (serialNumberLen + 1) * 2);
+
+            String serialNumber = Encoding.Unicode.GetString(serialNumberBytes);
+            _SerialNumber = new EEPROMVar(Addresses.SerialNumber, serialNumber);
+        }
+
         public bool StayInBootloader
         {
-            get { return (bool)_StayInBootloader.Data; }
+            get { return (((Byte)_StayInBootloader.Data) == 1); }
             set { _StayInBootloader.Data = (Byte)(value ? 1 : 0); }
         }
 

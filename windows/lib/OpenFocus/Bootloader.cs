@@ -22,6 +22,7 @@ namespace Cortex.OpenFocus
             public const byte WriteFlashBlock = 0x02;
             public const byte GetReport = 0x03;
             public const byte WriteEepromBlock = 0x04;
+            public const byte ReadEepromBlock = 0x05;
         }
 
         public static List<string> ListDevices()
@@ -67,7 +68,7 @@ namespace Cortex.OpenFocus
 
         private static Byte[] GetReport()
         {
-            int expected = 6;
+            int expected = 8;
             Byte[] data = new Byte[expected];
             UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Request.GetReport, 0, 0, 0);
             int transfered;
@@ -94,6 +95,47 @@ namespace Cortex.OpenFocus
             }
         }
 
+        public static UInt16 EEPROMSize
+        {
+            get
+            {
+                Byte[] data = GetReport();
+                return (UInt16)((data[7] << 8) | data[6]);
+            }
+        }
+
+        public static Byte[] ReadEepromBlock(UInt16 address, int length)
+        {
+            Byte[] data = new Byte[length];
+
+            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Request.ReadEepromBlock, (short)address, 0, (short)data.Length);
+            int transfered;
+            device.ControlTransfer(ref packet, data, data.Length, out transfered);
+            if (transfered != data.Length)
+                throw new CommunicationException("Error sending data to device");
+
+            return data;
+        }
+
+        public static Byte[] ReadEeprom()
+        {
+            UInt16 BlockSize = 128;
+            UInt16 EepromSize = EEPROMSize;
+
+            Byte[] data = new Byte[EepromSize];
+
+            for (UInt16 address = 0; address < EepromSize; address += BlockSize)
+            {
+                Byte[] b = ReadEepromBlock(address, BlockSize + sizeof(UInt16));
+
+                UInt16 receivedAddress = (UInt16)((b[0] << 8) | (b[1] & 0xff));
+
+                Buffer.BlockCopy(b, sizeof(UInt16), data, receivedAddress, b.Length - sizeof(UInt16));
+            }
+
+            return data;
+        }
+
         public static void WriteEepromBlock(UInt16 address, Byte[] data)
         {
             Byte[] b = new Byte[sizeof(UInt16) + data.Length];
@@ -104,8 +146,8 @@ namespace Cortex.OpenFocus
             UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.WriteEepromBlock, 0, 0, (short)b.Length);
             int transfered;
             device.ControlTransfer(ref packet, b, b.Length, out transfered);
-            /*if (transfered != b.Length)
-                throw new CommunicationException("Error sending data to device");*/
+            if (transfered != b.Length)
+                throw new CommunicationException("Error sending data to device");
         }
 
         public static void WriteEeprom(Byte[] data)
