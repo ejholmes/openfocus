@@ -289,8 +289,8 @@ tuningOverflow:
 #define USB_CFG_DEVICE_VERSION  0x01, 0x00
 /* Version number of the device: Minor number first, then major number.
  */
-#define USB_CFG_VENDOR_NAME     'C', 'o', 'r', 't', 'e', 'x', ' ', 'A', 's', 't', 'r', 'o', 'n', 'o', 'm', 'y', ' ', '(', 'c', 'o', 'r', 't', 'e', 'x', 'a', 's', 't', 'r', 'o', 'n', 'o', 'm', 'y', '.', 'c', 'o', 'm', ')'
-#define USB_CFG_VENDOR_NAME_LEN 38
+#define USB_CFG_VENDOR_NAME     'C', 'o', 'r', 't', 'e', 'x', ' ', 'A', 's', 't', 'r', 'o', 'n', 'o', 'm', 'y'
+#define USB_CFG_VENDOR_NAME_LEN 16
 /* These two values define the vendor name returned by the USB device. The name
  * must be given as a list of characters under single quotes. The characters
  * are interpreted as Unicode (UTF-16) entities.

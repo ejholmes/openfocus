@@ -66,11 +66,6 @@ namespace Cortex.OpenFocus
             else
                 device = UsbDevice.OpenUsbDevice(UsbFinder);
 
-            /* According to V-USB licensing, we have to check manufacturer string and product string */
-            if (device == null
-                || device.Info.ManufacturerString != ManufacturerString
-                || device.Info.ProductString != ProductString) throw new DeviceNotFoundException("Device not found");
-
             IUsbDevice usbDev = device as IUsbDevice;
             if (!ReferenceEquals(usbDev, null))
             {
