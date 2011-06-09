@@ -66,7 +66,6 @@ namespace Cortex.OpenFocus
             Bootloader.WriteFlash(data);
 
             Logger.Write("Firmware update complete!");
-            Logger.Write("Device is rebooting");
         }
     }
 }

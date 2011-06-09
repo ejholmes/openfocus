@@ -131,6 +131,7 @@ uchar usbFunctionWrite(uchar *data, uchar len)
     if (len > bytesRemaining)
         len = bytesRemaining;
 
+    // TODO: Fix this
     if (cmd == WRITE_EEPROM_BLOCK) {
         /* startPage is set when we receive a WRITE_FLASH_BLOCK command over
          * usb.
@@ -140,20 +141,17 @@ uchar usbFunctionWrite(uchar *data, uchar len)
          * */
         if (startPage) {
             address = (uint16_t)((data[1] << 8) | (data[0] & 0xff)); /* 2 byte address */
-            pageAddress = address;
 
             len -= 2;
             bytesRemaining -= 2;
             data += 2;
         }
 
-        eeprom_write_block(data, (void *)address, len);
+        /* eeprom_write_block(data, (void *)address.l, len); */
+        eeprom_write_byte((void *)address, (uint8_t)data[0]);
         eeprom_busy_wait();
 
-        address += len;
-        bytesRemaining -= len;
-
-        return bytesRemaining == 0;
+        return 1;
     }
     else if (cmd == WRITE_FLASH_BLOCK) {
         /* startPage is set when we receive a WRITE_FLASH_BLOCK command over
