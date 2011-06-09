@@ -1,5 +1,5 @@
-Copyright (c) 2011 Eric Holmes
-eric@ejholmes.net
+                 Copyright (c) 2011 Eric Holmes
+                       eric@ejholmes.net
 
 This package is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -14,6 +14,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+In addition to the terms described by the GNU Genera Public License,
+you do not have the rights to the VID/PID pairs used within this 
+library. If you make any changes to the code and publish them to a
+publicly accessible location, you are encouraged to change the VID/PID
+pairs to those freely granted by Objective Development for use with
+the V-USB driver.
+
 
 
                     GNU GENERAL PUBLIC LICENSE
