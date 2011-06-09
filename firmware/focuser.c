@@ -6,6 +6,7 @@
 
 static uint16_t current_position = 0;
 static uint8_t is_moving         = false;
+static uint8_t duty_cycle        = 0;
 
 /*
  * Handles events sent by the stepper motor
@@ -17,8 +18,10 @@ void step_event_handler(uint8_t evt, void *data)
             current_position += *(int8_t *)data;
             break;
         case EVT_MOVE_COMPLETE:
-            //stepper_release();
-			stepper_pwm_hold();
+            if (duty_cycle == 0)
+                stepper_release();
+            else
+                stepper_pwm_hold(duty_cycle);
             is_moving = false;
             break;
     }
@@ -44,6 +47,20 @@ uint16_t focuser_get_position(void)
 int focuser_is_moving()
 {
     return is_moving;
+}
+
+int focuser_set_pwm_holding(uint8_t duty)
+{
+    duty_cycle = duty;
+
+    if (duty_cycle == 0) {
+        stepper_release();
+    }
+    else {
+        stepper_pwm_hold(duty_cycle);
+    }
+
+    return duty_cycle;
 }
 
 int16_t focuser_move_to(uint16_t position)

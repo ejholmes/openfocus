@@ -111,6 +111,7 @@ namespace ASCOM.OpenFocus
                         DeviceConfig = new Config.Device(dev.Serial);
                         if (DeviceConfig.Position != 0)
                             dev.Position = DeviceConfig.Position;
+                        dev.SetPWMHolding(DeviceConfig.DutyCycle);
                         break;
                     case false:
                         if (dev.Connected)

@@ -104,8 +104,8 @@ namespace Cortex.OpenFocus
             UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.WriteEepromBlock, 0, 0, (short)b.Length);
             int transfered;
             device.ControlTransfer(ref packet, b, b.Length, out transfered);
-            /*if (transfered != b.Length)
-                throw new CommunicationException("Error sending data to device");*/
+            if (transfered != b.Length)
+                throw new CommunicationException("Error sending data to device");
         }
 
         public static void WriteEeprom(Byte[] data)

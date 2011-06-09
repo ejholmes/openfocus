@@ -34,6 +34,11 @@ void focuser_halt();
 int focuser_is_moving();
 
 /*
+ * Enables or disables pwm holding. Set duty_cycle to 0 to disables
+ */
+int focuser_set_pwm_holding(uint8_t duty);
+
+/*
  * Returns the current position of the focuser
  */
 uint16_t focuser_get_position();

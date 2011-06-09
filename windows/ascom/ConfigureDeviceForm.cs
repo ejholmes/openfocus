@@ -17,6 +17,8 @@ namespace ASCOM.OpenFocus
         public String Serial;
         public Config.Device Device;
 
+        UInt16 DutyCycle = 0;
+
         public ConfigureDeviceForm(String s)
         {
             InitializeComponent();
@@ -37,6 +39,9 @@ namespace ASCOM.OpenFocus
             this.tbMaxPosition.Text                = Device.MaxPosition.ToString();
             this.tbTemperatureCoefficient.Text     = Device.TemperatureCoefficient.ToString();
 
+            this.tbPWMHolding.Value                = Device.DutyCycle / 0x03;
+            tbPWMHolding_Scroll(null, null);
+
             this.SerialNumber.Text                  = Serial;
             this.toolTip.SetToolTip(this.SerialNumber, Serial);
             this.FirmwareVersion.Text               = firmware.ToString();
@@ -47,6 +52,7 @@ namespace ASCOM.OpenFocus
             Device.Name                             = this.tbName.Text;
             Device.MaxPosition                      = UInt16.Parse(this.tbMaxPosition.Text);
             Device.TemperatureCoefficient           = double.Parse(this.tbTemperatureCoefficient.Text);
+            Device.DutyCycle                        = DutyCycle;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -82,6 +88,26 @@ namespace ASCOM.OpenFocus
 
                     this.tbTemperatureCoefficient.Text = Math.Round(slope, 2).ToString();
                 }
+            }
+        }
+
+        private void tbPWMHolding_Scroll(object sender, EventArgs e)
+        {
+            if (this.tbPWMHolding.Value == 0)
+            {
+                this.lblPWMHolding.Text = "PWM Holding Disabled";
+                DutyCycle = 0;
+            }
+            else
+            {
+                switch (this.tbPWMHolding.Value)
+                {
+                    default:
+                        DutyCycle = (UInt16)(this.tbPWMHolding.Value * 0x03);
+                        break;
+
+                }
+                this.lblPWMHolding.Text = (Math.Round((((double)DutyCycle / (double)254) * 100), 0)).ToString() + "% Duty Cycle";
             }
         }
     }

@@ -23,7 +23,7 @@ void pwm_init(void)
 	TCCR1A |= _BV(WGM13) | _BV(WGM12) | _BV(WGM11) | _BV(WGM10); /* Fast PWM with OCR1A output compare */
 	TCCR1B |= _BV(CS11) | _BV(CS10); /* Clock source from XTAL, no prescaler */
 	
-	OCR1A = 0x03; /* 50% duty cycle */
+	OCR1A = 0x03; /* lowest duty cycle */
 }
 
 void stepper_init(void)
@@ -47,12 +47,14 @@ void stepper_init(void)
 void stepper_release(void)
 {
     MOTOR_PINS_OFF();
+    STOP_PWM();
 }
 
-void stepper_pwm_hold(void)
+void stepper_pwm_hold(uint8_t duty_cycle)
 {
-	ENABLE_PINS_OFF();
-	START_PWM();
+    ENABLE_PINS_OFF();
+    OCR1A = duty_cycle;
+    START_PWM();
 }
 
 void stepper_stop(void)

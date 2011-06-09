@@ -126,7 +126,7 @@ void stepper_release(void);
 /*
  * PWM the enable pins for heavy loads
  */
-void stepper_pwm_hold(void);
+void stepper_pwm_hold(uint8_t duty_cycle);
 
 /*
  * Stops the stepper motor

@@ -73,6 +73,11 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
         //uint8_t enabled = rq->wValue.bytes[0];
         return 0;
     }
+    else if (rq->bRequest == FOCUSER_SET_PWM_HOLDING) {
+        uint8_t duty_cycle = rq->wValue.bytes[0];
+        focuser_set_pwm_holding(duty_cycle);
+        return 0;
+    }
     else if (rq->bRequest == FOCUSER_IS_MOVING) {
         static uchar buffer[1];
         buffer[0] = focuser_is_moving();

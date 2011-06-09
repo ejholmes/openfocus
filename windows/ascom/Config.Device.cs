@@ -15,6 +15,7 @@ namespace ASCOM.OpenFocus
             private const UInt16 _MaxPosition                = 10000;
             private const double _TemperatureCoefficient     = 0.0;
             private const double _StepSize                   = 2.0;
+            private const UInt16 _DutyCycle                  = 0;
 
             private String Serial;
 
@@ -90,6 +91,19 @@ namespace ASCOM.OpenFocus
                         return double.Parse(val);
                 }
                 set { Write("StepSize", value.ToString(), Serial); }
+            }
+
+            public UInt16 DutyCycle
+            {
+                get
+                {
+                    String val = Read("DutyCycle", Serial);
+                    if (String.IsNullOrEmpty(val))
+                        return _DutyCycle;
+                    else
+                        return UInt16.Parse(val);
+                }
+                set { Write("DutyCycle", value.ToString(), Serial); }
             }
         }
     }

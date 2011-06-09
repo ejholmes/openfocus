@@ -24,6 +24,7 @@ namespace Cortex.OpenFocus
             public const byte SetPosition = 0x02;
             public const byte SetTemperatureCompensation = 0x03;
             public const byte RebootToBootloader = 0x04;
+            public const byte SetPWMHolding = 0x05;
             public const byte GetPosition = 0x10;
             public const byte IsMoving = 0x11;
             public const byte GetCapabilities = 0x12;
@@ -94,6 +95,7 @@ namespace Cortex.OpenFocus
         /* Disconnect the device */
         public void Disconnect()
         {
+            SetPWMHolding(0);
             device.Close();
         }
 
@@ -120,6 +122,15 @@ namespace Cortex.OpenFocus
         public void RebootToBootloader()
         {
             UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.RebootToBootloader, 0, 0, 0);
+
+            int transfered;
+            object buffer = null;
+            device.ControlTransfer(ref packet, buffer, 0, out transfered);
+        }
+
+        public void SetPWMHolding(int DutyCycle)
+        {
+            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.SetPWMHolding, (short)DutyCycle, 0, 0);
 
             int transfered;
             object buffer = null;

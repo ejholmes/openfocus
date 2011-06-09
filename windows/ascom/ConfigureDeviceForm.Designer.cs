@@ -47,9 +47,14 @@
             this.SerialNumber = new System.Windows.Forms.Label();
             this.lblSerial = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.gbPWMHolding = new System.Windows.Forms.GroupBox();
+            this.lblPWMHolding = new System.Windows.Forms.Label();
+            this.tbPWMHolding = new System.Windows.Forms.TrackBar();
             this.gbPositionSettings.SuspendLayout();
             this.gbTemperatureCompensation.SuspendLayout();
             this.gbDeviceInfo.SuspendLayout();
+            this.gbPWMHolding.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbPWMHolding)).BeginInit();
             this.SuspendLayout();
             // 
             // lblName
@@ -163,7 +168,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(194, 274);
+            this.btnCancel.Location = new System.Drawing.Point(194, 381);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 4;
@@ -174,7 +179,7 @@
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSave.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnSave.Location = new System.Drawing.Point(113, 274);
+            this.btnSave.Location = new System.Drawing.Point(113, 381);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 5;
@@ -229,13 +234,45 @@
             this.lblSerial.TabIndex = 0;
             this.lblSerial.Text = "Serial #:";
             // 
+            // gbPWMHolding
+            // 
+            this.gbPWMHolding.Controls.Add(this.lblPWMHolding);
+            this.gbPWMHolding.Controls.Add(this.tbPWMHolding);
+            this.gbPWMHolding.Location = new System.Drawing.Point(12, 271);
+            this.gbPWMHolding.Name = "gbPWMHolding";
+            this.gbPWMHolding.Size = new System.Drawing.Size(257, 99);
+            this.gbPWMHolding.TabIndex = 7;
+            this.gbPWMHolding.TabStop = false;
+            this.gbPWMHolding.Text = "Holding Torque";
+            // 
+            // lblPWMHolding
+            // 
+            this.lblPWMHolding.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblPWMHolding.Location = new System.Drawing.Point(17, 22);
+            this.lblPWMHolding.Name = "lblPWMHolding";
+            this.lblPWMHolding.Size = new System.Drawing.Size(224, 13);
+            this.lblPWMHolding.TabIndex = 1;
+            this.lblPWMHolding.Text = "Duty Cycle";
+            this.lblPWMHolding.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // tbPWMHolding
+            // 
+            this.tbPWMHolding.LargeChange = 1;
+            this.tbPWMHolding.Location = new System.Drawing.Point(9, 48);
+            this.tbPWMHolding.Name = "tbPWMHolding";
+            this.tbPWMHolding.Size = new System.Drawing.Size(242, 45);
+            this.tbPWMHolding.TabIndex = 0;
+            this.tbPWMHolding.Scroll += new System.EventHandler(this.tbPWMHolding_Scroll);
+            // 
             // ConfigureDeviceForm
             // 
             this.AcceptButton = this.btnSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(282, 309);
+            this.ClientSize = new System.Drawing.Size(282, 416);
+            this.Controls.Add(this.gbPWMHolding);
             this.Controls.Add(this.gbDeviceInfo);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnCancel);
@@ -255,6 +292,9 @@
             this.gbTemperatureCompensation.PerformLayout();
             this.gbDeviceInfo.ResumeLayout(false);
             this.gbDeviceInfo.PerformLayout();
+            this.gbPWMHolding.ResumeLayout(false);
+            this.gbPWMHolding.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbPWMHolding)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -296,5 +336,8 @@
         private System.Windows.Forms.Label FirmwareVersion;
         private System.Windows.Forms.Label lblFirmwareVersion;
         private System.Windows.Forms.Button btnFocusMaxImport;
+        private System.Windows.Forms.GroupBox gbPWMHolding;
+        private System.Windows.Forms.TrackBar tbPWMHolding;
+        private System.Windows.Forms.Label lblPWMHolding;
     }
 }
