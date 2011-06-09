@@ -83,7 +83,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\lib\Cortex.csproj">
+    <ProjectReference Include="..\lib\Cortex.csproj">
       <Project>{82E0EE74-DE1B-49D6-9413-BC85029C13A0}</Project>
       <Name>Cortex</Name>
     </ProjectReference>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C# Express 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "FirmwareUpdater\Updater.csproj", "{A531E25D-ED6F-43D1-B8F5-B35F03072C0F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater.csproj", "{A531E25D-ED6F-43D1-B8F5-B35F03072C0F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cortex", "..\lib\Cortex.csproj", "{82E0EE74-DE1B-49D6-9413-BC85029C13A0}"
 EndProject

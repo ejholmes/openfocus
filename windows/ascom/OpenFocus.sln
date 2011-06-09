@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C# Express 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenFocus", "OpenFocus\OpenFocus.csproj", "{AEDD8AFE-62B2-4773-9584-69ED72C8F799}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenFocus", "OpenFocus.csproj", "{AEDD8AFE-62B2-4773-9584-69ED72C8F799}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cortex", "..\lib\Cortex.csproj", "{82E0EE74-DE1B-49D6-9413-BC85029C13A0}"
 EndProject
