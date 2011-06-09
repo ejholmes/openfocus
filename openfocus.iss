@@ -22,6 +22,7 @@ LicenseFile="LICENSE.txt"
 UninstallFilesDir="{cf}\ASCOM\Uninstall\Focuser\OpenFocus"
 PrivilegesRequired=admin
 ArchitecturesInstallIn64BitMode=x64 ia64
+SetupIconFile=windows\lib\Resources\icon.ico
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -38,11 +39,11 @@ Name: win32; Description: Install the Windows driver;
 Name: source; Description: Install the Source files; Flags: unchecked
 
 [Files]
-Source: "windows\ascom\OpenFocus\bin\Release\OpenFocus.dll"; DestDir: "{app}"; Tasks: ascom
+Source: "windows\ascom\bin\Release\OpenFocus.dll"; DestDir: "{app}"; Tasks: ascom
 ; Require a read-me HTML to appear after installation, maybe driver's Help doc
 ; Source: "README.md"; DestDir: "{app}"; Flags: isreadme; Tasks: ascom
 ; Optional source files (COM and .NET aware)
-Source: "windows\ascom\OpenFocus\*"; Excludes: *.zip,*.exe,*.dll, \bin\*, \obj\*, \driver\*; DestDir: "{app}\Source\ASCOM"; Tasks: source; Flags: recursesubdirs
+Source: "windows\ascom\*"; Excludes: *.zip,*.exe,*.dll, \bin\*, \obj\*, \driver\*; DestDir: "{app}\Source\ASCOM"; Tasks: source; Flags: recursesubdirs
 
 ; copy your libusb-win32 setup package to the App folder
 Source: "driver\*"; Excludes: "*.exe"; Flags: recursesubdirs; DestDir: "{app}\driver"
