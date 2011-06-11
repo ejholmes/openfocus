@@ -128,7 +128,7 @@ namespace Cortex.OpenFocus
             {
                 Byte[] b = ReadEepromBlock(address, BlockSize + sizeof(UInt16));
 
-                UInt16 receivedAddress = (UInt16)((b[0] << 8) | (b[1] & 0xff));
+                UInt16 receivedAddress = (UInt16)((b[1] << 8) | (b[0] & 0xff));
 
                 Buffer.BlockCopy(b, sizeof(UInt16), data, receivedAddress, b.Length - sizeof(UInt16));
             }

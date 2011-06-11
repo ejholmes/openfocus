@@ -127,8 +127,9 @@ uchar usbFunctionRead(uchar *data, uchar len)
     uchar length = len;
 
     if (startPage) {
-        data[0] = address >> 8;
-        data[1] = address & 0xff;
+        data[0] = address & 0xff;
+        data[1] = address >> 8;
+
 
         data += 2;
         length -= 2;
@@ -150,7 +151,7 @@ uchar usbFunctionWrite(uchar *data, uchar len)
         len = bytesRemaining;
 
     if (cmd == WRITE_EEPROM_BLOCK) {
-        address = (uint16_t)((data[1] << 8) | (data[0] & 0xff)); /* 2 byte address */
+        address = *(uint16_t *)&data[0];
 
         len -= 2;
         data += 2;
@@ -168,7 +169,7 @@ uchar usbFunctionWrite(uchar *data, uchar len)
          * accordingly
          * */
         if (startPage) {
-            address = (uint16_t)((data[1] << 8) | (data[0] & 0xff)); /* 2 byte address */
+            address = *(uint16_t *)&data[0];
             pageAddress = address;
 
             /* Remove address from data */
