@@ -101,6 +101,11 @@ namespace FirmwareUpdater
                     done = true;
                     Logger.Write("Device not found!");
                 }
+                catch (NullReferenceException)
+                {
+                    done = true;
+                    Logger.Write("Device not found!");
+                }
             }
         }
 

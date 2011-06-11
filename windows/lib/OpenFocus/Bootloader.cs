@@ -43,7 +43,7 @@ namespace Cortex.OpenFocus
             device = UsbDevice.OpenUsbDevice(finder);
 
             if (device == null)
-                throw new DeviceNotFoundException("Device not found!");
+                throw new DeviceNotFoundException();
 
             IUsbDevice usbDev = device as IUsbDevice;
             if (!ReferenceEquals(usbDev, null))

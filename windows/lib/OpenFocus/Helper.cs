@@ -31,12 +31,18 @@ namespace Cortex.OpenFocus
                     Connect();
                     return;
                 }
-                catch (DeviceNotFoundException) /* If this is reach, the device probably not connected */
+                catch (DeviceNotFoundException) /* If this is reach, the device probably is not connected */
                 {
-                    Logger.Write("Device not found!", Logger.LogType.Error);
-                    return;
+                    goto DeviceNotFound;
+                }
+                catch (NullReferenceException)
+                {
+                    goto DeviceNotFound;
                 }
             }
+DeviceNotFound:
+            Logger.Write("Device not found!", Logger.LogType.Error);
+            return;
         }
 
         public static void UploadFile(string file)
