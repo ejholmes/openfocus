@@ -151,7 +151,7 @@ uchar usbFunctionWrite(uchar *data, uchar len)
         len = bytesRemaining;
 
     if (cmd == WRITE_EEPROM_BLOCK) {
-        address = *(uint16_t *)&data[0];
+        address = *(uint16_t *)&data[0]; /* Address is in little endian format so we just cast it */
 
         len -= 2;
         data += 2;
@@ -169,7 +169,7 @@ uchar usbFunctionWrite(uchar *data, uchar len)
          * accordingly
          * */
         if (startPage) {
-            address = *(uint16_t *)&data[0];
+            address = *(uint16_t *)&data[0]; /* Address is in little endian format so we just cast it */
             pageAddress = address;
 
             /* Remove address from data */
