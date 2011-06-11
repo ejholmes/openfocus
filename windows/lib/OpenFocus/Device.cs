@@ -263,7 +263,7 @@ namespace Cortex.OpenFocus
 
                 Int16 adc = (Int16)((buffer[1] << 8) | buffer[0]);
                 double kelvin = (5.00 * (double)adc * 100.00) / 1024.00;
-                kelvin = Math.Round(kelvin, 1); /* See https://github.com/CortexAstronomy/OpenFocus/wiki/LM335-Information */
+                kelvin = Math.Round(kelvin, 2); /* See https://github.com/CortexAstronomy/OpenFocus/wiki/LM335-Information */
 
                 return kelvin;
             }
