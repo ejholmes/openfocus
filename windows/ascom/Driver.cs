@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.InteropServices;
-using System.Timers;
 
 using ASCOM.Interface;
 
@@ -17,9 +16,7 @@ namespace ASCOM.OpenFocus
         public static string s_csDriverDescription = "OpenFocus";
         public static string s_csDeviceType = "Focuser";
 
-        private double LastTemperature      = 0;
-
-        private Timer TempCompTimer         = new Timer(10000);
+        
         public String Serial                = String.Empty;
 
         private Config.Device DeviceConfig;
@@ -33,7 +30,7 @@ namespace ASCOM.OpenFocus
         {
             Config.Profile.DeviceType = s_csDeviceType;
 
-            TempCompTimer.Elapsed += new ElapsedEventHandler(TempCompTimer_Elapsed);
+            
         }
 
         #region ASCOM Registration
@@ -139,7 +136,7 @@ namespace ASCOM.OpenFocus
         public void Move(int val)
         {
             if (val >= 0)
-                dev.MoveTo((Int16)val);
+                dev.MoveTo((UInt16)val);
         }
 
         public int Position
@@ -162,7 +159,11 @@ namespace ASCOM.OpenFocus
         public bool TempComp
         {
             get { return dev.TempComp; }
-            set { TempCompTimer.Enabled = value; dev.TempComp = value; }
+            set
+            {
+                dev.TempComp = value;
+                dev.TemperatureCoefficient = DeviceConfig.TemperatureCoefficient;
+            }
         }
 
         /* Asks the device if it can do temperature compensation */
@@ -188,25 +189,6 @@ namespace ASCOM.OpenFocus
                 else
                     return celsius;
             }
-        }
-
-        /*
-         * This event fires when the timer interval is up
-         * 
-         * We check to see if the temperature has changed then calculate how far 
-         * we should move the focuser according to the temperature coefficient
-         */
-        private void TempCompTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            double CurrentTemperature = dev.Temperature;
-
-            if (LastTemperature != 0 && !IsMoving)
-            {
-                double delta = CurrentTemperature - LastTemperature;
-                Move((int)(Position + (DeviceConfig.TemperatureCoefficient * delta)));
-            }
-
-            LastTemperature = CurrentTemperature;
         }
 
         #endregion
