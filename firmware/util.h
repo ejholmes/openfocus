@@ -1,24 +1,14 @@
 #ifndef __util_h_
 #define __util_h_
 
-/*
- * Delays for "ms" ms
- */
-void delay(uint16_t ms);
-
-/*
- * Returns a 16 bit unsigned int from lsb and msb
- */
-uint16_t make_uint(uint8_t lsb, uint8_t msb);
-
-/*
- * Returns the least significant bit of val
- */
-uint8_t lsb(uint16_t val);
-
-/*
- * Returns the most significant bit of val
- */
-uint8_t msb(uint16_t val);
+static inline void endian_swap(void *dest, const void *source, int length)
+{
+    unsigned char *dptr = (unsigned char *)dest;
+    unsigned char *sptr = (unsigned char *)source;
+    int i;
+    for (i = 0; i < length; i++) {
+        dptr[i] = (sptr[length - i]);
+    }
+}
 
 #endif

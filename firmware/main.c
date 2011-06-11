@@ -16,7 +16,7 @@
 
 #include "config.h"
 
-static PROGMEM uint8_t capabilities = CAPABILITY(ABSOLUTE_POSITIONING_ENABLED, CAP_ABSOLUTE) | CAPABILITY(TEMPERATURE_COMPENSATION_ENABLED, CAP_TEMP_COMP);
+static uint8_t capabilities = CAPABILITY(ABSOLUTE_POSITIONING_ENABLED, CAP_ABSOLUTE) | CAPABILITY(TEMPERATURE_COMPENSATION_ENABLED, CAP_TEMP_COMP);
 
 #ifdef EEPROM_SERIAL_NUMBER
 usbMsgLen_t usbFunctionDescriptor(struct usbRequest *rq)
@@ -42,9 +42,7 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
     usbRequest_t *rq = (void *)data;
 
     if (rq->bRequest == FOCUSER_MOVE_TO) {
-        uint8_t l = rq->wValue.bytes[0];
-        uint8_t h = rq->wValue.bytes[1];
-        focuser_move_to(make_uint(l, h));
+        focuser_move_to((uint16_t)rq->wValue.word);
         return 0;
     }
     else if (rq->bRequest == FOCUSER_HALT) {
@@ -52,17 +50,13 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
         return 0;
     }
     else if (rq->bRequest == FOCUSER_GET_POSITION) {
-        uint16_t position = focuser_get_position();
-        static uchar buffer[2];
-        buffer[0] = lsb(position);
-        buffer[1] = msb(position);
-        usbMsgPtr = buffer;
-        return sizeof(buffer);
+        static uint16_t position;
+        position = focuser_get_position();
+        usbMsgPtr = (uchar *)&position;
+        return sizeof(position);
     }
     else if (rq->bRequest == FOCUSER_SET_POSITION) {
-        uint8_t l = rq->wValue.bytes[0];
-        uint8_t h = rq->wValue.bytes[1];
-        focuser_set_position(make_uint(l, h));
+        focuser_set_position((uint16_t)rq->wValue.word);
         return 0;
     }
     else if (rq->bRequest == REBOOT_TO_BOOTLOADER) {
@@ -74,24 +68,20 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
         return 0;
     }
     else if (rq->bRequest == FOCUSER_IS_MOVING) {
-        static uchar buffer[1];
-        buffer[0] = focuser_is_moving();
-        usbMsgPtr = buffer;
+        static uchar buffer;
+        buffer = focuser_is_moving();
+        usbMsgPtr = &buffer;
         return sizeof(buffer);
     }
     else if (rq->bRequest == FOCUSER_GET_CAPABILITIES) {
-        static uchar buffer[1];
-        buffer[0] = capabilities;
-        usbMsgPtr = buffer;
-        return sizeof(buffer);
+        usbMsgPtr = &capabilities;
+        return sizeof(capabilities);
     }
     else if (rq->bRequest == FOCUSER_GET_TEMPERATURE) {
-        uint16_t temperature = temperature_read(TEMP_SENSOR_COUNT);
-        static uchar buffer[2];
-        buffer[0] = lsb(temperature);
-        buffer[1] = msb(temperature);
-        usbMsgPtr = buffer;
-        return sizeof(buffer);
+        static uint16_t temperature;
+        temperature = temperature_read(TEMP_SENSOR_COUNT);
+        usbMsgPtr = (uchar *)&temperature;
+        return sizeof(temperature);
     }
     return 0;   /* default for not implemented requests: return no data back to host */
 }
