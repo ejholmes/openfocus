@@ -11,6 +11,7 @@ Features include:
 * [Temperature sensing and compensation][wiki:tempcomp] for combating thermal expansion and contraction while imaging.
 * [Firmware upgradeable][wiki:updatefirmware].
 * Quickly and easily [import FocusMax temperature compensation data logs][wiki:tempcomp].
+* [C/C++ linkable library][libopenfocus] for custom control solutions.
 
 Installation
 ------------
@@ -34,6 +35,7 @@ See the [wiki article][wiki:build] for instructions on building from source.
 [ascom]:http://ascom-standards.org/
 [c#]:http://www.microsoft.com/express/Downloads/#2008-Visual-CS
 [downloads]:https://github.com/CortexAstronomy/OpenFocus/downloads
+[libopenfocus]:https://github.com/CortexAstronomy/LibOpenFocus
 [wiki:build]:https://github.com/CortexAstronomy/OpenFocus/wiki/Building
 [wiki:updatefirmware]:https://github.com/CortexAstronomy/OpenFocus/wiki/HowTo%3A-Update-Firmware
 [wiki:tempcomp]:https://github.com/CortexAstronomy/OpenFocus/wiki/HowTo%3A-Temperature-Compensation
