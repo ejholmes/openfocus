@@ -15,6 +15,7 @@ namespace ASCOM.OpenFocus
             private const UInt16 _MaxPosition                = 10000;
             private const double _TemperatureCoefficient     = 0.0;
             private const double _StepSize                   = 2.0;
+            private const bool _Reverse                      = false;
 
             private String Serial;
 
@@ -90,6 +91,19 @@ namespace ASCOM.OpenFocus
                         return double.Parse(val);
                 }
                 set { Write("StepSize", value.ToString(), Serial); }
+            }
+
+            public bool Reverse
+            {
+                get
+                {
+                    String val = Read("Reverse", Serial);
+                    if (String.IsNullOrEmpty(val))
+                        return _Reverse;
+                    else
+                        return bool.Parse(val);
+                }
+                set { Write("Reverse", value.ToString(), Serial); }
             }
         }
     }

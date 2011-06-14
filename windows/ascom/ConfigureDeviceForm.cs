@@ -36,6 +36,7 @@ namespace ASCOM.OpenFocus
             this.tbName.Text                       = Device.Name;
             this.tbMaxPosition.Text                = Device.MaxPosition.ToString();
             this.tbTemperatureCoefficient.Text     = Device.TemperatureCoefficient.ToString();
+            this.cbReverse.Checked                 = Device.Reverse;
 
             this.SerialNumber.Text                  = Serial;
             this.toolTip.SetToolTip(this.SerialNumber, Serial);
@@ -47,6 +48,7 @@ namespace ASCOM.OpenFocus
             Device.Name                             = this.tbName.Text;
             Device.MaxPosition                      = UInt16.Parse(this.tbMaxPosition.Text);
             Device.TemperatureCoefficient           = double.Parse(this.tbTemperatureCoefficient.Text);
+            Device.Reverse                          = this.cbReverse.Checked;
         }
 
         private void btnSave_Click(object sender, EventArgs e)

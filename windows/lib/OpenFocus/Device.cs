@@ -27,7 +27,7 @@ namespace Cortex.OpenFocus
             public const byte MoveTo = 0x00;
             public const byte Halt = 0x01;
             public const byte SetPosition = 0x02;
-            public const byte SetTemperatureCompensation = 0x03;
+            public const byte Reverse = 0x03;
             public const byte RebootToBootloader = 0x04;
             public const byte GetPosition = 0x10;
             public const byte IsMoving = 0x11;
@@ -224,6 +224,17 @@ namespace Cortex.OpenFocus
             }
         }
 
+        public bool Reverse
+        {
+            set
+            {
+                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.Reverse, (short)((value)?1:0), 0, 0);
+
+                int transfered;
+                device.ControlTransfer(ref packet, null, 0, out transfered);
+            }
+        }
+
         /// <summary>
         /// Set to true to enable temperature compensation, false to disable. Returns current temperature compensation status
         /// </summary>
@@ -235,11 +246,6 @@ namespace Cortex.OpenFocus
             }
             set
             {
-                UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.SetTemperatureCompensation, (short)((value) ? 1 : 0), 0, 0);
-
-                int transfered;
-                device.ControlTransfer(ref packet, null, 0, out transfered);
-
                 TempCompEnabled = value;
                 TempCompTimer.Enabled = value;
             }
@@ -321,9 +327,9 @@ namespace Cortex.OpenFocus
             {
                 double delta = CurrentTemperature - LastTemperature;
                 MoveTo((UInt16)(Position + (TemperatureCoefficient * delta)));
-            }
 
-            LastTemperature = CurrentTemperature;
+                LastTemperature = CurrentTemperature;
+            }
         }
 
         #endregion

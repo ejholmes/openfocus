@@ -63,8 +63,8 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
         reboot_to_bootloader();
         return 0;
     }
-    else if (rq->bRequest == FOCUSER_SET_TEMPERATURE_COMPENSATION) {
-        //uint8_t enabled = rq->wValue.bytes[0];
+    else if (rq->bRequest == FOCUSER_REVERSE) {
+        focuser_reverse(rq->wValue.bytes[0]);
         return 0;
     }
     else if (rq->bRequest == FOCUSER_IS_MOVING) {

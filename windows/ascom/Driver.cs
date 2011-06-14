@@ -108,6 +108,7 @@ namespace ASCOM.OpenFocus
                         DeviceConfig = new Config.Device(dev.Serial);
                         if (DeviceConfig.Position != 0)
                             dev.Position = DeviceConfig.Position;
+                        dev.Reverse = DeviceConfig.Reverse;
                         break;
                     case false:
                         if (dev.Connected)

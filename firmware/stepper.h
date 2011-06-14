@@ -126,6 +126,11 @@ void stepper_release(void);
  */
 void stepper_stop(void);
 
+/*
+ * Reverse the direction that the stepper rotates
+ */
+void stepper_reverse(uint8_t reverse);
+
 void registerEventCallback(Callback cb);
 
 #endif

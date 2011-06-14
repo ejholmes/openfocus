@@ -64,3 +64,8 @@ void focuser_set_position(uint16_t position)
 {
     current_position = position;
 }
+
+void focuser_reverse(uint8_t reverse)
+{
+    stepper_reverse(reverse);
+}

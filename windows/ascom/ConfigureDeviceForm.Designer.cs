@@ -47,6 +47,7 @@
             this.SerialNumber = new System.Windows.Forms.Label();
             this.lblSerial = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.cbReverse = new System.Windows.Forms.CheckBox();
             this.gbPositionSettings.SuspendLayout();
             this.gbTemperatureCompensation.SuspendLayout();
             this.gbDeviceInfo.SuspendLayout();
@@ -163,7 +164,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(194, 274);
+            this.btnCancel.Location = new System.Drawing.Point(194, 302);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 4;
@@ -174,7 +175,7 @@
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSave.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnSave.Location = new System.Drawing.Point(113, 274);
+            this.btnSave.Location = new System.Drawing.Point(113, 302);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 5;
@@ -229,13 +230,24 @@
             this.lblSerial.TabIndex = 0;
             this.lblSerial.Text = "Serial #:";
             // 
+            // cbReverse
+            // 
+            this.cbReverse.AutoSize = true;
+            this.cbReverse.Location = new System.Drawing.Point(12, 271);
+            this.cbReverse.Name = "cbReverse";
+            this.cbReverse.Size = new System.Drawing.Size(111, 17);
+            this.cbReverse.TabIndex = 7;
+            this.cbReverse.Text = "Reverse Direction";
+            this.cbReverse.UseVisualStyleBackColor = true;
+            // 
             // ConfigureDeviceForm
             // 
             this.AcceptButton = this.btnSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(282, 309);
+            this.ClientSize = new System.Drawing.Size(282, 337);
+            this.Controls.Add(this.cbReverse);
             this.Controls.Add(this.gbDeviceInfo);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnCancel);
@@ -296,5 +308,6 @@
         private System.Windows.Forms.Label FirmwareVersion;
         private System.Windows.Forms.Label lblFirmwareVersion;
         private System.Windows.Forms.Button btnFocusMaxImport;
+        private System.Windows.Forms.CheckBox cbReverse;
     }
 }

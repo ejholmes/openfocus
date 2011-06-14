@@ -38,4 +38,9 @@ int focuser_is_moving();
  */
 uint16_t focuser_get_position();
 
+/*
+ * Reverses the direction that the focuser moves
+ */
+void focuser_reverse(uint8_t reverse);
+
 #endif

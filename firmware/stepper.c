@@ -9,6 +9,7 @@
 
 
 int8_t direction              = FORWARD;
+uint8_t reversed              = 0;  
 volatile uint16_t steps_to_go = 0;
 static uint8_t step           = 0;
 Callback step_event_cb        = NULL;
@@ -49,13 +50,18 @@ void stepper_stop(void)
     step_event_cb(EVT_MOVE_COMPLETE, NULL);     /* Let the event handler know that we're done */
 }
 
+void stepper_reverse(uint8_t reverse)
+{
+    reversed = reverse;
+}
+
 void stepper_step(int16_t steps)
 {
     if (steps > 0) {
-        direction = FORWARD;
+        direction = (reversed)?BACKWARD:FORWARD;
     }
     else if (steps < 0) {
-        direction = BACKWARD;
+        direction = (reversed)?FORWARD:BACKWARD;
     }
     else {                                      /* Steps must == 0, nothing to be done */
         return;
