@@ -11,7 +11,7 @@ Features include:
 * [Temperature sensing and compensation][wiki:tempcomp] for combating thermal expansion and contraction while imaging.
 * [Firmware upgradeable][wiki:updatefirmware].
 * Quickly and easily [import FocusMax temperature compensation data logs][wiki:tempcomp].
-* [C/C++ linkable library][libopenfocus] and [C# library][c#lib] for custom control solutions.
+* [C/C++ linkable library][libopenfocus] and [C# library][c#lib] for custom control requirements.
 
 Installation
 ------------
