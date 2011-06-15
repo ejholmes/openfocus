@@ -8,8 +8,8 @@
 #include "util.h"
 
 
-int8_t direction              = FORWARD;
-uint8_t reversed              = 0;  
+static int8_t direction              = FORWARD;
+static uint8_t reversed              = 0;  
 volatile uint16_t steps_to_go = 0;
 static uint8_t step           = 0;
 Callback step_event_cb        = NULL;
