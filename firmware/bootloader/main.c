@@ -100,6 +100,8 @@ usbMsgLen_t   usbFunctionSetup(uchar data[8])
         return USB_NO_MSG;
     }
     else if (rq->bRequest == USB_RQ_READ_EEPROM_BLOCK) {
+        if (rq->wValue.word > E2END)
+            return 0; /* Leave if they requested an address that is out of range */
         bytesRemaining = rq->wLength.word; /* How much data to transfer */
         address = rq->wValue.word; /* Start address */
         startPage = 1;
@@ -151,7 +153,7 @@ uchar usbFunctionWrite(uchar *data, uchar len)
         len = bytesRemaining;
 
     if (cmd == WRITE_EEPROM_BLOCK) {
-        address = *(uint16_t *)&data[0]; /* Address is in little endian format so we just cast it */
+        address = *(uint16_t *)&data[0] & E2END; /* Address is in little endian format so we just cast it */
 
         len -= 2;
         data += 2;
@@ -169,7 +171,7 @@ uchar usbFunctionWrite(uchar *data, uchar len)
          * accordingly
          * */
         if (startPage) {
-            address = *(uint16_t *)&data[0]; /* Address is in little endian format so we just cast it */
+            address = *(uint16_t *)&data[0] & FLASHEND; /* Address is in little endian format so we just cast it */
             pageAddress = address;
 
             /* Remove address from data */
