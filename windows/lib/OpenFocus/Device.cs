@@ -252,7 +252,7 @@ namespace Cortex.OpenFocus
         }
 
         /// <summary>
-        /// Returns current temperature read by the device
+        /// Returns current temperature read by the device in degrees kelvin
         /// </summary>
         public double Temperature
         {

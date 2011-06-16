@@ -131,9 +131,9 @@
             // 
             // btnFocusMaxImport
             // 
-            this.btnFocusMaxImport.Location = new System.Drawing.Point(110, 45);
+            this.btnFocusMaxImport.Location = new System.Drawing.Point(105, 45);
             this.btnFocusMaxImport.Name = "btnFocusMaxImport";
-            this.btnFocusMaxImport.Size = new System.Drawing.Size(141, 23);
+            this.btnFocusMaxImport.Size = new System.Drawing.Size(146, 23);
             this.btnFocusMaxImport.TabIndex = 3;
             this.btnFocusMaxImport.Text = "Import FocusMax Data...";
             this.btnFocusMaxImport.UseVisualStyleBackColor = true;
@@ -143,7 +143,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 22);
+            this.label1.Location = new System.Drawing.Point(6, 22);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(90, 13);
             this.label1.TabIndex = 2;
@@ -153,9 +153,9 @@
             // tbTemperatureCoefficient
             // 
             this.tbTemperatureCoefficient.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbTemperatureCoefficient.Location = new System.Drawing.Point(110, 19);
+            this.tbTemperatureCoefficient.Location = new System.Drawing.Point(105, 19);
             this.tbTemperatureCoefficient.Name = "tbTemperatureCoefficient";
-            this.tbTemperatureCoefficient.Size = new System.Drawing.Size(141, 20);
+            this.tbTemperatureCoefficient.Size = new System.Drawing.Size(146, 20);
             this.tbTemperatureCoefficient.TabIndex = 1;
             this.toolTip.SetToolTip(this.tbTemperatureCoefficient, "Value should be steps per unit temperature");
             this.tbTemperatureCoefficient.Validating += new System.ComponentModel.CancelEventHandler(this.tbTemperatureCoefficient_Validating);
