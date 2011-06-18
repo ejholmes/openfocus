@@ -124,7 +124,7 @@
             this.gbTemperatureCompensation.Controls.Add(this.tbTemperatureCoefficient);
             this.gbTemperatureCompensation.Location = new System.Drawing.Point(12, 186);
             this.gbTemperatureCompensation.Name = "gbTemperatureCompensation";
-            this.gbTemperatureCompensation.Size = new System.Drawing.Size(257, 79);
+            this.gbTemperatureCompensation.Size = new System.Drawing.Size(257, 78);
             this.gbTemperatureCompensation.TabIndex = 3;
             this.gbTemperatureCompensation.TabStop = false;
             this.gbTemperatureCompensation.Text = "Temperature Compensation";
