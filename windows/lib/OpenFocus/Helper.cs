@@ -40,6 +40,7 @@ namespace Cortex.OpenFocus
                     goto DeviceNotFound;
                 }
             }
+            return;
 DeviceNotFound:
             Logger.Write("Device not found!", Logger.LogType.Error);
             return;

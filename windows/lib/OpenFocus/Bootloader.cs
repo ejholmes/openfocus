@@ -111,8 +111,6 @@ namespace Cortex.OpenFocus
             UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointIn, (byte)Request.ReadEepromBlock, (short)address, 0, (short)data.Length);
             int transfered;
             device.ControlTransfer(ref packet, data, data.Length, out transfered);
-            if (transfered != data.Length)
-                throw new CommunicationException("Error sending data to device");
 
             return data;
         }
@@ -127,9 +125,7 @@ namespace Cortex.OpenFocus
             for (UInt16 address = 0; address < EepromSize; address += BlockSize)
             {
                 Byte[] b = ReadEepromBlock(address, BlockSize + sizeof(UInt16));
-
                 UInt16 receivedAddress = (UInt16)((b[1] << 8) | (b[0] & 0xff));
-
                 Buffer.BlockCopy(b, sizeof(UInt16), data, receivedAddress, b.Length - sizeof(UInt16));
             }
 
@@ -138,15 +134,10 @@ namespace Cortex.OpenFocus
 
         public static void WriteEepromBlock(UInt16 address, Byte[] data)
         {
-            Byte[] b = new Byte[sizeof(UInt16) + data.Length];
-
-            Buffer.BlockCopy(ToUsbInt(address, sizeof(UInt16)), 0, b, 0, sizeof(UInt16));
-            Buffer.BlockCopy(data, 0, b, sizeof(UInt16), data.Length);
-
-            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.WriteEepromBlock, 0, 0, (short)b.Length);
+            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.WriteEepromBlock, (short)address, 0, (short)data.Length);
             int transfered;
-            device.ControlTransfer(ref packet, b, b.Length, out transfered);
-            if (transfered != b.Length)
+            device.ControlTransfer(ref packet, data, data.Length, out transfered);
+            if (transfered != data.Length)
                 throw new CommunicationException("Error sending data to device");
         }
 
@@ -168,15 +159,10 @@ namespace Cortex.OpenFocus
 
         public static void WriteFlashBlock(UInt16 address, Byte[] data)
         {
-            Byte[] b = new Byte[sizeof(UInt16) + data.Length];
-
-            Buffer.BlockCopy(ToUsbInt(address, sizeof(UInt16)), 0, b, 0, sizeof(UInt16));
-            Buffer.BlockCopy(data, 0, b, sizeof(UInt16), data.Length);
-
-            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.WriteFlashBlock, 0, 0, (short)b.Length);
+            UsbSetupPacket packet = new UsbSetupPacket((byte)UsbRequestType.TypeVendor | (byte)UsbRequestRecipient.RecipDevice | (byte)UsbEndpointDirection.EndpointOut, (byte)Request.WriteFlashBlock, (short)address, 0, (short)data.Length);
             int transfered;
-            device.ControlTransfer(ref packet, b, b.Length, out transfered);
-            if (transfered != b.Length)
+            device.ControlTransfer(ref packet, data, data.Length, out transfered);
+            if (transfered != data.Length)
                 throw new CommunicationException("Error sending data to device");
         }
 

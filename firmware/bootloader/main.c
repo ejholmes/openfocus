@@ -42,9 +42,9 @@ static inline void  bootLoaderInit(void)
 
 static uint8_t cmd;
 static uchar bytesRemaining;
-static uint8_t startPage = 0;
 static uint16_t address;
 static uint16_t pageAddress;
+static uint8_t startPage = 0;
 
 static uchar exitMainloop;
 
@@ -76,27 +76,33 @@ static void leaveBootloader()
 usbMsgLen_t   usbFunctionSetup(uchar data[8])
 {
     usbRequest_t    *rq = (void *)data;
-    static uchar    replyBuffer[8] = {
-        SPM_PAGESIZE & 0xff,
+    static uchar    replyBuffer[8] = { /* Contains devices sizes */
+        SPM_PAGESIZE & 0xff, /* Page Size */
         SPM_PAGESIZE >> 8,
-        ((long)FLASHEND + 1) & 0xff,
+        ((long)FLASHEND + 1) & 0xff, /* Flash Size */
         (((long)FLASHEND + 1) >> 8) & 0xff,
         (((long)FLASHEND + 1) >> 16) & 0xff,
         (((long)FLASHEND + 1) >> 24) & 0xff,
-        (E2END + 1) & 0xff,
+        (E2END + 1) & 0xff, /* EEPROM Size */
         (E2END +1) >> 8
     };
 
     if (rq->bRequest == USB_RQ_WRITE_FLASH_BLOCK) {
-        startPage = 1;
+        if (rq->wValue.word > FLASHEND)
+            return 0; /* Leave if they requested an address that is out of range */
         cmd = WRITE_FLASH_BLOCK;
+        address = rq->wValue.word;
         bytesRemaining = rq->wLength.word;
+        startPage = 1;
         return USB_NO_MSG;
     }
     else if (rq->bRequest == USB_RQ_WRITE_EEPROM_BLOCK) {
-        startPage = 1;
+        if (rq->wValue.word > E2END)
+            return 0; /* Leave if they requested an address that is out of range */
         cmd = WRITE_EEPROM_BLOCK;
+        address = rq->wValue.word;
         bytesRemaining = rq->wLength.word;
+        startPage = 1;
         return USB_NO_MSG;
     }
     else if (rq->bRequest == USB_RQ_READ_EEPROM_BLOCK) {
@@ -153,36 +159,17 @@ uchar usbFunctionWrite(uchar *data, uchar len)
         len = bytesRemaining;
 
     if (cmd == WRITE_EEPROM_BLOCK) {
-        address = *(uint16_t *)&data[0] & E2END; /* Address is in little endian format so we just cast it */
-
-        len -= 2;
-        data += 2;
-
-        eeprom_write_block((const void*)data, (void *)address, 2);
+        /* We write only 2 bytes at a time since eeprom_write_block takes a long time. 
+         * If we write more data that it will cause V-USB to timeout */
+        eeprom_write_block((const void*)data, (void *)address, 2); 
         eeprom_busy_wait();
-
-        return 1;
+        return 1; /* Done with data */
     }
     else if (cmd == WRITE_FLASH_BLOCK) {
-        /* startPage is set when we receive a WRITE_FLASH_BLOCK command over
-         * usb.
-         *
-         * We get the address from the first 2 bytes and adjust the data buffer
-         * accordingly
-         * */
-        if (startPage) {
-            address = *(uint16_t *)&data[0] & FLASHEND; /* Address is in little endian format so we just cast it */
-            pageAddress = address;
-
-            /* Remove address from data */
-            len -= 2;
-            bytesRemaining -= 2;
-            data += 2;
-        }
-
         do {
             /* if we're at the start of a page, erase the page */
             if (startPage){
+                pageAddress = address;
                 cli();
                 boot_page_erase(pageAddress);
                 sei();
