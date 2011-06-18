@@ -202,7 +202,7 @@
             // 
             this.FirmwareVersion.Location = new System.Drawing.Point(102, 41);
             this.FirmwareVersion.Name = "FirmwareVersion";
-            this.FirmwareVersion.Size = new System.Drawing.Size(149, 12);
+            this.FirmwareVersion.Size = new System.Drawing.Size(149, 13);
             this.FirmwareVersion.TabIndex = 5;
             // 
             // lblFirmwareVersion
@@ -216,15 +216,15 @@
             // 
             // SerialNumber
             // 
-            this.SerialNumber.Location = new System.Drawing.Point(58, 23);
+            this.SerialNumber.Location = new System.Drawing.Point(102, 23);
             this.SerialNumber.Name = "SerialNumber";
-            this.SerialNumber.Size = new System.Drawing.Size(193, 14);
+            this.SerialNumber.Size = new System.Drawing.Size(149, 13);
             this.SerialNumber.TabIndex = 1;
             // 
             // lblSerial
             // 
             this.lblSerial.AutoSize = true;
-            this.lblSerial.Location = new System.Drawing.Point(6, 23);
+            this.lblSerial.Location = new System.Drawing.Point(50, 23);
             this.lblSerial.Name = "lblSerial";
             this.lblSerial.Size = new System.Drawing.Size(46, 13);
             this.lblSerial.TabIndex = 0;
