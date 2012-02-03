@@ -1,5 +1,4 @@
-OpenFocus
-=========
+# OpenFocus
 OpenFocus is an open source implementation of a computer controlled focuser for
 telescopes based around the ATMega328p AVR chip from Atmel. It uses
 the [V-USB stack][vusb] and [libusb][libusb] and also includes an
@@ -13,9 +12,7 @@ Features include:
 * Quickly and easily [import FocusMax temperature compensation data logs][wiki:tempcomp].
 * [C/C++ linkable library][libopenfocus] and [C# library][c#lib] for custom control requirements.
 
-Installation
-------------
-
+## Installation
 Prerequisites: [ASCOM Platform 5.5][ascom]
 
 To download the most recent driver installer, visit the [downloads][downloads] page.
@@ -23,8 +20,7 @@ To download the most recent driver installer, visit the [downloads][downloads] p
 To update your device to the most recent firmware version, visit the [wiki article][wiki:updatefirmware].
 
 
-Building from source
--------------------
+## Building from source
 See the [wiki article][wiki:build] for instructions on building from source.
 
 [vusb]:http://www.obdev.at/products/vusb/index.html
@@ -34,9 +30,9 @@ See the [wiki article][wiki:build] for instructions on building from source.
 [msys]:http://www.mingw.org/wiki/MSYS
 [ascom]:http://ascom-standards.org/
 [c#]:http://www.microsoft.com/express/Downloads/#2008-Visual-CS
-[downloads]:https://github.com/CortexAstronomy/OpenFocus/downloads
-[libopenfocus]:https://github.com/CortexAstronomy/LibOpenFocus
-[c#lib]:https://github.com/CortexAstronomy/OpenFocus/tree/master/windows/lib
-[wiki:build]:https://github.com/CortexAstronomy/OpenFocus/wiki/Building
-[wiki:updatefirmware]:https://github.com/CortexAstronomy/OpenFocus/wiki/HowTo%3A-Update-Firmware
-[wiki:tempcomp]:https://github.com/CortexAstronomy/OpenFocus/wiki/HowTo%3A-Temperature-Compensation
+[downloads]:https://github.com/ejholmes/openfocus/downloads
+[libopenfocus]:https://github.com/ejholmes/libopenfocus
+[c#lib]:https://github.com/ejholmes/openfocus/tree/master/windows/lib
+[wiki:build]:https://github.com/ejholmes/openfocus/wiki/Building
+[wiki:updatefirmware]:https://github.com/ejholmes/openfocus/wiki/HowTo%3A-Update-Firmware
+[wiki:tempcomp]:https://github.com/ejholmes/openfocus/wiki/HowTo%3A-Temperature-Compensation
